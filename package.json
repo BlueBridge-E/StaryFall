@@ -1,0 +1,26 @@
+{
+  "name": "staryfall",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlueBridge-E/StaryFall.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BlueBridge-E/StaryFall/issues"
+  },
+  "homepage": "https://github.com/BlueBridge-E/StaryFall#readme",
+  "dependencies": {
+    "@astrojs/starlight": "^0.39.2",
+    "astro": "^6.3.1"
+  }
+}
