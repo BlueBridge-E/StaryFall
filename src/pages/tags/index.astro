@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/TagLayout.astro';
+
+const base = '/StaryFall';
+const docs = await getCollection('docs');
+const posts = docs.filter((d) => d.id.startsWith('posts/'));
+
+const tagMap = new Map<string, { title: string; path: string }[]>();
+for (const post of posts) {
+  const tags: string[] = post.data.tags ?? [];
+  const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
+  for (const tag of tags) {
+    if (!tagMap.has(tag)) tagMap.set(tag, []);
+    tagMap.get(tag)!.push({
+      title: post.data.title,
+      path: `${base}/posts/${slug}/`,
+    });
+  }
+}
+
+const sortedTags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
+---
+
+<Layout title="标签">
+  <ul class="tag-list">
+    {sortedTags.map(([tag, posts]) => (
+      <li>
+        <a href={`${base}/tags/${tag}/`}>
+          <span class="tag-name">#{tag}</span>
+          <span class="tag-count">{posts.length} 篇</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .tag-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .tag-list a:hover {
+    border-color: var(--sl-color-text-accent);
+    background: var(--sl-color-gray-7);
+  }
+  .tag-name { font-weight: 600; color: var(--sl-color-text-accent); }
+  .tag-count { font-size: 0.85rem; color: var(--sl-color-gray-2); }
+</style>

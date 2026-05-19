@@ -1,0 +1,54 @@
+/* StaryFall custom styles */
+
+:root {
+  --sl-color-text-accent: #2563eb;
+  --sl-color-bg-accent: #eff6ff;
+  --sl-content-width: 50rem;
+  --sl-sidebar-width: 0rem;
+}
+
+/* Hide left sidebar */
+.sidebar-pane,
+.mobile-sidebar-toggle {
+  display: none !important;
+}
+
+/* Hide right sidebar (ToC) */
+.right-sidebar-container {
+  display: none !important;
+}
+
+/* Full-width content area, centered */
+[data-has-sidebar][data-has-toc] .main-pane {
+  width: 100% !important;
+  --sl-content-margin-inline: auto !important;
+}
+
+/* Chinese-optimized font stack */
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* Better article typography */
+.sl-markdown-content {
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+
+.sl-markdown-content h1 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.sl-markdown-content blockquote {
+  border-left-color: var(--sl-color-text-accent);
+}
+
+.sl-markdown-content code:not(pre code) {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}

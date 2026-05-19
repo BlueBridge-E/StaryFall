@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+
+const base = '/StaryFall';
+const docs = await getCollection('docs');
+const posts = docs
+  .filter((d) => d.id.startsWith('posts/'))
+  .sort((a, b) => {
+    const da = a.data.date?.getTime() ?? 0;
+    const db = b.data.date?.getTime() ?? 0;
+    return db - da;
+  });
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>StaryFall — 学习与构建的技术博客</title>
+    <meta name="description" content="一个关于前端开发、编程语言和工具链的技术博客。" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>StaryFall</h1>
+      <p class="tagline">学习与构建的技术博客</p>
+      <nav class="hero-nav">
+        <a href={`${base}/tags/`}>标签</a>
+        <a href="https://github.com/BlueBridge-E">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="post-list">
+      {posts.map((post) => {
+        const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
+        const tags = (post.data.tags ?? []) as string[];
+        return (
+          <article class="post-card">
+            <a href={`${base}/posts/${slug}/`} class="post-title">
+              {post.data.title}
+            </a>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="post-meta">
+              {post.data.date && (
+                <time datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('zh-CN')}
+                </time>
+              )}
+              {tags.length > 0 && (
+                <span class="post-tags">
+                  {tags.map((tag) => (
+                    <a href={`${base}/tags/${tag}/`} class="tag">#{tag}</a>
+                  ))}
+                </span>
+              )}
+            </div>
+          </article>
+        );
+      })}
+    </main>
+
+    <footer class="footer">
+      <p>Built with Astro + Starlight</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :root {
+    --accent: #2563eb;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #fafafa;
+    --card-bg: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .hero-nav {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .hero-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  .hero-nav a:hover { color: var(--accent); }
+
+  .post-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+  .post-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .post-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  .post-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .post-title:hover { color: var(--accent); }
+  .post-desc {
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .post-meta {
+    margin-top: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.82rem;
+  }
+  .tag:hover { text-decoration: underline; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 3rem 1.25rem 2rem; }
+    .hero h1 { font-size: 2rem; }
+    .post-list { padding: 1.5rem 1rem 3rem; }
+    .post-meta { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  }
+</style>

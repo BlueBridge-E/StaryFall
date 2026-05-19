@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/TagLayout.astro';
+
+const base = '/StaryFall';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  const posts = docs.filter((d) => d.id.startsWith('posts/'));
+  const tagSet = new Set<string>();
+  for (const post of posts) {
+    const tags: string[] = post.data.tags ?? [];
+    for (const tag of tags) {
+      tagSet.add(tag);
+    }
+  }
+  return [...tagSet].map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const docs = await getCollection('docs');
+
+const posts = docs
+  .filter((d) => {
+    if (!d.id.startsWith('posts/')) return false;
+    return ((d.data.tags as string[]) ?? []).includes(tag);
+  })
+  .sort((a, b) => {
+    const da = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const db = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return db - da;
+  });
+---
+
+<Layout title={`标签: #${tag}`}>
+  <p class="post-count">{posts.length} 篇文章</p>
+
+  {posts.length > 0 ? (
+    <ul class="post-list">
+      {posts.map((post) => {
+        const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
+        return (
+          <li>
+            <a href={`${base}/posts/${slug}/`}>
+              <span class="post-title">{post.data.title}</span>
+              {post.data.date && (
+                <span class="post-date">
+                  {new Date(post.data.date).toLocaleDateString('zh-CN')}
+                </span>
+              )}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  ) : (
+    <p>暂无该标签的文章。</p>
+  )}
+
+  <p style="margin-top: 2rem;">
+    <a href={`${base}/tags/`}>&larr; 查看所有标签</a>
+  </p>
+</Layout>
+
+<style>
+  .post-count { margin-bottom: 1rem; color: var(--sl-color-gray-2); }
+  .post-list { list-style: none; padding: 0; }
+  .post-list li { margin-bottom: 0.5rem; }
+  .post-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    text-decoration: none;
+  }
+  .post-list a:hover .post-title { color: var(--sl-color-text-accent); }
+  .post-date {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-2);
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+</style>
