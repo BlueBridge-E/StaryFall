@@ -1,3 +1,10 @@
+---
+title: Scrapling 深度解析：当爬虫框架学会「自适应」
+description: 深度分析 Scrapling——一个 57k+ stars 的 Python 自适应爬虫框架，解析其 auto-adapting 引擎、三态 Fetcher 架构、MCP Server 集成，以及与 Scrapy/Playwright 的对比
+date: 2026-06-01
+tags: [python, web-scraping, opensource, analysis]
+---
+
 # Scrapling 深度解析：当爬虫框架学会「自适应」
 
 ## 引子
