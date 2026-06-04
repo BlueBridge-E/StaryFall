@@ -1,8 +1,93 @@
 ---
-// src/pages/work.astro — 作品集页面
-import { getCollection } from 'astro:content';
+// src/pages/work.astro — 作品集页面（GitHub API 自动拉取 + 静态 fallback）
 
 const base = '/StaryFall';
+
+// Repos 配置（自动拉取的 GitHub 仓库）
+const GITHUB_REPOS = [
+  'BlueBridge-E/lighthouse-mcp',
+  'BlueBridge-E/cyber-coin',
+  'BlueBridge-E/StaryFall',
+];
+
+// 项目元数据（描述、标签、icon 等）手写，其他字段自动从 GitHub API 拉取
+const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: string; class?: string }[] }> = {
+  'lighthouse-mcp': {
+    icon: '🦞',
+    desc: 'MCP Server for Tencent Cloud Lighthouse — 让 AI Agent 通过自然语言管理轻量服务器。封装 9 个管理工具（实例/监控/防火墙/快照/远程命令），支持 Claude Code / OpenClaw / Cursor 等 MCP 客户端。',
+    tags: [
+      { label: 'TypeScript', class: 'ts' },
+      { label: 'MCP' },
+      { label: '腾讯云' },
+    ],
+  },
+  'cyber-coin': {
+    icon: '💎',
+    desc: '基于 Tauri v2 + Rust 的跨平台桌面应用。实践前端与系统级语言的混合架构，探索本地化桌面工具的开发、打包与自动更新全链路。',
+    tags: [
+      { label: 'Rust', class: 'rust' },
+      { label: 'TypeScript', class: 'ts' },
+      { label: 'Tauri v2' },
+    ],
+  },
+  'StaryFall': {
+    icon: '🌠',
+    desc: '个人技术博客，基于 Astro + Starlight 构建，GitHub Actions 自动部署至腾讯云 Nginx。涵盖前端开发、AI 编码工具、协议分析等深度技术文章，支持标签分类与 SEO。',
+    tags: [
+      { label: 'Astro' },
+      { label: 'Starlight' },
+      { label: 'GitHub Actions' },
+    ],
+  },
+};
+
+// 从 GitHub API 拉取 repo 数据（构建时运行）
+async function fetchGithubRepos() {
+  const results: Record<string, { stars: number; language: string; updatedAt: string } | null> = {};
+  try {
+    const responses = await Promise.all(
+      GITHUB_REPOS.map((repo) =>
+        fetch(`https://api.github.com/repos/${repo}`, {
+          headers: { 'User-Agent': 'StaryFall/1.0', Accept: 'application/vnd.github+json' },
+        }).then((r) => (r.ok ? r.json() : null)),
+      ),
+    );
+    for (const repo of responses) {
+      if (repo && repo.name) {
+        results[repo.name] = {
+          stars: repo.stargazers_count ?? 0,
+          language: repo.language ?? '',
+          updatedAt: repo.pushed_at ?? repo.updated_at,
+        };
+      }
+    }
+  } catch {
+    // 静默失败，前端用 fallback
+  }
+  return results;
+}
+
+const githubData = await fetchGithubRepos();
+
+// 格式化日期
+function fmtDate(iso: string | undefined) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const dayMs = 86400000;
+  const diff = now.getTime() - d.getTime();
+  if (diff < dayMs) return '今天';
+  if (diff < 2 * dayMs) return '昨天';
+  if (diff < 7 * dayMs) return Math.floor(diff / dayMs) + ' 天前';
+  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+}
+
+// 获取项目数据
+function getProject(name: string) {
+  const meta = PROJECT_META[name];
+  const data = githubData[name];
+  return { meta, github: data };
+}
 ---
 
 <!doctype html>
@@ -25,26 +110,41 @@ const base = '/StaryFall';
     </header>
 
     <main class="work-list">
-      <!-- lighthouse-mcp -->
-      <a href="https://github.com/BlueBridge-E/lighthouse-mcp" class="work-card" target="_blank" rel="noopener">
-        <div class="work-header">
-          <span class="work-icon">🦞</span>
-          <div>
-            <h2 class="work-title">lighthouse-mcp</h2>
-            <p class="work-tags">
-              <span class="lang-tag ts">TypeScript</span>
-              <span class="lang-tag">MCP</span>
-              <span class="lang-tag">腾讯云</span>
-            </p>
-          </div>
-        </div>
-        <p class="work-desc">
-          MCP Server for Tencent Cloud Lighthouse — 让 AI Agent 通过自然语言管理轻量服务器。
-          封装 9 个管理工具（实例/监控/防火墙/快照/远程命令），支持 Claude Code / OpenClaw / Cursor 等 MCP 客户端。
-        </p>
-      </a>
+      <!-- GitHub Repos（自动拉取） -->
+      {
+        GITHUB_REPOS.map((fullName) => {
+          const name = fullName.split('/')[1];
+          const { meta, github } = getProject(name);
+          if (!meta) return null;
+          return (
+            <a href={`https://github.com/${fullName}`} class="work-card" target="_blank" rel="noopener">
+              <div class="work-header">
+                <span class="work-icon">{meta.icon}</span>
+                <div>
+                  <h2 class="work-title">{name}</h2>
+                  <p class="work-tags">
+                    {meta.tags.map((t) => (
+                      <span class={`lang-tag ${t.class ?? ''}`}>{t.label}</span>
+                    ))}
+                  </p>
+                </div>
+                <div class="work-stats">
+                  {github && (
+                    <>
+                      <span class="stat">★ {github.stars}</span>
+                      <span class="stat stat--time">{fmtDate(github.updatedAt)}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <p class="work-desc">{meta.desc}</p>
+            </a>
+          );
+        })
+      }
 
-      <!-- OpenClaw Agent 工作流系统 -->
+      <!-- 非 GitHub 项目（纯静态） -->
+
       <div class="work-card work-card--no-link">
         <div class="work-header">
           <span class="work-icon">🤖</span>
@@ -64,45 +164,6 @@ const base = '/StaryFall';
         </p>
       </div>
 
-      <!-- StaryFall -->
-      <a href={`${base}/`} class="work-card">
-        <div class="work-header">
-          <span class="work-icon">🌠</span>
-          <div>
-            <h2 class="work-title">StaryFall</h2>
-            <p class="work-tags">
-              <span class="lang-tag">Astro</span>
-              <span class="lang-tag">Starlight</span>
-              <span class="lang-tag">GitHub Actions</span>
-            </p>
-          </div>
-        </div>
-        <p class="work-desc">
-          个人技术博客，基于 Astro + Starlight 构建，GitHub Actions 自动部署至腾讯云 Nginx。
-          涵盖前端开发、AI 编码工具、协议分析等深度技术文章，支持标签分类与 SEO。
-        </p>
-      </a>
-
-      <!-- CyberCoin -->
-      <a href="https://github.com/BlueBridge-E/cyber-coin" class="work-card" target="_blank" rel="noopener">
-        <div class="work-header">
-          <span class="work-icon">💎</span>
-          <div>
-            <h2 class="work-title">CyberCoin</h2>
-            <p class="work-tags">
-              <span class="lang-tag rust">Rust</span>
-              <span class="lang-tag ts">TypeScript</span>
-              <span class="lang-tag">Tauri v2</span>
-            </p>
-          </div>
-        </div>
-        <p class="work-desc">
-          基于 Tauri v2 + Rust 的跨平台桌面应用。实践前端与系统级语言的混合架构，
-          探索本地化桌面工具的开发、打包与自动更新全链路。
-        </p>
-      </a>
-
-      <!-- 代码理解项目 -->
       <div class="work-card work-card--no-link">
         <div class="work-header">
           <span class="work-icon">🔍</span>
@@ -121,7 +182,6 @@ const base = '/StaryFall';
         </p>
       </div>
 
-      <!-- 基础设施 -->
       <div class="work-card work-card--no-link">
         <div class="work-header">
           <span class="work-icon">☁️</span>
@@ -143,7 +203,7 @@ const base = '/StaryFall';
     </main>
 
     <footer class="footer">
-      <p>Built with Astro · Deployed on Tencent Cloud</p>
+      <p>Built with Astro · Deployed on Tencent Cloud<p>
     </footer>
   </body>
 </html>
@@ -234,10 +294,12 @@ const base = '/StaryFall';
     align-items: center;
     gap: 1rem;
     margin-bottom: 0.75rem;
+    flex-wrap: wrap;
   }
   .work-icon {
     font-size: 2rem;
     line-height: 1;
+    flex-shrink: 0;
   }
   .work-title {
     font-size: 1.2rem;
@@ -261,6 +323,23 @@ const base = '/StaryFall';
   .lang-tag.ts { background: #e6f4ff; color: #3178c6; }
   .lang-tag.rust { background: #fff3e0; color: #c17538; }
 
+  .work-stats {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .stat--time {
+    font-size: 0.8rem;
+  }
+
   .work-desc {
     color: var(--muted);
     font-size: 0.95rem;
@@ -279,6 +358,7 @@ const base = '/StaryFall';
     .hero { padding: 3rem 1.25rem 2rem; }
     .hero h1 { font-size: 2rem; }
     .work-list { padding: 1.5rem 1rem 3rem; }
-    .work-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .work-header { gap: 0.5rem; }
+    .work-stats { margin-left: 0; margin-top: 0.25rem; }
   }
 </style>
