@@ -1,4 +1,40 @@
 {
-  "lastUpdated": "",
-  "items": []
+  "lastUpdated": "2026-06-04T21:00:00+08:00",
+  "items": [
+    {
+      "title": "ChatGPT 月活用户突破 10 亿，创下历史最快纪录",
+      "summary": "据市场情报机构 Sensor Tower 数据，ChatGPT 在 2026 年 5 月达到 10 亿月活跃用户，成为史上增长最快的应用，超越谷歌地图、TikTok、Instagram 和 YouTube 等产品。",
+      "url": "https://www.reuters.com/technology/chatgpt-app-hits-1-billion-monthly-active-users-record-time-data-shows-2026-06-02/",
+      "source": "Reuters",
+      "date": "2026-06-04"
+    },
+    {
+      "title": "微软发布 Project Solara：为 AI Agent 硬件打造的全新操作系统",
+      "summary": "微软在 Build 2026 大会上发布 Project Solara，一个基于 Android 构建的专用操作系统，用于驱动 AI Agent 设备，并展示了两款概念设计——桌面终端和可穿戴徽章，支持面部识别、指纹扫描和 AI 代理一键唤醒。",
+      "url": "https://www.theverge.com/news/941830/microsoft-project-solara-os-ai-agent-gadgets",
+      "source": "The Verge",
+      "date": "2026-06-04"
+    },
+    {
+      "title": "民调显示超 70% 美国民众反对在自家附近建设 AI 数据中心",
+      "summary": "盖洛普最新调查显示，超过 70% 的美国人反对在居住地附近建设 AI 数据中心，反对程度甚至超过核电站历史峰值。50% 的反对者担忧数据中心的资源消耗（水和电力）问题。",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/930477/ai-data-centers-gallup-survey-70-percent-opposition",
+      "source": "The Verge",
+      "date": "2026-06-04"
+    },
+    {
+      "title": "SpaceX 计划投资 550 亿美元在德州建设 AI 芯片工厂 Terafab",
+      "summary": "SpaceX 拟在德克萨斯州奥斯汀建设芯片制造工厂 Terafab，初始投资至少 550 亿美元，远期总投资或达 1190 亿美元，目标是为 AI、机器人和太空计算提供算力支撑。",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/926356/spacex-terafab-plant-cost-ai-chips",
+      "source": "The Verge",
+      "date": "2026-06-04"
+    },
+    {
+      "title": "犹他州 4 万英亩超大规模 AI 数据中心项目引发环保与资源争议",
+      "summary": "Kevin O'Leary 投资的 Stratos 项目计划在犹他州建设 4 万英亩的超大规模 AI 数据中心，面积相当于曼哈顿的两倍多，预计耗电 9GW（接近全州峰值需求），引发环保组织和当地居民的强烈反对。",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/933687/utah-stratos-project-data-center-kevin-oleary",
+      "source": "The Verge",
+      "date": "2026-06-04"
+    }
+  ]
 }
