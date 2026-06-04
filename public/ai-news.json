@@ -1,39 +1,39 @@
 {
-  "lastUpdated": "2026-06-04T21:00:00+08:00",
+  "lastUpdated": "2026-06-04T22:04:00+08:00",
   "items": [
     {
-      "title": "ChatGPT 月活用户突破 10 亿，创下历史最快纪录",
-      "summary": "据市场情报机构 Sensor Tower 数据，ChatGPT 在 2026 年 5 月达到 10 亿月活跃用户，成为史上增长最快的应用，超越谷歌地图、TikTok、Instagram 和 YouTube 等产品。",
-      "url": "https://www.reuters.com/technology/chatgpt-app-hits-1-billion-monthly-active-users-record-time-data-shows-2026-06-02/",
-      "source": "Reuters",
+      "title": "Alphabet 创纪录融资 850 亿美元，全部投入 AI 基础设施建设",
+      "summary": "Google 母公司 Alphabet 完成了一笔创纪录的 850 亿美元股票融资。首轮原计划募资 400 亿美元，因超额认购最终募集 450 亿美元，巴菲特旗下的伯克希尔·哈撒韦认购了 100 亿美元。Alphabet 计划下季度再募集 400 亿美元。CEO 皮查伊表示该资金将用于 AI 多年度投资战略，公司今年资本支出预计为 1800 至 1900 亿美元，主要用于 AI 基础设施和数据中心。这笔融资规模超过了巴西石油公司 Petrobras 在 2010 年创下的 700 亿美元纪录。分析认为，Alphabet 成功融资对 Anthropic、OpenAI 等计划中的 AI 公司 IPO 是一个积极信号。",
+      "url": "https://techcrunch.com/2026/06/03/alphabets-record-breaking-85b-raise-for-googles-ai-business-is-a-helluva-good-signal/",
+      "source": "TechCrunch",
+      "date": "2026-06-03"
+    },
+    {
+      "title": "英国监管机构要求谷歌允许网站退出生成式 AI 搜索",
+      "summary": "英国竞争与市场管理局（CMA）迫使谷歌推出一项新功能，允许网站所有者在 Search Console 中选择退出生成式 AI 搜索功能（包括 AI Overviews、AI Mode 等），被 CMA 称为"全球首创"。该选项将先在部分英国网站中测试，随后在全球范围内推广。谷歌表示网站的退出决定不会影响其在传统搜索中的排名，同时将在 Search Console 中展示 AI 响应中出现的页面数据以说服网站继续参与。谷歌还须确保发布商内容在 AI 功能中得到正确的来源标注和链接。",
+      "url": "https://techcrunch.com/2026/06/03/publishers-will-be-able-to-opt-out-of-ai-search-thanks-to-new-regulation/",
+      "source": "TechCrunch",
+      "date": "2026-06-03"
+    },
+    {
+      "title": "Meta 推出商业智能体，开辟广告之外 AI 收费新业务",
+      "summary": "Meta 宣布推出 Meta 商业智能体（Meta Business Agent），可在 WhatsApp、Messenger、Instagram 等应用中运行，实现自动回复客户咨询、商品推荐和预约登记等功能。该功能将纳入 Meta One 面向商户的付费订阅套餐，大型企业采用按量计费模式。扎克伯格在伦敦发布会上表示，该服务可让中小企业比肩大型品牌，全天候提供高度定制化客服。Meta 近 98% 营收仍来自广告，此举是开辟 AI 新营收的重要尝试。此前 Meta 已在墨西哥、印度等地免费测试该服务。",
+      "url": "https://www.ithome.com/0/959/600.htm",
+      "source": "IT之家",
       "date": "2026-06-04"
     },
     {
-      "title": "微软发布 Project Solara：为 AI Agent 硬件打造的全新操作系统",
-      "summary": "微软在 Build 2026 大会上发布 Project Solara，一个基于 Android 构建的专用操作系统，用于驱动 AI Agent 设备，并展示了两款概念设计——桌面终端和可穿戴徽章，支持面部识别、指纹扫描和 AI 代理一键唤醒。",
-      "url": "https://www.theverge.com/news/941830/microsoft-project-solara-os-ai-agent-gadgets",
-      "source": "The Verge",
+      "title": "谷歌 AI Edge Gallery 登陆 Mac，16GB 内存即可运行 Gemma 4 12B 模型",
+      "summary": "谷歌推出的实验性应用 AI Edge Gallery 现已登陆 macOS，支持苹果 Mac 用户在本机离线运行 Gemma 系列 AI 模型。该应用核心优势在于完全离线运行，无需联网即可进行聊天、图像处理和语义理解。目前支持 5 款谷歌自有模型，其中最值得关注的是 Gemma 4 12B，可在 16GB 内存 Mac 上处理文本、视觉和音频，具备代码能力。同时上架的还有 Google AI Edge Eloquent，一款免费离线语音听写应用，可捕捉语音转写为文字并去除口误、润色文本，所有处理在设备端完成。",
+      "url": "https://www.ithome.com/0/959/653.htm",
+      "source": "IT之家",
       "date": "2026-06-04"
     },
     {
-      "title": "民调显示超 70% 美国民众反对在自家附近建设 AI 数据中心",
-      "summary": "盖洛普最新调查显示，超过 70% 的美国人反对在居住地附近建设 AI 数据中心，反对程度甚至超过核电站历史峰值。50% 的反对者担忧数据中心的资源消耗（水和电力）问题。",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/930477/ai-data-centers-gallup-survey-70-percent-opposition",
-      "source": "The Verge",
-      "date": "2026-06-04"
-    },
-    {
-      "title": "SpaceX 计划投资 550 亿美元在德州建设 AI 芯片工厂 Terafab",
-      "summary": "SpaceX 拟在德克萨斯州奥斯汀建设芯片制造工厂 Terafab，初始投资至少 550 亿美元，远期总投资或达 1190 亿美元，目标是为 AI、机器人和太空计算提供算力支撑。",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/926356/spacex-terafab-plant-cost-ai-chips",
-      "source": "The Verge",
-      "date": "2026-06-04"
-    },
-    {
-      "title": "犹他州 4 万英亩超大规模 AI 数据中心项目引发环保与资源争议",
-      "summary": "Kevin O'Leary 投资的 Stratos 项目计划在犹他州建设 4 万英亩的超大规模 AI 数据中心，面积相当于曼哈顿的两倍多，预计耗电 9GW（接近全州峰值需求），引发环保组织和当地居民的强烈反对。",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/933687/utah-stratos-project-data-center-kevin-oleary",
-      "source": "The Verge",
+      "title": "Ideogram 4.0 开源发布，宣称全球最强开源文生图 AI 模型",
+      "summary": "Ideogram 发布 Ideogram 4.0 开放权重文生图模型，核心规模为 9.3B 参数，采用单流扩散 Transformer（DiT）架构。该模型在 DesignArena 排名中超过 Nano Banana Pro，位列全球第 4，由人类评价生成结果质量。模型最突出的能力是文字绘制，可在图像中更准确呈现较长文本，适合海报、商品图和社媒素材制作。模型还支持使用结构化 JSON 字幕数据训练，用户可更精确地通过提示词指定版式、对象位置和文本布局。",
+      "url": "https://www.ithome.com/0/959/805.htm",
+      "source": "IT之家",
       "date": "2026-06-04"
     }
   ]
