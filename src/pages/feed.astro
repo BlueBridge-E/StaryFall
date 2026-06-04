@@ -19,13 +19,10 @@ interface NewsData {
 
 let newsData: NewsData | null = null;
 
-// 在构建时尝试读取 ai-news.json
 try {
-  // Astro SSG: 用 Vite import 读取 public 下的 JSON
   const mod = await import(`../../public/ai-news.json`) as { default: NewsData };
   newsData = mod.default;
 } catch {
-  // 文件不存在 → 显示空状态
   newsData = null;
 }
 
@@ -33,18 +30,17 @@ const items = newsData?.items ?? [];
 const lastUpdated = newsData?.lastUpdated ?? '';
 ---
 
-{/* 前端渲染 */}
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI 速递 — StaryFall</title>
-    <meta name="description" content="AI 资讯精选速递 · 每日更新" />
+    <meta name="description" content="AI 资讯精选速递 · 每周更新" />
   </head>
   <body>
     <header class="hero">
       <h1>🤖 AI 速递</h1>
-      <p class="tagline">AI 资讯精选 · 每日更新</p>
+      <p class="tagline">AI 热点资讯精选 · 每周三、周日更新</p>
       <nav class="hero-nav">
         <a href={`${base}/`}>首页</a>
         <a href={`${base}/work/`}>作品</a>
@@ -65,19 +61,32 @@ const lastUpdated = newsData?.lastUpdated ?? '';
         <div class="empty-state">
           <span class="empty-icon">📭</span>
           <p>资讯数据准备中，稍后回来查看</p>
-          <p class="empty-hint">首次部署后需运行 cron 自动生成内容</p>
         </div>
       ) : (
-        items.map((item: NewsItem) => (
-          <article class="news-card">
-            {item.url ? (
-              <a href={item.url} class="news-title" target="_blank" rel="noopener">{item.title}</a>
-            ) : (
-              <h2 class="news-title news-title--static">{item.title}</h2>
-            )}
-            {item.source && <span class="news-source">{item.source}</span>}
-            <p class="news-desc">{item.summary}</p>
-          </article>
+        items.map((item: NewsItem, i: number) => (
+          <details class="news-card" open>
+            <summary class="news-summary">
+              <h2 class="news-title">{item.title}</h2>
+              <div class="news-meta-top">
+                {item.source && <span class="news-source">{item.source}</span>}
+                {item.date && <span class="news-date">{item.date}</span>}
+                <span class="news-expand-icon">▾</span>
+              </div>
+            </summary>
+            <div class="news-body">
+              <p class="news-desc">{item.summary}</p>
+              <div class="news-footer">
+                {item.url ? (
+                  <a href={item.url} class="news-link" target="_blank" rel="noopener">
+                    阅读原文 ↗
+                  </a>
+                ) : (
+                  <span class="news-link news-link--disabled">暂无链接</span>
+                )}
+                {item.source && <span class="news-source-tag">来源：{item.source}</span>}
+              </div>
+            </div>
+          </details>
         ))
       )}
     </main>
@@ -123,23 +132,105 @@ const lastUpdated = newsData?.lastUpdated ?? '';
 
   .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
   .empty-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
-  .empty-hint { margin-top: 0.5rem; font-size: 0.85rem; }
 
+  /* 可展开卡片 */
   .news-card {
-    padding: 1.75rem; margin-bottom: 1rem; background: var(--card-bg);
-    border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    border: 1px solid transparent; position: relative;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    overflow: hidden;
   }
-  .news-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .news-card[open] { border-color: #dbeafe; }
+
+  .news-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .news-summary::-webkit-details-marker { display: none; }
+  .news-summary:hover { background: #f8fafc; }
+
+  .news-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .news-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
   .news-source {
-    display: inline-block; margin-left: 0.5rem; padding: 0.1em 0.55em;
-    border-radius: 4px; font-size: 0.75rem; background: #f0f4ff; color: #4a6cc1;
-    vertical-align: middle;
+    padding: 0.15em 0.6em;
+    border-radius: 4px;
+    background: #f0f4ff;
+    color: #4a6cc1;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
   }
-  .news-title { font-size: 1.15rem; font-weight: 700; color: var(--text); text-decoration: none; }
-  a.news-title:hover { color: var(--accent); }
-  .news-title--static { cursor: default; }
-  .news-desc { margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+  .news-date { white-space: nowrap; }
+  .news-expand-icon {
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+  }
+  .news-card[open] .news-expand-icon { transform: rotate(180deg); }
+
+  /* 展开内容 */
+  .news-body {
+    padding: 0 1.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+  .news-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .news-footer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .news-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35em 0.85em;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .news-link:hover { background: #1d4ed8; }
+  .news-link--disabled {
+    background: #e5e7eb;
+    color: var(--muted);
+    cursor: default;
+  }
+  .news-source-tag {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
 
   .footer { text-align: center; padding: 2rem; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--border); }
 
@@ -147,5 +238,7 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     .hero { padding: 3rem 1.25rem 2rem; }
     .hero h1 { font-size: 2rem; }
     .feed-list { padding: 1.5rem 1rem 3rem; }
+    .news-summary { padding: 1.25rem; flex-direction: column; }
+    .news-meta-top { align-self: flex-start; }
   }
 </style>
