@@ -1,0 +1,151 @@
+---
+// src/pages/feed.astro — AI 新闻速递
+// 数据文件: public/ai-news.json（由 cron 定时更新）
+
+const base = '/StaryFall';
+
+interface NewsItem {
+  title: string;
+  summary: string;
+  url?: string;
+  source?: string;
+  date?: string;
+}
+
+interface NewsData {
+  lastUpdated?: string;
+  items: NewsItem[];
+}
+
+let newsData: NewsData | null = null;
+
+// 在构建时尝试读取 ai-news.json
+try {
+  // Astro SSG: 用 Vite import 读取 public 下的 JSON
+  const mod = await import(`../../public/ai-news.json`) as { default: NewsData };
+  newsData = mod.default;
+} catch {
+  // 文件不存在 → 显示空状态
+  newsData = null;
+}
+
+const items = newsData?.items ?? [];
+const lastUpdated = newsData?.lastUpdated ?? '';
+---
+
+{/* 前端渲染 */}
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 速递 — StaryFall</title>
+    <meta name="description" content="AI 资讯精选速递 · 每日更新" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>🤖 AI 速递</h1>
+      <p class="tagline">AI 资讯精选 · 每日更新</p>
+      <nav class="hero-nav">
+        <a href={`${base}/`}>首页</a>
+        <a href={`${base}/work/`}>作品</a>
+        <a href={`${base}/tags/`}>标签</a>
+      </nav>
+    </header>
+
+    <main class="feed-list">
+      {lastUpdated && (
+        <p class="feed-meta">
+          最近更新：<time>{new Date(lastUpdated).toLocaleString('zh-CN', {
+            month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+          })}</time>
+        </p>
+      )}
+
+      {items.length === 0 ? (
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <p>资讯数据准备中，稍后回来查看</p>
+          <p class="empty-hint">首次部署后需运行 cron 自动生成内容</p>
+        </div>
+      ) : (
+        items.map((item: NewsItem) => (
+          <article class="news-card">
+            {item.url ? (
+              <a href={item.url} class="news-title" target="_blank" rel="noopener">{item.title}</a>
+            ) : (
+              <h2 class="news-title news-title--static">{item.title}</h2>
+            )}
+            {item.source && <span class="news-source">{item.source}</span>}
+            <p class="news-desc">{item.summary}</p>
+          </article>
+        ))
+      )}
+    </main>
+
+    <footer class="footer">
+      <p>自动采集 · AI 辅助整理 · Astro 构建</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :root {
+    --accent: #2563eb;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #fafafa;
+    --card-bg: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .tagline { margin-top: 0.5rem; color: var(--muted); font-size: 1.1rem; }
+  .hero-nav { margin-top: 1.25rem; display: flex; gap: 1.5rem; justify-content: center; }
+  .hero-nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
+  .hero-nav a:hover { color: var(--accent); }
+
+  .feed-list { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .feed-meta { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+  .empty-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  .empty-hint { margin-top: 0.5rem; font-size: 0.85rem; }
+
+  .news-card {
+    padding: 1.75rem; margin-bottom: 1rem; background: var(--card-bg);
+    border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid transparent; position: relative;
+  }
+  .news-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .news-source {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1em 0.55em;
+    border-radius: 4px; font-size: 0.75rem; background: #f0f4ff; color: #4a6cc1;
+    vertical-align: middle;
+  }
+  .news-title { font-size: 1.15rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  a.news-title:hover { color: var(--accent); }
+  .news-title--static { cursor: default; }
+  .news-desc { margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+  .footer { text-align: center; padding: 2rem; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+  @media (max-width: 480px) {
+    .hero { padding: 3rem 1.25rem 2rem; }
+    .hero h1 { font-size: 2rem; }
+    .feed-list { padding: 1.5rem 1rem 3rem; }
+  }
+</style>
