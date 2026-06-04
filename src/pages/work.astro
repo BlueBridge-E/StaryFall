@@ -1,0 +1,284 @@
+---
+// src/pages/work.astro — 作品集页面
+import { getCollection } from 'astro:content';
+
+const base = '/StaryFall';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>作品 — StaryFall</title>
+    <meta name="description" content="AI 工具与工程化项目作品集" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>作品</h1>
+      <p class="tagline">Build AI-powered tools.</p>
+      <nav class="hero-nav">
+        <a href={`${base}/`}>首页</a>
+        <a href={`${base}/tags/`}>标签</a>
+        <a href="https://github.com/BlueBridge-E">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="work-list">
+      <!-- lighthouse-mcp -->
+      <a href="https://github.com/BlueBridge-E/lighthouse-mcp" class="work-card" target="_blank" rel="noopener">
+        <div class="work-header">
+          <span class="work-icon">🦞</span>
+          <div>
+            <h2 class="work-title">lighthouse-mcp</h2>
+            <p class="work-tags">
+              <span class="lang-tag ts">TypeScript</span>
+              <span class="lang-tag">MCP</span>
+              <span class="lang-tag">腾讯云</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          MCP Server for Tencent Cloud Lighthouse — 让 AI Agent 通过自然语言管理轻量服务器。
+          封装 9 个管理工具（实例/监控/防火墙/快照/远程命令），支持 Claude Code / OpenClaw / Cursor 等 MCP 客户端。
+        </p>
+      </a>
+
+      <!-- OpenClaw Agent 工作流系统 -->
+      <div class="work-card work-card--no-link">
+        <div class="work-header">
+          <span class="work-icon">🤖</span>
+          <div>
+            <h2 class="work-title">OpenClaw Agent 工作流系统</h2>
+            <p class="work-tags">
+              <span class="lang-tag">Agent</span>
+              <span class="lang-tag">Cron</span>
+              <span class="lang-tag">多通道</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          自建 AI 资讯采集与深度解读管线。多源信息聚合 → LLM 加工 → QQ/微信双通道分发。
+          每日 12:00 自动推送 InfoQ 精选 + AI 新闻速递，全年稳定运行。
+          支持 cron 任务调度、IMA 知识空间归档、故障自愈机制。
+        </p>
+      </div>
+
+      <!-- StaryFall -->
+      <a href={`${base}/`} class="work-card">
+        <div class="work-header">
+          <span class="work-icon">🌠</span>
+          <div>
+            <h2 class="work-title">StaryFall</h2>
+            <p class="work-tags">
+              <span class="lang-tag">Astro</span>
+              <span class="lang-tag">Starlight</span>
+              <span class="lang-tag">GitHub Actions</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          个人技术博客，基于 Astro + Starlight 构建，GitHub Actions 自动部署至腾讯云 Nginx。
+          涵盖前端开发、AI 编码工具、协议分析等深度技术文章，支持标签分类与 SEO。
+        </p>
+      </a>
+
+      <!-- CyberCoin -->
+      <a href="https://github.com/BlueBridge-E/cyber-coin" class="work-card" target="_blank" rel="noopener">
+        <div class="work-header">
+          <span class="work-icon">💎</span>
+          <div>
+            <h2 class="work-title">CyberCoin</h2>
+            <p class="work-tags">
+              <span class="lang-tag rust">Rust</span>
+              <span class="lang-tag ts">TypeScript</span>
+              <span class="lang-tag">Tauri v2</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          基于 Tauri v2 + Rust 的跨平台桌面应用。实践前端与系统级语言的混合架构，
+          探索本地化桌面工具的开发、打包与自动更新全链路。
+        </p>
+      </a>
+
+      <!-- 代码理解项目 -->
+      <div class="work-card work-card--no-link">
+        <div class="work-header">
+          <span class="work-icon">🔍</span>
+          <div>
+            <h2 class="work-title">CodeGraph — 本地代码知识图谱</h2>
+            <p class="work-tags">
+              <span class="lang-tag">SQLite FTS5</span>
+              <span class="lang-tag">tree-sitter</span>
+              <span class="lang-tag">MCP</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          基于 SQLite FTS5 全文索引 + tree-sitter WASM 沙盒的本地代码语义检索引擎。
+          通过 MCP 协议对接 AI Coding Agent，降低 Agent 代码理解的 token 消耗。
+        </p>
+      </div>
+
+      <!-- 基础设施 -->
+      <div class="work-card work-card--no-link">
+        <div class="work-header">
+          <span class="work-icon">☁️</span>
+          <div>
+            <h2 class="work-title">自建 AI 基础设施</h2>
+            <p class="work-tags">
+              <span class="lang-tag">OpenClaw</span>
+              <span class="lang-tag">Nginx</span>
+              <span class="lang-tag">Lighthouse</span>
+            </p>
+          </div>
+        </div>
+        <p class="work-desc">
+          腾讯云上海 Lighthouse 服务器上的完整 AI Agent 基础设施。
+          含 OpenClaw 多通道通信网关、Nginx 反代、MCP Server 托管、cron 调度系统。
+          全年 24x7 稳定运行。
+        </p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Built with Astro · Deployed on Tencent Cloud</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :root {
+    --accent: #2563eb;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #fafafa;
+    --card-bg: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .hero-nav {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .hero-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  .hero-nav a:hover { color: var(--accent); }
+
+  .work-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .work-card {
+    display: block;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    background: var(--card-bg);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    border: 1px solid transparent;
+  }
+  a.work-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .work-card--no-link {
+    cursor: default;
+  }
+  .work-card--no-link:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transform: none;
+    border-color: transparent;
+  }
+
+  .work-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .work-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+  .work-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .work-tags {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+    flex-wrap: wrap;
+  }
+  .lang-tag {
+    display: inline-block;
+    padding: 0.15em 0.65em;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: #f0f4ff;
+    color: #4a6cc1;
+  }
+  .lang-tag.ts { background: #e6f4ff; color: #3178c6; }
+  .lang-tag.rust { background: #fff3e0; color: #c17538; }
+
+  .work-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 3rem 1.25rem 2rem; }
+    .hero h1 { font-size: 2rem; }
+    .work-list { padding: 1.5rem 1rem 3rem; }
+    .work-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  }
+</style>
