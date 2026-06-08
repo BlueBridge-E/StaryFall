@@ -8,6 +8,7 @@ const GITHUB_REPOS = [
   'BlueBridge-E/lighthouse-mcp',
   'BlueBridge-E/cyber-coin',
   'BlueBridge-E/StaryFall',
+  'BlueBridge-E/cn30days-skill',
 ];
 
 // 项目元数据（描述、标签、icon 等）手写，其他字段自动从 GitHub API 拉取
@@ -37,6 +38,15 @@ const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: 
       { label: 'Astro' },
       { label: 'Starlight' },
       { label: 'GitHub Actions' },
+    ],
+  },
+  'cn30days-skill': {
+    icon: '🇨🇳',
+    desc: '中国互联网全网热搜聚合引擎 — OpenClaw AI Agent Skill。微博热搜、百度趋势、B站热门、GitHub 精选、权威媒体 RSS 五源并发采集，跨平台热度归一化排序，AI 自动合成叙事化深度报告。零 API key 即用，受 last30days-skill 启发。',
+    tags: [
+      { label: 'Python' },
+      { label: 'Agent Skill' },
+      { label: '多源聚合' },
     ],
   },
 };
