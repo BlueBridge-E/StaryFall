@@ -40,7 +40,8 @@ const trades = docs
         <p class="empty">暂无交易记录。</p>
       ) : (
         trades.map((t) => {
-          const slug = t.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
+          // keep posts/ prefix: t.id = 'posts/trade/2026-06-09' → 'posts/trade/2026-06-09'
+          const slug = t.id.replace(/\.(md|mdx)$/, '');
           const tags = (t.data.tags ?? []) as string[];
           return (
             <a href={`${base}/${slug}/`} class="trade-card">
