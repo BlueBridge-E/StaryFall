@@ -24,6 +24,8 @@ Astro + Starlight static blog deployed to GitHub Pages (`base: '/StaryFall'`). D
 | `/posts/*` | `src/content/docs/posts/*.md` | Starlight-rendered article pages with right ToC |
 | `/tags/` | `src/pages/tags/index.astro` | Tag index page |
 | `/tags/[tag]/` | `src/pages/tags/[tag].astro` | Dynamic tag pages, auto-generated from content |
+| `/trade/` | `src/pages/trade/index.astro` | Custom trade log list page (standalone, not wrapped in Starlight). Card-style links to `/posts/trade/*/` |
+| `/posts/trade/*` | `src/content/docs/posts/trade/*.md` | Starlight-rendered daily trade log entries |
 
 **Key files:**
 
@@ -43,6 +45,27 @@ Astro + Starlight static blog deployed to GitHub Pages (`base: '/StaryFall'`). D
 ## CI/CD
 
 Push to `main` → `.github/workflows/deploy.yml`: Node 24 → `npm install` → `npm run build` → deploy `./dist` to GitHub Pages.
+
+## Trade Log (交易日志)
+
+**数据源**：每天 cron 运行时，将交易记录写出为 `src/content/docs/posts/trade/YYYY-MM-DD.md`，然后 push 到 GitHub。
+
+**Frontmatter 约定**：
+```yaml
+---
+title: 第N日 — 操作摘要
+description: 一句话概括当日操作和涨跌
+date: YYYY-MM-DD
+tags: [trade, 标的代码, 操作类型]
+---
+```
+tags 示例：`trade`（固定）、`nvda`、`aapl`、`dip-buy`、`stop-loss`、`take-profit`、`new-position`、`no-action`。
+
+**列表页**：`src/pages/trade/index.astro` 从 docs collection 过滤 `posts/trade/` 路径的文章，按日期倒序显示卡片。
+
+**详情页**：文章系统自动渲染，路径 `/posts/trade/YYYY-MM-DD/`，Starlight 主题带右侧 ToC。
+
+**导航入口**：首页和 `/trade/` 页面的导航栏互相链接。
 
 ## Content conventions
 

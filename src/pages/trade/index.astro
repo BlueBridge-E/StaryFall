@@ -1,10 +1,13 @@
 ---
+// src/pages/trade/index.astro — 交易日志列表页
+// 数据源：src/content/docs/posts/trade/*.md（由 cron 每日追加）
+
 import { getCollection } from 'astro:content';
 
 const base = '/StaryFall';
 const docs = await getCollection('docs');
-const posts = docs
-  .filter((d) => d.id.startsWith('posts/'))
+const trades = docs
+  .filter((d) => d.id.startsWith('posts/trade/'))
   .sort((a, b) => {
     const da = a.data.date?.getTime() ?? 0;
     const db = b.data.date?.getTime() ?? 0;
@@ -17,53 +20,52 @@ const posts = docs
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>StaryFall — 学习与构建的技术博客</title>
-    <meta name="description" content="一个关于前端开发、编程语言和工具链的技术博客。" />
+    <title>交易日志 — StaryFall</title>
+    <meta name="description" content="MrLobster-1 AI 自动化交易代理的每日操作记录" />
   </head>
   <body>
     <header class="hero">
-      <h1>StaryFall</h1>
-      <p class="tagline">学习与构建的技术博客</p>
+      <h1>交易日志</h1>
+      <p class="tagline">MrLobster-1 全自动交易代理 · 止损 -3% · 止盈 +5% · 跌深 -2% 补仓</p>
       <nav class="hero-nav">
+        <a href={`${base}/`}>首页</a>
         <a href={`${base}/tags/`}>标签</a>
-        <a href={`${base}/trade/`}>交易日志</a>
         <a href={`${base}/work/`}>作品</a>
         <a href={`${base}/feed/`}>AI 速递</a>
-        <a href="https://github.com/BlueBridge-E">GitHub</a>
       </nav>
     </header>
 
-    <main class="post-list">
-      {posts.map((post) => {
-        const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
-        const tags = (post.data.tags ?? []) as string[];
-        return (
-          <article class="post-card">
-            <a href={`${base}/posts/${slug}/`} class="post-title">
-              {post.data.title}
-            </a>
-            <p class="post-desc">{post.data.description}</p>
-            <div class="post-meta">
-              {post.data.date && (
-                <time datetime={post.data.date.toISOString()}>
-                  {post.data.date.toLocaleDateString('zh-CN')}
-                </time>
-              )}
-              {tags.length > 0 && (
-                <span class="post-tags">
-                  {tags.map((tag) => (
-                    <a href={`${base}/tags/${tag}/`} class="tag">#{tag}</a>
-                  ))}
+    <main class="trade-list">
+      {trades.length === 0 ? (
+        <p class="empty">暂无交易记录。</p>
+      ) : (
+        trades.map((t) => {
+          const slug = t.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
+          const tags = (t.data.tags ?? []) as string[];
+          return (
+            <a href={`${base}/${slug}/`} class="trade-card">
+              <div class="trade-card-header">
+                <span class="trade-date">
+                  {t.data.date?.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
                 </span>
-              )}
-            </div>
-          </article>
-        );
-      })}
+                {tags.length > 0 && (
+                  <span class="trade-tags">
+                    {tags.map((tag) => (
+                      <span class="tag">#{tag}</span>
+                    ))}
+                  </span>
+                )}
+              </div>
+              <h2 class="trade-title">{t.data.title}</h2>
+              <p class="trade-desc">{t.data.description}</p>
+            </a>
+          );
+        })
+      )}
     </main>
 
     <footer class="footer">
-      <p>Built with Astro + Starlight</p>
+      <p>Powered by AI-Trader · Built with Astro</p>
     </footer>
   </body>
 </html>
@@ -101,7 +103,7 @@ const posts = docs
   .tagline {
     margin-top: 0.5rem;
     color: var(--muted);
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
   .hero-nav {
     margin-top: 1.25rem;
@@ -117,64 +119,80 @@ const posts = docs
   }
   .hero-nav a:hover { color: var(--accent); }
 
-  .post-list {
+  .trade-list {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
   }
-  .post-card {
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 3rem 0;
+  }
+
+  .trade-card {
+    display: block;
     padding: 1.5rem;
     margin-bottom: 1rem;
     background: var(--card-bg);
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    color: inherit;
     transition: box-shadow 0.2s, transform 0.2s;
   }
-  .post-card:hover {
+  .trade-card:hover {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
   }
-  .post-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .post-title:hover { color: var(--accent); }
-  .post-desc {
-    margin-top: 0.35rem;
-    color: var(--muted);
-    font-size: 0.95rem;
-    line-height: 1.65;
-  }
-  .post-meta {
-    margin-top: 0.6rem;
+
+  .trade-card-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .trade-date {
     font-size: 0.85rem;
     color: var(--muted);
   }
-  .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .tag {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: 0.82rem;
+  .trade-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
   }
-  .tag:hover { text-decoration: underline; }
+  .tag {
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .trade-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .trade-card:hover .trade-title { color: var(--accent); }
+
+  .trade-desc {
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
 
   .footer {
     text-align: center;
     padding: 2rem;
     font-size: 0.85rem;
     color: var(--muted);
+    border-top: 1px solid var(--border);
   }
 
   @media (max-width: 480px) {
     .hero { padding: 3rem 1.25rem 2rem; }
     .hero h1 { font-size: 2rem; }
-    .post-list { padding: 1.5rem 1rem 3rem; }
-    .post-meta { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    .trade-list { padding: 1.5rem 1rem 3rem; }
   }
 </style>
