@@ -91,9 +91,50 @@ const lastUpdated = newsData?.lastUpdated ?? '';
       )}
     </main>
 
+    <nav class="pagination" id="feedPagination">
+      <button class="page-btn" id="feedPrevPage">← 上一页</button>
+      <span class="page-info" id="feedPageInfo"></span>
+      <button class="page-btn" id="feedNextPage">下一页 →</button>
+    </nav>
+
     <footer class="footer">
       <p>自动采集 · AI 辅助整理 · Astro 构建</p>
     </footer>
+
+    <script>
+      (function() {
+        var PAGE_SIZE = 10;
+        var cards = document.querySelectorAll('.news-card');
+        var total = cards.length;
+        var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        var current = 1;
+
+        var prevBtn = document.getElementById('feedPrevPage');
+        var nextBtn = document.getElementById('feedNextPage');
+        var infoEl = document.getElementById('feedPageInfo');
+
+        function showPage(n) {
+          current = n;
+          var start = (current - 1) * PAGE_SIZE;
+          var end = Math.min(start + PAGE_SIZE, total);
+          for (var i = 0; i < total; i++) {
+            cards[i].style.display = (i >= start && i < end) ? 'block' : 'none';
+          }
+          prevBtn.disabled = (current === 1);
+          nextBtn.disabled = (current === totalPages);
+          infoEl.textContent = current + ' / ' + totalPages;
+        }
+
+        prevBtn.onclick = function() {
+          if (current > 1) showPage(current - 1);
+        };
+        nextBtn.onclick = function() {
+          if (current < totalPages) showPage(current + 1);
+        };
+
+        showPage(1);
+      })();
+    </script>
   </body>
 </html>
 
@@ -240,5 +281,42 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     .feed-list { padding: 1.5rem 1rem 3rem; }
     .news-summary { padding: 1.25rem; flex-direction: column; }
     .news-meta-top { align-self: flex-start; }
+    .pagination { flex-wrap: wrap; }
+  }
+
+  /* 分页 */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5em 1.2em;
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .page-btn:hover {
+    background: #eff6ff;
+    border-color: var(--accent);
+  }
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .page-info {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 500;
   }
 </style>
