@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 const base = '/StaryFall';
 const docs = await getCollection('docs');
 const posts = docs
-  .filter((d) => d.id.startsWith('posts/'))
+  .filter((d) => d.id.startsWith('posts/') && !d.id.startsWith('posts/trade/'))
   .sort((a, b) => {
     const da = a.data.date?.getTime() ?? 0;
     const db = b.data.date?.getTime() ?? 0;
