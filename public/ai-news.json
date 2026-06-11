@@ -2,18 +2,32 @@
   "lastUpdated": "2026-06-10T11:47:11+08:00",
   "items": [
     {
-      "title": "Alphabet 创纪录融资 850 亿美元，全部投入 AI 基础设施建设",
-      "summary": "Google 母公司 Alphabet 完成了一笔创纪录的 850 亿美元股票融资。首轮原计划募资 400 亿美元，因超额认购最终募集 450 亿美元，巴菲特旗下的伯克希尔·哈撒韦认购了 100 亿美元。Alphabet 计划下季度再募集 400 亿美元。CEO 皮查伊表示该资金将用于 AI 多年度投资战略，公司今年资本支出预计为 1800 至 1900 亿美元，主要用于 AI 基础设施和数据中心。这笔融资规模超过了巴西石油公司 Petrobras 在 2010 年创下的 700 亿美元纪录。分析认为，Alphabet 成功融资对 Anthropic、OpenAI 等计划中的 AI 公司 IPO 是一个积极信号。",
-      "url": "https://techcrunch.com/2026/06/03/alphabets-record-breaking-85b-raise-for-googles-ai-business-is-a-helluva-good-signal/",
+      "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
+      "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
+      "url": "https://techcrunch.com/2026/06/08/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
       "source": "TechCrunch",
-      "date": "2026-06-03"
+      "date": "2026-06-08"
     },
     {
-      "title": "英国监管机构要求谷歌允许网站退出生成式 AI 搜索",
-      "summary": "英国竞争与市场管理局（CMA）迫使谷歌推出一项新功能，允许网站所有者在 Search Console 中选择退出生成式 AI 搜索功能（包括 AI Overviews、AI Mode 等），被 CMA 称为「全球首创」。该选项将先在部分英国网站中测试，随后在全球范围内推广。谷歌表示网站的退出决定不会影响其在传统搜索中的排名，同时将在 Search Console 中展示 AI 响应中出现的页面数据以说服网站继续参与。谷歌还须确保发布商内容在 AI 功能中得到正确的来源标注和链接。",
-      "url": "https://techcrunch.com/2026/06/03/publishers-will-be-able-to-opt-out-of-ai-search-thanks-to-new-regulation/",
-      "source": "TechCrunch",
-      "date": "2026-06-03"
+      "title": "Anthropic 呼吁全球放缓 AI 发展，警告自我改进型 AI 系统存在社会风险",
+      "summary": "Anthropic 联合创始人 Jack Clark 公开呼吁全球顶尖 AI 实验室考虑减缓 AI 系统发展速度，警告随着模型能力快速增强，AI 可能实现无需人类干预的自我改进，从而带来重大社会风险。Anthropic 指出 AI 独立完成任务的能力每四个月翻一番，预计到 2027 年可管理目前需要数周完成的任务。该公司同时呼吁建立国际可验证的暂停机制。Anthropic 近期完成 650 亿美元融资，声称 ARR 达 140 亿美元。",
+      "url": "https://fortune.com/2026/06/05/anthropic-self-improving-ai-systems-societal-risks/",
+      "source": "Fortune",
+      "date": "2026-06-05"
+    },
+    {
+      "title": "美国特朗普政府拟入股 OpenAI、Anthropic 等五大 AI 巨头，推动国有化方案",
+      "summary": "据 NOTUS 报道，美国高级官员已与 OpenAI、Anthropic、谷歌、微软、Meta 等头部 AI 公司进行初步接触，讨论联邦政府获取部分股份的可能性。该方案由 OpenAI 的 CEO Sam Altman 最早于 2025 年初提出，近期重新推进。政府参考持有英特尔 10% 股权的模式，意图打造国家与资本双重控制体系，让 AI 创造的经济收益更广泛惠及公众。分析认为这将是人类历史上首次主要新产业在完全成熟前即启动全民股权分配机制。",
+      "url": "https://www.yuntoutiao.com/yuntoutiao/414.html",
+      "source": "云头条",
+      "date": "2026-06-05"
+    },
+    {
+      "title": "Anthropic 发布递归自我改进重磅报告: 警告 AI 两年内或脱离人类控制",
+      "summary": "Anthropic 发布《当 AI 构建自身》报告，发出行业最高级别安全警示。报告称截至 2026 年 5 月，Claude 代码库 80% 由 AI 自主编写，工程师人均产能暴涨 8 倍；递归自我改进或在 2028 年底前发生，概率高达 60%。报告直言 AI 已具备自我迭代和自我优化能力，若不提前设置安全刹车，两年内或出现脱离人类控制的超级智能，呼吁全球建立统一安全监管机制。同步消息显示 Anthropic 已完成 650 亿美元 H 轮融资，估值 9650 亿美元，预计 2026 年 10 月正式上市。",
+      "url": "https://fortune.com/2026/06/05/anthropic-self-improving-ai-systems-societal-risks/",
+      "source": "Fortune",
+      "date": "2026-06-05"
     },
     {
       "title": "Meta 推出商业智能体，开辟广告之外 AI 收费新业务",
@@ -37,18 +51,25 @@
       "date": "2026-06-04"
     },
     {
-      "title": "MiniMax 发布 M3 开源模型，计划回归 A 股上市",
-      "summary": "MiniMax 发布新一代开源模型 MiniMax M3，首次在单一模型中融合代码、Agent 与长上下文三大前沿能力，SWE-Bench Pro 达 59.0%，支持 100 万 token 稀疏注意力。同时据彭博报道，MiniMax 已启动国内上市准备工作。该公司此前 1 月在港交所上市，股价较发行价上涨近 5 倍。MiniMax 声称全球企业用户数半年增长 5 倍，ARR 在过去两个月翻倍。但其 Hailuo 视频 AI 系统遭迪士尼等三家好莱坞公司提起版权诉讼，未能驳回。",
-      "url": "https://www.asiatechreview.com/p/minimax-reports-big-growth-as-it",
-      "source": "Asia Tech Review",
-      "date": "2026-06-01"
+      "title": "谷歌云自动系统误停 Railway 生产账号，致全平台八小时中断",
+      "summary": "谷歌云平台的自动化系统在 5 月 19 日误暂停了 Railway 的生产账号，触发持续八小时的全平台级故障。期间 Railway 的仪表盘、API、所有部署及全部数据库对其 300 万用户完全不可用。该事件凸显云平台自动化安全策略对下游 SaaS 服务的冲击风险。",
+      "url": "https://www.infoq.cn/article/H66fR5iUG8AF88FFDSlJ",
+      "source": "InfoQ",
+      "date": "2026-06-04"
     },
     {
-      "title": "Anthropic 呼吁全球放缓 AI 发展，警告自我改进型 AI 系统存在社会风险",
-      "summary": "Anthropic 联合创始人 Jack Clark 公开呼吁全球顶尖 AI 实验室考虑减缓 AI 系统发展速度，警告随着模型能力快速增强，AI 可能实现无需人类干预的自我改进，从而带来重大社会风险。Anthropic 指出 AI 独立完成任务的能力每四个月翻一番，预计到 2027 年可管理目前需要数周完成的任务。该公司同时呼吁建立国际可验证的暂停机制。Anthropic 近期完成 650 亿美元融资，声称 ARR 达 140 亿美元。",
-      "url": "https://fortune.com/2026/06/05/anthropic-self-improving-ai-systems-societal-risks/",
-      "source": "Fortune",
-      "date": "2026-06-05"
+      "title": "Alphabet 创纪录融资 850 亿美元，全部投入 AI 基础设施建设",
+      "summary": "Google 母公司 Alphabet 完成了一笔创纪录的 850 亿美元股票融资。首轮原计划募资 400 亿美元，因超额认购最终募集 450 亿美元，巴菲特旗下的伯克希尔·哈撒韦认购了 100 亿美元。Alphabet 计划下季度再募集 400 亿美元。CEO 皮查伊表示该资金将用于 AI 多年度投资战略，公司今年资本支出预计为 1800 至 1900 亿美元，主要用于 AI 基础设施和数据中心。这笔融资规模超过了巴西石油公司 Petrobras 在 2010 年创下的 700 亿美元纪录。分析认为，Alphabet 成功融资对 Anthropic、OpenAI 等计划中的 AI 公司 IPO 是一个积极信号。",
+      "url": "https://techcrunch.com/2026/06/03/alphabets-record-breaking-85b-raise-for-googles-ai-business-is-a-helluva-good-signal/",
+      "source": "TechCrunch",
+      "date": "2026-06-03"
+    },
+    {
+      "title": "英国监管机构要求谷歌允许网站退出生成式 AI 搜索",
+      "summary": "英国竞争与市场管理局（CMA）迫使谷歌推出一项新功能，允许网站所有者在 Search Console 中选择退出生成式 AI 搜索功能（包括 AI Overviews、AI Mode 等），被 CMA 称为「全球首创」。该选项将先在部分英国网站中测试，随后在全球范围内推广。谷歌表示网站的退出决定不会影响其在传统搜索中的排名，同时将在 Search Console 中展示 AI 响应中出现的页面数据以说服网站继续参与。谷歌还须确保发布商内容在 AI 功能中得到正确的来源标注和链接。",
+      "url": "https://techcrunch.com/2026/06/03/publishers-will-be-able-to-opt-out-of-ai-search-thanks-to-new-regulation/",
+      "source": "TechCrunch",
+      "date": "2026-06-03"
     },
     {
       "title": "Intel Computex 2026 发布全线 AI 芯片，剑指英伟达",
@@ -65,20 +86,6 @@
       "date": "2026-06-03"
     },
     {
-      "title": "谷歌云自动系统误停 Railway 生产账号，致全平台八小时中断",
-      "summary": "谷歌云平台的自动化系统在 5 月 19 日误暂停了 Railway 的生产账号，触发持续八小时的全平台级故障。期间 Railway 的仪表盘、API、所有部署及全部数据库对其 300 万用户完全不可用。该事件凸显云平台自动化安全策略对下游 SaaS 服务的冲击风险。",
-      "url": "https://www.infoq.cn/article/H66fR5iUG8AF88FFDSlJ",
-      "source": "InfoQ",
-      "date": "2026-06-04"
-    },
-    {
-      "title": "英伟达开源 Cosmos 3: 全球首个物理 AI 全模态模型开放权重发布",
-      "summary": "英伟达在 Computex 2026/GTC Taipei 上正式开源 Cosmos 3，号称全球首个面向物理世界的全模态开放基础模型。该模型采用混合 Transformer 架构，单模型原生支持文本、图像、视频、环境声音理解与生成，并可输出机器人关节角度等动作信号，实现推理生成行动一体化。英伟达同步成立 Cosmos Coalition 联盟，联合 Agile Robots、Black Forest Labs、Runway 等推进世界模型发展。开发者无需 GPU 即可在 build.nvidia.com 直接体验。",
-      "url": "https://www.hpcwire.com/aiwire/2026/06/01/nvidia-launches-cosmos-3-the-open-frontier-foundation-model-for-physical-ai",
-      "source": "HPCwire",
-      "date": "2026-06-01"
-    },
-    {
       "title": "微软 Build 2026 发布 7 款自研 MAI 模型群，终结 OpenAI 独家合作时代",
       "summary": "微软在 Build 2026 大会上一口气发布 7 款自研 MAI 模型，覆盖推理、编程、图像生成、语音识别等全场景。旗舰 MAI-Thinking-1 是微软首个推理模型，对标 Claude Sonnet 4.6；MAI-Code-1-Flash 即日起在 GitHub Copilot 中默认启用。微软表示 MAI 调优模型在基准测试上可比肩 GPT-5.4，同时效率提高 10 倍。此举正式结束微软自 2021 年以来与 OpenAI 的独家合作关系，MAI 模型还将通过 Open Router、Fireworks 等第三方平台分发，标志着微软从转售方转型为自研 AI 平台提供商。",
       "url": "https://www.theverge.com/tech/941664/microsoft-ai-model-reasoning-mai-thinking-1-build-2026",
@@ -86,25 +93,18 @@
       "date": "2026-06-02"
     },
     {
-      "title": "美国特朗普政府拟入股 OpenAI、Anthropic 等五大 AI 巨头，推动国有化方案",
-      "summary": "据 NOTUS 报道，美国高级官员已与 OpenAI、Anthropic、谷歌、微软、Meta 等头部 AI 公司进行初步接触，讨论联邦政府获取部分股份的可能性。该方案由 OpenAI 的 CEO Sam Altman 最早于 2025 年初提出，近期重新推进。政府参考持有英特尔 10% 股权的模式，意图打造国家与资本双重控制体系，让 AI 创造的经济收益更广泛惠及公众。分析认为这将是人类历史上首次主要新产业在完全成熟前即启动全民股权分配机制。",
-      "url": "https://www.yuntoutiao.com/yuntoutiao/414.html",
-      "source": "云头条",
-      "date": "2026-06-05"
+      "title": "MiniMax 发布 M3 开源模型，计划回归 A 股上市",
+      "summary": "MiniMax 发布新一代开源模型 MiniMax M3，首次在单一模型中融合代码、Agent 与长上下文三大前沿能力，SWE-Bench Pro 达 59.0%，支持 100 万 token 稀疏注意力。同时据彭博报道，MiniMax 已启动国内上市准备工作。该公司此前 1 月在港交所上市，股价较发行价上涨近 5 倍。MiniMax 声称全球企业用户数半年增长 5 倍，ARR 在过去两个月翻倍。但其 Hailuo 视频 AI 系统遭迪士尼等三家好莱坞公司提起版权诉讼，未能驳回。",
+      "url": "https://www.asiatechreview.com/p/minimax-reports-big-growth-as-it",
+      "source": "Asia Tech Review",
+      "date": "2026-06-01"
     },
     {
-      "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
-      "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
-      "url": "https://techcrunch.com/2026/06/08/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
-      "source": "TechCrunch",
-      "date": "2026-06-08"
-    },
-    {
-      "title": "Anthropic 发布递归自我改进重磅报告: 警告 AI 两年内或脱离人类控制",
-      "summary": "Anthropic 发布《当 AI 构建自身》报告，发出行业最高级别安全警示。报告称截至 2026 年 5 月，Claude 代码库 80% 由 AI 自主编写，工程师人均产能暴涨 8 倍；递归自我改进或在 2028 年底前发生，概率高达 60%。报告直言 AI 已具备自我迭代和自我优化能力，若不提前设置安全刹车，两年内或出现脱离人类控制的超级智能，呼吁全球建立统一安全监管机制。同步消息显示 Anthropic 已完成 650 亿美元 H 轮融资，估值 9650 亿美元，预计 2026 年 10 月正式上市。",
-      "url": "https://fortune.com/2026/06/05/anthropic-self-improving-ai-systems-societal-risks/",
-      "source": "Fortune",
-      "date": "2026-06-05"
+      "title": "英伟达开源 Cosmos 3: 全球首个物理 AI 全模态模型开放权重发布",
+      "summary": "英伟达在 Computex 2026/GTC Taipei 上正式开源 Cosmos 3，号称全球首个面向物理世界的全模态开放基础模型。该模型采用混合 Transformer 架构，单模型原生支持文本、图像、视频、环境声音理解与生成，并可输出机器人关节角度等动作信号，实现推理生成行动一体化。英伟达同步成立 Cosmos Coalition 联盟，联合 Agile Robots、Black Forest Labs、Runway 等推进世界模型发展。开发者无需 GPU 即可在 build.nvidia.com 直接体验。",
+      "url": "https://www.hpcwire.com/aiwire/2026/06/01/nvidia-launches-cosmos-3-the-open-frontier-foundation-model-for-physical-ai",
+      "source": "HPCwire",
+      "date": "2026-06-01"
     }
   ]
 }
