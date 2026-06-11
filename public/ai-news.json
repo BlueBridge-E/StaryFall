@@ -2,13 +2,6 @@
   "lastUpdated": "2026-06-11T12:18:20+08:00",
   "items": [
     {
-      "title": "测试新闻",
-      "summary": "这是一条测试",
-      "url": "https://example.com/test",
-      "source": "测试",
-      "date": "2026-06-11"
-    },
-    {
       "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
       "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
       "url": "https://techcrunch.com/2026/06/08/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
