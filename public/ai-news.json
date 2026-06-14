@@ -1,6 +1,41 @@
 {
-  "lastUpdated": "2026-06-11T12:18:20+08:00",
+  "lastUpdated": "2026-06-14T10:03:37+08:00",
   "items": [
+    {
+      "title": "Anthropic 接近实现 AI「递归自我进化」能力，中美加速竞速",
+      "summary": "Anthropic 宣布其最新 Mythos 模型正接近「递归自我改进」（RSI）能力——即 AI 自动改进自身的终极目标。与此同时，中国 AI 公司也在加速追赶，小米 MiMo 模型负责人罗福利在中关村论坛上表示「自我进化」将是 AI 未来一年最大趋势。Anthropic 为此呼吁全球暂时暂停 AI 发展以降低失控风险。",
+      "url": "https://www.scmp.com/tech/tech-war/article/3356788/china-races-against-us-ais-holy-grail-self-improving-tech",
+      "source": "South China Morning Post",
+      "date": "2026-06-11"
+    },
+    {
+      "title": "诺基亚推出 IP 网络 Agentic AI 框架，实现可信任 AI 网络运维",
+      "summary": "诺基亚宣布在其网络服务平台（NSP）中引入 Agentic AI 框架，使运营商可在多厂商 IP 网络中部署 AI 代理，基于实时网络数据进行推理并执行策略化操作。该框架支持 AI 驱动故障排查、根因分析与自动化工作流，兼容 MCP 协议，计划 2026 年底商用，标志着运营商网络向自主运维迈出关键一步。",
+      "url": "https://www.nokia.com/newsroom/nokia-introduces-agentic-ai-framework-in-network-services-platform-to-enable-trust-based-ai-operations-for-ip-networks",
+      "source": "Nokia",
+      "date": "2026-06-11"
+    },
+    {
+      "title": "摩根士丹利：2026 年全球 AI 相关债券发行将超 5000 亿美元",
+      "summary": "摩根士丹利预测 AI 相关全球债券发行量 2026 年将翻倍至近 5700 亿美元，截至 5 月 31 日已达 2360 亿美元（去年同期的 4 倍）。Alphabet、亚马逊、微软和 Meta 等超大规模企业今年预计资本开支达 7000 亿美元，2027 年将突破 1 万亿美元，科技巨头正从依赖现金流转向债务融资满足 AI 基础设施投资需求。",
+      "url": "https://www.reuters.com/business/global-ai-debt-issuance-top-500-billion-2026-morgan-stanley-says-2026-06-10",
+      "source": "Reuters",
+      "date": "2026-06-10"
+    },
+    {
+      "title": "OpenAI 与 Anthropic 相继提交 IPO 机密文件，AI 巨头进入上市冲刺",
+      "summary": "Anthropic 于 6 月 1 日提交机密 S-1 文件启动 IPO 流程，OpenAI 紧随其后于一周内提交。Anthropic 估值约 9650 亿美元，预计年化收入达 470 亿美元，18 个月内从 10 亿飙升至近 500 亿，创企业软件增长纪录。AI IPO 热潮已成 2026 下半年资本市场最大焦点。",
+      "url": "https://pitchbook.com/news/reports/q2-2026-anthropic-the-s-1-expected-to-price-ai",
+      "source": "PitchBook",
+      "date": "2026-06-10"
+    },
+    {
+      "title": "苹果 WWDC 2026 发布 Siri AI、iOS 27 重大更新，与 Google Gemini 深度合作",
+      "summary": "苹果在 WWDC 2026 上正式推出全新 Siri AI，底层接入 Google Gemini 模型，支持多轮对话、跨应用上下文理解与屏幕感知。同时发布 iOS 27，引入 Liquid Glass 设计优化、AI 密码管理等新功能。这标志着苹果在 AI 竞赛中迈出关键一步，也是 Tim Cook 作为 CEO 的最后一次 WWDC。",
+      "url": "https://techcrunch.com/2026/06/09/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more/",
+      "source": "TechCrunch",
+      "date": "2026-06-09"
+    },
     {
       "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
       "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
