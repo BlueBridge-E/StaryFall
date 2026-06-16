@@ -50,6 +50,15 @@ const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: 
       { label: '多源聚合' },
     ],
   },
+  'Giuseppe': {
+    icon: '💰',
+    desc: 'iOS 原生记账应用 — SwiftUI + SwiftData，核心概念"财富支撑日"（存款 ÷ 日均支出），每笔收支都直观反馈自由天数。极简风格，高度自定义，记账音效反馈。开发中。',
+    tags: [
+      { label: 'Swift', class: 'swift' },
+      { label: 'SwiftUI' },
+      { label: 'iOS' },
+    ],
+  },
 };
 
 // 从 GitHub API 拉取 repo 数据（构建时运行）
@@ -314,6 +323,7 @@ function getProject(name: string) {
   }
   .lang-tag.ts { background: #e6f4ff; color: #3178c6; }
   .lang-tag.swift { background: #fff3e0; color: #c17538; }
+  .lang-tag.swift { background: #f0fff0; color: #c17538; }
   .lang-tag.rust { background: #fff3e0; color: #c17538; }
   .lang-tag.swift { background: #fff3e0; color: #c17538; }
 
