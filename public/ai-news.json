@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18T14:11:55+08:00",
+  "lastUpdated": "2026-06-18T16:07:22+08:00",
   "items": [
     {
       "title": "Q1机器人与物理AI风投创纪录：163亿美元涌入492笔交易",
@@ -14,6 +14,41 @@
       "url": "https://markets.ft.com/data/announce/detail?dockey=600-202606170512BIZWIRE_USPRX____20260617_BW847068-1",
       "source": "Financial Times",
       "date": "2026-06-17"
+    },
+    {
+      "title": "世界模型公司 Odyssey 获3.1亿美元B轮融资，估值14.5亿美元，亚马逊参投",
+      "summary": "由自动驾驶先驱创立的 AI 世界模型公司 Odyssey 完成3.1亿美元B轮融资，亚马逊、AMD Ventures 等参投。其模型通过采集真实物理世界数据模拟精确物理环境，用于游戏创作和机器人，并将在 AWS Trainium 芯片上优化运行。",
+      "url": "https://techcrunch.com/2026/06/17/world-model-maker-odyssey-nabs-1-45b-valuation-backed-by-amazon-and-other-big-names/",
+      "source": "TechCrunch",
+      "date": "2026-06-17"
+    },
+    {
+      "title": "2026世界人工智能大会倒计时30天，超300款AI产品将全球首发",
+      "summary": "2026 WAIC 将于7月17-20日在上海举办，主题为智能伙伴共创未来。大会设140场论坛，展览超10万平方米，1100多家企业携3000多项产品亮相，其中超300款AI产品全球首发。",
+      "url": "https://www.thepaper.cn/newsDetail_forward_33400001",
+      "source": "澎湃新闻",
+      "date": "2026-06-17"
+    },
+    {
+      "title": "国家发改委：推动人工智能朝着有益、安全、公平方向发展",
+      "summary": "国家发改委副主任周海兵在国新办发布会上表示，人工智能治理攸关全球，中国将推动人工智能朝着有益、安全、公平的方向发展，构建更加公正合理的全球治理体系。",
+      "url": "https://m.thepaper.cn/newsDetail_forward_33396933",
+      "source": "澎湃新闻",
+      "date": "2026-06-17"
+    },
+    {
+      "title": "OpenAI 财务数据泄露：2025年营收130亿美元，亏损210亿美元",
+      "summary": "Fortune 独家曝光的财务文件显示，OpenAI 2025年营收从37亿增至130亿美元，但总亏损达209亿美元（研发支出192亿），每收入1美元需支出1.60美元，亏损率在收窄。公司已向SEC提交IPO申请。",
+      "url": "https://fortune.com/2026/06/16/openai-financials-leaked-losses-revenue-profit/",
+      "source": "Fortune",
+      "date": "2026-06-16"
+    },
+    {
+      "title": "全球首颗搭载视觉语言模型的卫星在轨自主识别目标",
+      "summary": "NASA 喷气推进实验室在 Loft Orbital 卫星上部署了 Google DeepMind 的 Gemma 3 视觉语言模型，卫星可通过自然语言查询自主识别地表感兴趣区域，无需地面分析师介入，标志 AI 在轨智能处理的里程碑。",
+      "url": "https://techcrunch.com/2026/06/15/a-satellite-just-learned-to-find-things-on-its-own-heres-what-that-means/",
+      "source": "TechCrunch",
+      "date": "2026-06-15"
     },
     {
       "title": "Mistral AI被曝以200亿欧元估值融资30亿欧元",
