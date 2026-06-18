@@ -1,6 +1,34 @@
 {
-  "lastUpdated": "2026-06-14T10:03:37+08:00",
+  "lastUpdated": "2026-06-18T14:11:55+08:00",
   "items": [
+    {
+      "title": "Q1机器人与物理AI风投创纪录：163亿美元涌入492笔交易",
+      "summary": "PitchBook报告显示，2026年Q1机器人与物理AI领域风投达创纪录的163亿美元，共492笔交易，由Shield AI、Saronic和Neura Robotics等大额交易推动。报告指出机器人技术正从实验走向部署，投资者评估标准从技术可行性转向规模化制造能力与商业变现。国防自主、工业机器人和机器人软件平台成为资本聚集热点。",
+      "url": "https://pitchbook.com/news/reports/q1-2026-robotics-physical-ai-vc-trends",
+      "source": "PitchBook",
+      "date": "2026-06-17"
+    },
+    {
+      "title": "支付宝全面升级AI助手\"阿宝\"，AI Pay交易量突破3亿笔",
+      "summary": "蚂蚁集团发布2025年可持续发展报告显示，年度研发投入达51.7亿美元创新高。6月16日支付宝推出AI助手\"阿宝\"重大升级，支持10亿用户通过语音/文字完成叫车、点餐等日常任务。5月发布的AI支付基础设施（AI Pay/AI Wallet等）截至6月交易量已突破3亿笔，成为全球首个规模化商用的AI原生支付基础设施。",
+      "url": "https://markets.ft.com/data/announce/detail?dockey=600-202606170512BIZWIRE_USPRX____20260617_BW847068-1",
+      "source": "Financial Times",
+      "date": "2026-06-17"
+    },
+    {
+      "title": "Mistral AI被曝以200亿欧元估值融资30亿欧元",
+      "summary": "据Bloomberg报道，法国AI独角兽Mistral AI正在进行早期谈判，计划融资约30亿欧元（约35亿美元），估值约200亿欧元（约231.5亿美元），几乎是去年C轮估值的两倍。Mistral自2023年创立以来坚持开放路线，已与法国军方、卢森堡政府及多家欧洲企业合作，定位为欧洲主权AI替代方案。",
+      "url": "https://techcrunch.com/2026/06/12/mistral-is-rumored-to-be-raising-e3b-at-e20-valuation/",
+      "source": "TechCrunch",
+      "date": "2026-06-12"
+    },
+    {
+      "title": "Nature Medicine研究：通用大语言模型在医疗基准上超越专用临床AI工具",
+      "summary": "发表于Nature Medicine的最新研究对OpenEvidence和UpToDate Expert AI两款临床AI工具进行独立评估，发现通用大语言模型在多项医疗基准测试中表现优于专用工具。该发现挑战了医疗领域需要专门训练小模型的传统假设，表明通用基础模型的能力外溢已在专业垂直领域产生竞争优势，引发了对医疗AI架构选择的新讨论。",
+      "url": "https://www.nature.com/articles/s41591-026-04431-5",
+      "source": "Nature Medicine",
+      "date": "2026-06-12"
+    },
     {
       "title": "Anthropic 接近实现 AI「递归自我进化」能力，中美加速竞速",
       "summary": "Anthropic 宣布其最新 Mythos 模型正接近「递归自我改进」（RSI）能力——即 AI 自动改进自身的终极目标。与此同时，中国 AI 公司也在加速追赶，小米 MiMo 模型负责人罗福利在中关村论坛上表示「自我进化」将是 AI 未来一年最大趋势。Anthropic 为此呼吁全球暂时暂停 AI 发展以降低失控风险。",
@@ -13,6 +41,13 @@
       "summary": "诺基亚宣布在其网络服务平台（NSP）中引入 Agentic AI 框架，使运营商可在多厂商 IP 网络中部署 AI 代理，基于实时网络数据进行推理并执行策略化操作。该框架支持 AI 驱动故障排查、根因分析与自动化工作流，兼容 MCP 协议，计划 2026 年底商用，标志着运营商网络向自主运维迈出关键一步。",
       "url": "https://www.nokia.com/newsroom/nokia-introduces-agentic-ai-framework-in-network-services-platform-to-enable-trust-based-ai-operations-for-ip-networks",
       "source": "Nokia",
+      "date": "2026-06-11"
+    },
+    {
+      "title": "Anthropic发布Claude Fable 5：专为药物发现打造，基于顶级Mythos 5模型",
+      "summary": "Anthropic推出全新大语言模型Claude Fable 5，这是首个基于其顶级Mythos 5模型发布的AI，专注于药物发现和科学研究。Anthropic称该模型可将药物设计流程加速约10倍，在自主运行时达到或超越人类专家水平。该发布因安全降级机制引发争议——部分敏感查询会被静默切换至旧版Opus模型，Anthropic随后承诺增加透明提示。",
+      "url": "https://pharmaphorum.com/news/anthropic-puts-life-sciences-heart-new-ai-model",
+      "source": "pharmaphorum",
       "date": "2026-06-11"
     },
     {
