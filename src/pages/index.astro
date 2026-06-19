@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content';
 const base = '/StaryFall';
 const docs = await getCollection('docs');
 const posts = docs
-  .filter((d) => d.id.startsWith('posts/') && !d.id.startsWith('posts/trade/'))
   .sort((a, b) => {
     const da = a.data.date?.getTime() ?? 0;
     const db = b.data.date?.getTime() ?? 0;
@@ -26,7 +25,6 @@ const posts = docs
       <p class="tagline">学习与构建的技术博客</p>
       <nav class="hero-nav">
         <a href={`${base}/tags/`}>标签</a>
-        <a href={`${base}/trade/`}>交易日志</a>
         <a href={`${base}/work/`}>作品</a>
         <a href={`${base}/feed/`}>AI 速递</a>
         <a href="https://github.com/BlueBridge-E">GitHub</a>
