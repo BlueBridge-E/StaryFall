@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18T16:07:22+08:00",
+  "lastUpdated": "2026-06-21T18:37:05+08:00",
   "items": [
     {
       "title": "Q1机器人与物理AI风投创纪录：163亿美元涌入492笔交易",
@@ -107,10 +107,24 @@
       "date": "2026-06-09"
     },
     {
+      "title": "Apple WWDC 2026 发布 Siri AI：全面重构的智能助手",
+      "summary": "苹果在 WWDC 2026 上正式发布了全面重构的 Siri AI，基于苹果自研基础模型并接入 Google Gemini 提供支持。新 Siri 拥有独立应用、支持上下文感知、屏幕内容理解和跨应用操作，标志着苹果在 AI 赛道的重大追赶。同时发布的还有 iOS 27、Apple Intelligence 增强功能等。此次 WWDC 也是即将退休的 CEO Tim Cook 最后一次主持。",
+      "url": "https://techcrunch.com/2026/06/09/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
+      "source": "TechCrunch",
+      "date": "2026-06-09"
+    },
+    {
       "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
       "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
       "url": "https://techcrunch.com/2026/06/08/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
       "source": "TechCrunch",
+      "date": "2026-06-08"
+    },
+    {
+      "title": "OpenAI 紧随其后提交机密 IPO 申请",
+      "summary": "OpenAI 于 6 月 8 日向 SEC 秘密提交 IPO 申请，估值超过 8500 亿美元。ChatGPT 拥有超过 9 亿周活跃用户和 20 亿美元月收入。OpenAI 正与高盛和摩根士丹利合作筹备上市，计划最早于 2026 年第四季度登陆公开市场。此次 IPO 标志着 AI 行业进入资本化新阶段，SpaceX 也已加入这一总估值超 3.6 万亿美元的 IPO 热潮。",
+      "url": "https://www.cnbc.com/2026/06/08/openai-confidentially-files-for-ipo-prepping-wall-street-for-ai-debut.html",
+      "source": "CNBC",
       "date": "2026-06-08"
     },
     {
@@ -198,6 +212,13 @@
       "date": "2026-06-02"
     },
     {
+      "title": "特朗普签署 AI 创新与安全行政令，建立前沿 AI 自愿框架",
+      "summary": "美国总统特朗普于 6 月 2 日签署《促进先进人工智能创新与安全》行政令，在平衡 AI 创新与国家安全的框架下，要求国防部、国土安全部和 NSA 等部门制定网络安全升级方案。行政令建立针对前沿 AI 模型的自愿预发布参与框架，并指示司法部优先打击 AI 驱动的网络犯罪，标志着美国 AI 监管进入新阶段。",
+      "url": "https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security",
+      "source": "白宫",
+      "date": "2026-06-02"
+    },
+    {
       "title": "MiniMax 发布 M3 开源模型，计划回归 A 股上市",
       "summary": "MiniMax 发布新一代开源模型 MiniMax M3，首次在单一模型中融合代码、Agent 与长上下文三大前沿能力，SWE-Bench Pro 达 59.0%，支持 100 万 token 稀疏注意力。同时据彭博报道，MiniMax 已启动国内上市准备工作。该公司此前 1 月在港交所上市，股价较发行价上涨近 5 倍。MiniMax 声称全球企业用户数半年增长 5 倍，ARR 在过去两个月翻倍。但其 Hailuo 视频 AI 系统遭迪士尼等三家好莱坞公司提起版权诉讼，未能驳回。",
       "url": "https://www.asiatechreview.com/p/minimax-reports-big-growth-as-it",
@@ -210,6 +231,20 @@
       "url": "https://www.hpcwire.com/aiwire/2026/06/01/nvidia-launches-cosmos-3-the-open-frontier-foundation-model-for-physical-ai",
       "source": "HPCwire",
       "date": "2026-06-01"
+    },
+    {
+      "title": "Anthropic 提交机密 S-1 文件，AI IPO 浪潮开启",
+      "summary": "Anthropic 于 6 月 1 日向 SEC 秘密提交 S-1 注册声明，正式启动 IPO 进程。该公司估值约 1.75-1.8 万亿美元，潜在募资高达 750 亿美元，或将成为史上最大规模 IPO。作为 Claude 系列模型的开发商，Anthropic 在 2026 年 5 月完成了 650 亿美元 H 轮融资，估值达 9650 亿美元，首次超越 OpenAI 成为全球估值最高的私有 AI 公司。",
+      "url": "https://www.cnbc.com/2026/06/01/anthropic-ipo-s1-prospectus.html",
+      "source": "CNBC",
+      "date": "2026-06-01"
+    },
+    {
+      "title": "Google 搜索 25 年来首次改造搜索框，全面接入 Gemini AI",
+      "summary": "Google 在 I/O 2026 上宣布对其搜索框进行 25 年来最大幅度的改造，搜索框可容纳更长查询并支持视频生成。搜索服务升级至 Gemini 3.5 Flash 模型，AI Mode 全面增强，搜索从链接结果转向 AI 生成的答案、语音助手和智能代理推荐。这一变革标志着 AI 搜索广告有望从目前的小份额增长为市场主要收入来源。",
+      "url": "https://www.nytimes.com/2026/05/19/business/google-seach-bar-ai-gemini.html",
+      "source": "The New York Times",
+      "date": "2026-05-19"
     }
   ]
 }
