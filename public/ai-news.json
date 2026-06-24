@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-21T18:37:05+08:00",
+  "lastUpdated": "2026-06-24T14:14:33+08:00",
   "items": [
     {
       "title": "Q1机器人与物理AI风投创纪录：163亿美元涌入492笔交易",
@@ -65,6 +65,13 @@
       "date": "2026-06-12"
     },
     {
+      "title": "OpenAI GPT-5.6 泄露：Codex 后端日志确认，6 月底有望发布",
+      "summary": "OpenAI 的 GPT-5.6 模型在 Codex 后端路由日志中被首次发现，Polymarket 预测市场给出 89% 的 6 月底发布概率。该模型定位为对 GPT-5.5 的「有意义的改进」，定价约为 Claude Fable 5 的三分之一。OpenAI 首席科学家预览称 GPT-5.6 将带来推理和 Token 成本的显著优化。GPT-5.5 于 4 月 23 日发布，GPT-5.6 的快速迭代周期表明 OpenAI 正加速模型更新节奏以应对 Anthropic 和 Google 的竞争压力。",
+      "url": "https://aiweekly.co/alerts/openai-plans-june-gpt-56-as-meaningful-improvement",
+      "source": "AI Weekly / Android Authority",
+      "date": "2026-06-12"
+    },
+    {
       "title": "Anthropic 接近实现 AI「递归自我进化」能力，中美加速竞速",
       "summary": "Anthropic 宣布其最新 Mythos 模型正接近「递归自我改进」（RSI）能力——即 AI 自动改进自身的终极目标。与此同时，中国 AI 公司也在加速追赶，小米 MiMo 模型负责人罗福利在中关村论坛上表示「自我进化」将是 AI 未来一年最大趋势。Anthropic 为此呼吁全球暂时暂停 AI 发展以降低失控风险。",
       "url": "https://www.scmp.com/tech/tech-war/article/3356788/china-races-against-us-ais-holy-grail-self-improving-tech",
@@ -83,6 +90,13 @@
       "summary": "Anthropic推出全新大语言模型Claude Fable 5，这是首个基于其顶级Mythos 5模型发布的AI，专注于药物发现和科学研究。Anthropic称该模型可将药物设计流程加速约10倍，在自主运行时达到或超越人类专家水平。该发布因安全降级机制引发争议——部分敏感查询会被静默切换至旧版Opus模型，Anthropic随后承诺增加透明提示。",
       "url": "https://pharmaphorum.com/news/anthropic-puts-life-sciences-heart-new-ai-model",
       "source": "pharmaphorum",
+      "date": "2026-06-11"
+    },
+    {
+      "title": "小米开源 AI 编程助手 MiMo Code：持久记忆架构终结长任务上下文丢失问题",
+      "summary": "6 月 11 日，小米 MiMo 团队正式开源终端 AI 编程助手 MiMo Code V0.1.0，采用 MIT 协议可免费商用。其核心突破在于四级持久记忆系统，在超过 200 步的长周期开发任务中胜率飙升至 65%，超越 Claude Code。基于 SQLite FTS5 的跨会话项目记忆库可长期留存项目架构与开发进度。实测数据显示完成 125 项开发任务、处理 3.87 亿 Token 的总 API 成本仅 70 美元，定价仅为竞品的 1/7。",
+      "url": "https://www.cnblogs.com/hnzhengfy/p/20461386/MIMO_Code",
+      "source": "博客园 / 新浪财经",
       "date": "2026-06-11"
     },
     {
@@ -114,6 +128,13 @@
       "date": "2026-06-09"
     },
     {
+      "title": "Anthropic 发布 Claude Fable 5：首个面向公众的 Mythos 级模型，三天后被紧急召回",
+      "summary": "Anthropic 于 6 月 9 日发布 Claude Fable 5，这是其首个面向公众的 Mythos 级模型，在软件工程基准测试 SWE-Bench Pro 上达到 80.3% 的惊人成绩，性能达到 Opus 4.8 的两倍。然而仅发布三天后，美国政府以国家安全为由介入，要求 Anthropic 暂停该模型的公开访问，引发了全球对前沿 AI 安全管控的激烈讨论。免费使用通道于 6 月 22 日截止，此后转为按 Token 付费模式。",
+      "url": "https://techcrunch.com/2026/06/09/anthropics-claude-fable-5-is-a-version-of-mythos-the-public-can-access-today",
+      "source": "TechCrunch",
+      "date": "2026-06-09"
+    },
+    {
       "title": "Apple WWDC 2026: AI Siri 正式登场，搭载 Google Gemini 引擎",
       "summary": "苹果在 WWDC 2026 上正式发布搭载 Google Gemini AI 的全新 Siri，这是苹果在 AI 助手领域的史上最大升级。新版 Siri 通过 Apple 自有的 Private Cloud Compute 基础设施调用 Gemini 模型，可整合邮件、消息、日历等个人数据提供上下文感知响应，新增聊天模式和主动工作流功能。同步发布的 iOS 27 带来 Apple Intelligence 深度集成，包括 Safari AI 标签管理、一键密码更新、照片 AI 编辑等。此次合作也巩固了 Google 作为前沿 AI 模型领先供应商的地位。",
       "url": "https://techcrunch.com/2026/06/08/wwdc-2026-everything-announced-on-siri-ai-os-27-apple-intelligence-and-more",
@@ -126,6 +147,13 @@
       "url": "https://www.cnbc.com/2026/06/08/openai-confidentially-files-for-ipo-prepping-wall-street-for-ai-debut.html",
       "source": "CNBC",
       "date": "2026-06-08"
+    },
+    {
+      "title": "Google 确认 Gemini 3.5 Pro 将于 6 月发布：支持 200 万 Token 上下文与 Deep Think 推理",
+      "summary": "Google 在 I/O 2026 上宣布的 Gemini 3.5 Pro 预计于 2026 年 6 月正式面向公众发布。该模型支持高达 200 万 Token 的超长上下文窗口，搭载「Deep Think」深度推理模式，定位为前沿级多模态推理模型，重点在编程、Agent 任务和复杂推理方面与 OpenAI 和 Anthropic 竞争。Gemini 3.5 Flash 已先行发布并在 Agent 基准测试中表现优异，Pro 版本将进一步补齐推理能力上的短板。",
+      "url": "https://www.techtimes.com/articles/317919/20260606/google-gemini-35-pro-nears-june-launch-2-million-token-context-deep-think-reasoning.htm",
+      "source": "TechTimes",
+      "date": "2026-06-06"
     },
     {
       "title": "Anthropic 呼吁全球放缓 AI 发展，警告自我改进型 AI 系统存在社会风险",
@@ -146,6 +174,13 @@
       "summary": "Anthropic 发布《当 AI 构建自身》报告，发出行业最高级别安全警示。报告称截至 2026 年 5 月，Claude 代码库 80% 由 AI 自主编写，工程师人均产能暴涨 8 倍；递归自我改进或在 2028 年底前发生，概率高达 60%。报告直言 AI 已具备自我迭代和自我优化能力，若不提前设置安全刹车，两年内或出现脱离人类控制的超级智能，呼吁全球建立统一安全监管机制。同步消息显示 Anthropic 已完成 650 亿美元 H 轮融资，估值 9650 亿美元，预计 2026 年 10 月正式上市。",
       "url": "https://fortune.com/2026/06/05/anthropic-self-improving-ai-systems-societal-risks/",
       "source": "Fortune",
+      "date": "2026-06-05"
+    },
+    {
+      "title": "华为云发布全球首个全流程具身智能开发平台 CloudRobo，6 月 30 日公测",
+      "summary": "6 月 5 日，华为云在 INSPIRE 创想者大会上正式发布行业 AI 梦工厂·具身智能专区，并推出全球首个全流程具身智能开发平台 CloudRobo。该平台提供 PB 级安全可信数据底座、云原生具身模型生产引擎及全国产 Real-Sim 评测体系，可实现机器人小时级上云、模型分钟级部署。目前已与 30 多家行业伙伴和 10 多家 985 高校建立合作，面向工业、医疗、教育等 20 多个场景提供解决方案。",
+      "url": "https://app.myzaker.com/news/article.php?pk=6a277a1e8e9f094e691df8ef",
+      "source": "ZAKER / 新浪科技",
       "date": "2026-06-05"
     },
     {
