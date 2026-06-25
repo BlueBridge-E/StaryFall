@@ -92,9 +92,8 @@ const posts = docs
           prevBtn.disabled = (current === 1);
           nextBtn.disabled = (current === totalPages);
           infoEl.textContent = current + ' / ' + totalPages;
-          // 翻页后滚动到文章列表顶部，避免停留在页尾
-          var list = document.querySelector('.post-list');
-          if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // 翻页后滚动到页面顶部，无论容器高度
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         prevBtn.onclick = function() {
