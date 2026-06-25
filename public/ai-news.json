@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-25T19:31:18+08:00",
+  "lastUpdated": "2026-06-25T19:33:26+08:00",
   "items": [
     {
       "title": "Anthropic向美国国会提交AI安全监管政策建议，推动第三方独立安全评估",
@@ -189,6 +189,27 @@
       "url": "https://www.reuters.com/world/asia-pacific/five-eyes-intelligence-alliance-warns-that-new-ai-models-pose-urgent-cyber-risk-2026-06-22/",
       "source": "reuters.com",
       "date": "2026-06-25"
+    },
+    {
+      "title": "OpenAI Launches Full-Scale Effort to Patch Open-Source Bugs as It Takes on Anthropic’s Mythos - WIRED",
+      "summary": "OpenAI启动全面计划修复开源软件漏洞，以应对Anthropic的Mythos项目竞争。此举旨在提升AI系统安全性，并巩固其在开源AI生态中的领导地位。",
+      "url": "https://www.wired.com/story/openai-launches-full-scale-effort-to-patch-open-source-bugs-as-it-takes-on-anthropics-mythos/",
+      "source": "wired.com",
+      "date": "2026-06-23"
+    },
+    {
+      "title": "New York City House primary emerges as key battleground in ‘AI civil war’ - The Guardian",
+      "summary": "纽约市众议院初选成为AI政策分歧的焦点战场，候选人围绕AI监管、就业影响和伦理问题激烈辩论，反映美国社会对AI发展的深层分裂。",
+      "url": "https://www.theguardian.com/us-news/2026/jun/22/new-york-city-house-primary-race",
+      "source": "theguardian.com",
+      "date": "2026-06-22"
+    },
+    {
+      "title": "EXCLUSIVE Indonesia plans to embed AI in key programmes, including $15 billion free-meal drive, document shows - Reuters",
+      "summary": "印尼计划将AI嵌入关键国家项目，包括价值150亿美元的免费餐计划，利用AI优化物流和资源分配，提升政府服务效率，显示AI在公共治理中的大规模应用。",
+      "url": "https://www.reuters.com/world/asia-pacific/indonesia-plans-embed-ai-key-programmes-including-15-billion-free-meal-drive-2026-06-22/",
+      "source": "reuters.com",
+      "date": "2026-06-22"
     },
     {
       "title": "Q1机器人与物理AI风投创纪录：163亿美元涌入492笔交易",
