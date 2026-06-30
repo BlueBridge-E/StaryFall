@@ -1,6 +1,13 @@
 {
-  "lastUpdated": "2026-06-28T16:06:00+08:00",
+  "lastUpdated": "2026-07-01T07:00:15+08:00",
   "items": [
+    {
+      "title": "AI spending boom could end in global bust, report says - Semafor",
+      "summary": "一份新报告警告称，当前人工智能领域的巨额投资热潮可能以全球性崩盘告终。报告指出，科技巨头和风投机构在AI基础设施、芯片和数据中心上的支出已超过实际需求，形成泡沫风险。尽管AI技术发展迅速，但商业化回报尚未达到预期，许多初创公司估值过高且缺乏可持续盈利模式。分析师担心，若市场情绪逆转，大规模资本撤出将引发连锁反应，影响整个科技行业和全球经济。该报告呼吁投资者保持谨慎，并建议监管机构关注系统性风险。",
+      "url": "https://www.semafor.com/article/06/28/2026/ai-spending-boom-could-end-in-global-bust",
+      "source": "Semafor",
+      "date": "2026-06-28"
+    },
     {
       "title": "Exclusive: Goldman bankers say the next AI boom is in the physical economy - Axios",
       "summary": "高盛银行家在一份独家报告中指出，下一波AI热潮将聚焦于实体经济领域，包括制造业、物流和能源行业。报告强调，AI技术正从数字世界向物理世界扩展，通过工业自动化和效率提升推动变革。高盛分析师预测，到2030年，AI在实体经济中的应用将为全球GDP贡献超过2万亿美元，其中制造业和物流领域将占据最大份额。这一趋势反映了AI从虚拟经济向实体经济的战略转移，可能重塑全球产业链格局。",
@@ -189,6 +196,27 @@
       "url": "https://www.reuters.com/world/asia-pacific/five-eyes-intelligence-alliance-warns-that-new-ai-models-pose-urgent-cyber-risk-2026-06-22/",
       "source": "Reuters",
       "date": "2026-06-25"
+    },
+    {
+      "title": "Databricks’ former AI chief thinks he can cut AI’s power bill by 1,000x - TechCrunch",
+      "summary": "Databricks前AI负责人声称，其新创公司开发的技术能将AI模型的能耗降低1000倍。这一突破性进展针对当前大语言模型训练和推理的高能耗痛点，通过优化算法和硬件协同设计，大幅减少电力消耗。如果实现，将显著降低AI运营成本，并缓解数据中心对环境的压力。该负责人表示，其方法已在小型模型上验证成功，正计划扩展到更大规模系统。此举可能重塑AI产业格局，使更多中小企业能以更低成本部署先进AI能力。",
+      "url": "https://techcrunch.com/2026/06/25/databricks-former-ai-chief-thinks-he-can-cut-ais-power-bill-by-1000x/",
+      "source": "TechCrunch",
+      "date": "2026-06-25"
+    },
+    {
+      "title": "Patronus AI lands $50M to build ‘digital worlds’ that stress-test AI agents - TechCrunch",
+      "summary": "AI安全初创公司Patronus AI获得5000万美元融资，用于构建模拟数字世界以压力测试AI智能体。该公司开发的平台能创建复杂虚拟环境，让AI系统在安全受控条件下接受极端场景测试，包括对抗性攻击、逻辑漏洞和伦理困境。随着AI代理在金融、医疗和自动驾驶等关键领域广泛应用，确保其可靠性和安全性成为迫切需求。Patronus AI的解决方案旨在提前发现潜在风险，避免现实世界中的灾难性故障。此轮融资由知名风投领投，凸显市场对AI安全测试工具的高度关注。",
+      "url": "https://techcrunch.com/2026/06/25/patronus-ai-lands-50m-to-build-digital-worlds-that-stress-test-ai-agents/",
+      "source": "TechCrunch",
+      "date": "2026-06-25"
+    },
+    {
+      "title": "Behind the Curtain: America's AI lead, security in peril - Axios",
+      "summary": "Axios深度报道揭示，美国在人工智能领域的领先地位正面临严重安全威胁。文章指出，尽管美国在AI基础研究和顶级模型开发上仍占优势，但网络安全漏洞和供应链风险日益突出。中国AI公司如DeepSeek和Z.ai的快速崛起，以及其声称在网络安全领域媲美美国顶尖模型Mythos的能力，引发了对技术外泄和恶意使用的担忧。专家警告，若美国不加强AI安全防护和出口管制，其技术优势可能被削弱，甚至被对手利用来发动网络攻击。报道呼吁政府和企业采取更严格的防护措施。",
+      "url": "https://www.axios.com/2026/06/24/ai-security-america-china-mythos-deepseek",
+      "source": "Axios",
+      "date": "2026-06-24"
     },
     {
       "title": "OpenAI启动全面计划修复开源漏洞，应对Anthropic竞争",
