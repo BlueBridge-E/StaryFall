@@ -1,6 +1,41 @@
 {
-  "lastUpdated": "2026-07-05T07:00:17+08:00",
+  "lastUpdated": "2026-07-12T07:00:20+08:00",
   "items": [
+    {
+      "title": "幕后揭秘：三大AI趋势正同时碰撞",
+      "summary": "Axios分析指出，当前AI领域三大趋势正同时发生碰撞：一是AI模型能力快速迭代，如OpenAI的Sol模型和Grok的竞争；二是中美AI技术竞争加剧，美国对华芯片出口限制推动中国加速自主研发；三是AI应用从对话式向自主代理（Agentic AI）演进，企业开始部署能独立执行任务的AI系统。这些趋势相互影响，可能在未来数月内重塑行业格局。例如，中国在受限环境下发展出替代方案，而美国公司则面临成本与创新平衡的挑战。文章强调，理解这些趋势的交互作用对预测AI发展至关重要。",
+      "url": "https://www.axios.com/2026/07/09/ai-trends-fable-5-sol-grok-china-us",
+      "source": "Axios",
+      "date": "2026-07-09"
+    },
+    {
+      "title": "独家：Meta计划9月量产AI芯片，力求计算能力翻倍",
+      "summary": "据路透社独家获取的内部备忘录显示，Meta计划于2026年9月开始量产其自主研发的AI芯片，旨在将计算能力提升一倍。该芯片专为训练和推理大型语言模型设计，将减少Meta对英伟达等外部供应商的依赖。备忘录还透露，Meta正在扩建数据中心，以支持其AI基础设施的扩张。此举是Meta在AI领域加大投入的一部分，此前该公司已发布Llama系列开源模型。分析师认为，自研芯片将帮助Meta降低成本并优化性能，但量产初期的良率和供应链稳定性仍是挑战。",
+      "url": "https://www.reuters.com/world/asia-pacific/meta-put-ai-chip-into-production-september-it-looks-double-computing-capacity-2026-07-09/",
+      "source": "路透社",
+      "date": "2026-07-09"
+    },
+    {
+      "title": "OpenAI发布新模型系列GPT-5.6",
+      "summary": "TechCrunch确认，OpenAI于7月9日正式推出其新一代模型系列GPT-5.6。该系列包括多个版本，针对不同应用场景优化，在代码生成、数学推理和语言理解等基准测试中表现显著优于前代。OpenAI表示，GPT-5.6采用了新的训练架构和数据处理技术，在保持高性能的同时降低了计算资源消耗。早期测试者报告称，模型在复杂任务中的准确率和连贯性有大幅提升。此次发布正值AI行业竞争白热化之际，Anthropic的Claude和Google的Gemini也在近期推出更新。OpenAI强调，GPT-5.6将首先通过API向开发者开放，消费级产品随后推出。",
+      "url": "https://techcrunch.com/2026/07/09/openai-launches-its-new-family-of-models-with-gpt-5-6/",
+      "source": "TechCrunch",
+      "date": "2026-07-09"
+    },
+    {
+      "title": "超越代理AI：认知AI生态系统的兴起",
+      "summary": "Forbes专栏文章探讨了AI发展的下一阶段——从当前的代理AI（Agentic AI）向认知AI生态系统演进。作者认为，代理AI虽然能自主执行任务，但缺乏真正的理解和适应能力。认知AI生态系统则整合多个AI模型、数据和外部工具，形成类似人类认知的协同工作方式，能进行推理、学习和跨领域迁移。文章举例说明，未来企业可能部署由多个专业AI代理组成的网络，它们相互协作解决复杂问题。这一趋势要求新的架构设计、安全标准和治理框架。作者警告，若缺乏适当监管，认知AI可能带来不可预测的风险。",
+      "url": "https://www.forbes.com/sites/chuckbrooks/2026/07/09/beyond-agentic-ai-the-emergence-of-cognitive-ai-ecosystems/",
+      "source": "Forbes",
+      "date": "2026-07-09"
+    },
+    {
+      "title": "GPT-5.6热潮升温：关于OpenAI新模型Sol的须知信息",
+      "summary": "Axios报道，OpenAI即将推出的新模型系列GPT-5.6（代号Sol）引发业界高度关注。该模型据称在推理、多模态能力和效率上实现重大突破，可能超越现有GPT-4系列。同时，Anthropic和xAI的Grok模型也在快速迭代，形成激烈竞争。Sol模型预计将支持更长的上下文窗口和更低的推理成本，有望推动AI应用向更复杂场景扩展。然而，OpenAI尚未公布具体发布日期和定价，市场对其实际性能提升幅度持谨慎期待。分析人士指出，GPT-5.6的发布可能加速AI行业新一轮技术竞赛。",
+      "url": "https://www.axios.com/2026/07/08/gpt-sol-ultra-openai-anthropic-grok",
+      "source": "Axios",
+      "date": "2026-07-08"
+    },
     {
       "title": "报告显示印度AI招聘速度超过整体IT招聘",
       "summary": "路透社7月3日报道，一份新报告显示，印度人工智能领域的招聘增速已显著超过整体IT行业。报告指出，随着企业加速数字化转型和AI应用落地，对机器学习工程师、数据科学家和AI产品经理的需求激增。2026年上半年，AI相关职位发布量同比增长超过40%，而传统IT岗位仅增长约12%。这一趋势反映了印度科技行业的结构性转变，AI技能正成为就业市场的核心竞争力。报告还提到，印度政府推出的AI教育计划和产业激励政策，进一步推动了人才向AI领域流动。",
