@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-12T07:00:20+08:00",
+  "lastUpdated": "2026-07-15T07:00:12+08:00",
   "items": [
     {
       "title": "幕后揭秘：三大AI趋势正同时碰撞",
@@ -26,6 +26,13 @@
       "title": "超越代理AI：认知AI生态系统的兴起",
       "summary": "Forbes专栏文章探讨了AI发展的下一阶段——从当前的代理AI（Agentic AI）向认知AI生态系统演进。作者认为，代理AI虽然能自主执行任务，但缺乏真正的理解和适应能力。认知AI生态系统则整合多个AI模型、数据和外部工具，形成类似人类认知的协同工作方式，能进行推理、学习和跨领域迁移。文章举例说明，未来企业可能部署由多个专业AI代理组成的网络，它们相互协作解决复杂问题。这一趋势要求新的架构设计、安全标准和治理框架。作者警告，若缺乏适当监管，认知AI可能带来不可预测的风险。",
       "url": "https://www.forbes.com/sites/chuckbrooks/2026/07/09/beyond-agentic-ai-the-emergence-of-cognitive-ai-ecosystems/",
+      "source": "Forbes",
+      "date": "2026-07-09"
+    },
+    {
+      "title": "人形机器人受追捧，但任务专用机器人或赢得市场",
+      "summary": "Forbes分析认为，尽管人形机器人因通用性获得大量关注和投资，但任务专用机器人（如仓储、清洁、制造机器人）在商业落地和投资回报方面更具优势。人形机器人面临成本高、技术复杂和法规限制等问题，而专用机器人已证明在特定场景的高效性。文章引用市场数据，预计到2030年专用机器人市场将增长至500亿美元，而人形机器人仍处于早期阶段。投资者应关注实际应用场景而非概念炒作。",
+      "url": "https://www.forbes.com/sites/garydrenik/2026/07/09/humanoid-robots-get-the-hype-task-specific-robots-may-win-the-market/",
       "source": "Forbes",
       "date": "2026-07-09"
     },
