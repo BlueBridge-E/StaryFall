@@ -1,6 +1,27 @@
 {
-  "lastUpdated": "2026-07-26T07:00:06+08:00",
+  "lastUpdated": "2026-07-29T07:00:20+08:00",
   "items": [
+    {
+      "title": "AI在2026年发现的网络安全漏洞数量是2025年的两倍",
+      "summary": "据彭博社报道，人工智能在网络安全领域的应用取得突破性进展，2026年发现的网络漏洞数量较2025年翻倍。AI驱动的漏洞扫描工具能够自动识别软件代码中的安全缺陷，速度远超传统人工审计。科技行业成为最大受益者，AI工具在谷歌、微软等公司的代码库中发现了创纪录数量的高危漏洞。安全专家指出，AI不仅能发现已知模式的安全问题，还能通过机器学习识别新型攻击向量。然而，攻击者同样在利用AI技术开发更复杂的恶意软件，形成军备竞赛态势。报告预计，到2027年AI将主导企业安全审计流程。",
+      "url": "https://www.bloomberg.com/news/articles/2026-07-27/ai-hunts-for-cyber-flaws-finding-record-numbers-in-tech-sector",
+      "source": "彭博社",
+      "date": "2026-07-27"
+    },
+    {
+      "title": "关于AI未来的争论在硅谷分裂，中国正在迎头赶上",
+      "summary": "据《卫报》报道，硅谷内部围绕AI发展方向产生严重分歧，而中国在AI领域的快速进步加剧了这一分裂。一派主张开源AI模型以加速创新，另一派则强调安全可控的闭源路线。开源阵营以Meta为代表，认为开放模型能防止技术垄断；闭源阵营如OpenAI则警告开源可能导致AI滥用。与此同时，中国AI企业如百度、阿里巴巴在应用层面取得显著进展，在自动驾驶、医疗AI等领域接近甚至超越美国同行。硅谷的分裂可能削弱美国在AI领域的整体竞争力，而中国凭借统一的市场和政策支持正在缩小差距。",
+      "url": "https://www.theguardian.com/technology/2026/jul/27/silicon-valley-ai-open-source-china",
+      "source": "卫报",
+      "date": "2026-07-27"
+    },
+    {
+      "title": "即使是中国的AI巨头也无法找到AI盈利的方法",
+      "summary": "《纽约时报》报道指出，尽管中国在AI技术研发上投入巨资，但包括阿里巴巴、字节跳动在内的AI巨头仍难以实现盈利。阿里巴巴的AI云服务收入增长放缓，字节跳动的AI内容生成工具用户增长但付费转化率低。分析认为，AI模型训练和运营成本高昂，而商业化路径尚不清晰。中国AI企业面临与美国同行相似的困境：技术突破未能转化为可持续的商业模式。投资者开始质疑AI领域的估值泡沫，要求企业展示明确的盈利时间表。这一现象可能促使中国AI行业从追求技术领先转向更务实的商业应用探索。",
+      "url": "https://www.nytimes.com/2026/07/27/business/china-ai-alibaba-bytedance.html",
+      "source": "纽约时报",
+      "date": "2026-07-27"
+    },
     {
       "title": "AI News | Latest Headlines and Developments",
       "summary": "",
@@ -35,6 +56,13 @@
       "url": "https://www.forbes.com",
       "source": "forbes.com",
       "date": "2026-07-26"
+    },
+    {
+      "title": "Monday.com是最新一家将裁员归咎于AI的科技公司——以下是其他20家",
+      "summary": "项目管理软件公司Monday.com加入越来越多将裁员归因于人工智能的科技企业行列。据TechCrunch统计，2026年已有超过20家主要科技公司以AI取代人力为由进行裁员，包括谷歌、微软、Meta等巨头。Monday.com在宣布裁员约200人时表示，AI工具已能自动化完成部分员工的工作。这一趋势引发对AI就业替代效应的广泛担忧，但企业普遍强调AI将创造新岗位而非完全取代人类。分析人士指出，将裁员归因于AI可能成为企业优化成本的新借口，实际裁员规模与AI能力提升之间的关联仍需更多数据验证。",
+      "url": "https://techcrunch.com/2026/07/25/the-running-list-major-tech-layoffs-in-2026-where-employers-cited-ai",
+      "source": "TechCrunch",
+      "date": "2026-07-25"
     },
     {
       "title": "上海科学论坛照片展示中国在人工智能和机器人领域与美国竞争中的进步",
@@ -391,6 +419,13 @@
       "summary": "Axios深度报道揭示，美国在人工智能领域的领先地位正面临严重安全威胁。文章指出，尽管美国在AI基础研究和顶级模型开发上仍占优势，但网络安全漏洞和供应链风险日益突出。中国AI公司如DeepSeek和Z.ai的快速崛起，以及其声称在网络安全领域媲美美国顶尖模型Mythos的能力，引发了对技术外泄和恶意使用的担忧。专家警告，若美国不加强AI安全防护和出口管制，其技术优势可能被削弱，甚至被对手利用来发动网络攻击。报道呼吁政府和企业采取更严格的防护措施。",
       "url": "https://www.axios.com/2026/06/24/ai-security-america-china-mythos-deepseek",
       "source": "Axios",
+      "date": "2026-06-24"
+    },
+    {
+      "title": "Anthropic指控阿里巴巴非法提取Claude AI模型能力",
+      "summary": "AI初创公司Anthropic向路透社透露，已发现阿里巴巴通过不正当手段提取其Claude AI模型的核心能力。Anthropic声称，阿里巴巴利用API接口漏洞，大量查询Claude模型以反向工程获取其架构和训练数据。这起事件凸显中美AI企业之间的技术竞争日趋激烈。Anthropic表示已采取法律行动，并加强模型安全防护。阿里巴巴尚未正式回应。分析人士指出，模型窃取已成为AI行业重大风险，企业需投入更多资源保护知识产权。此案可能影响中美科技合作，并推动各国加强AI模型安全监管立法。",
+      "url": "https://www.reuters.com/world/china/anthropic-says-alibaba-illicitly-extracted-claude-ai-model-capabilities-2026-06-24",
+      "source": "路透社",
       "date": "2026-06-24"
     },
     {
