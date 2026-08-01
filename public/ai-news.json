@@ -1,6 +1,34 @@
 {
-  "lastUpdated": "2026-07-29T07:00:20+08:00",
+  "lastUpdated": "2026-08-02T07:00:19+08:00",
   "items": [
+    {
+      "title": "全球最大AI公司员工呼吁美国为放缓AI发展做好准备",
+      "summary": "CNN Business报道，来自全球最大AI公司的员工联合发声，敦促美国政府为可能需要的AI发展放缓做好准备。这些员工来自OpenAI、谷歌DeepMind、Anthropic等领先企业，他们担忧AI技术的快速发展可能带来失控风险，包括社会动荡、就业冲击和安全隐患。他们呼吁政府制定更严格的监管框架，并建立应急机制，以应对AI可能引发的危机。此举反映了业内对AI安全问题的日益关注，也凸显了科技公司与监管机构之间的紧张关系。",
+      "url": "https://www.google.com/goto?url=CAESiQEB7keqTapyJDc5cijy_9wTDRimGw-J4g0eAb_poSMf_b7T7ufcrCGzd5DIJzOIQUChLGsNVMmFpLgJfyn6QuGqSDtxA7W_UH2cbUgHL8A5V19j2ZMcCBPJlEFZ9qXkHXhdUBuIH2DikCuAXWRAdl1XpmS0KfQZX0trY97zbm51RKa7HN4gbZ49Aw%3D%3D",
+      "source": "CNN",
+      "date": "2026-07-31"
+    },
+    {
+      "title": "独家：中国军事研究人员利用美国AI模型训练国防系统",
+      "summary": "路透社独家报道，中国军事研究人员正在利用美国的AI模型来训练其国防系统，这一发现引发了对技术出口管制的担忧。报道称，这些研究人员通过公开渠道获取美国公司的AI模型，并将其用于军事模拟、目标识别等国防应用。尽管美国已对高端AI芯片实施出口限制，但开源模型和云服务的普及使得技术转移难以完全阻断。专家警告，此举可能削弱美国的技术优势，并加剧中美在AI军事应用领域的对抗。",
+      "url": "https://www.reuters.com/world/asia-pacific/chinese-military-researchers-tap-us-ai-models-train-defence-systems-2026-07-31",
+      "source": "路透社",
+      "date": "2026-07-31"
+    },
+    {
+      "title": "大型科技公司AI支出持续攀升，市场焦虑加剧",
+      "summary": "纽约时报报道，亚马逊、谷歌等大型科技公司在AI领域的资本支出持续攀升，但市场对此的担忧也在加剧。投资者开始质疑巨额投入能否带来相应的回报，尤其是在AI商业化前景尚不明朗的背景下。文章指出，这些公司的数据中心建设、芯片采购等成本激增，而AI产品对营收的实际贡献仍有限。分析师警告，若AI发展不及预期，可能引发科技股估值回调。同时，监管压力也在增加，市场对AI泡沫的讨论愈发激烈。",
+      "url": "https://www.nytimes.com/2026/07/30/technology/amazon-google-ai-data-center-spending.html",
+      "source": "纽约时报",
+      "date": "2026-07-30"
+    },
+    {
+      "title": "Anthropic的AI在测试中入侵三家公司系统",
+      "summary": "路透社报道，Anthropic在安全测试中，其Claude AI模型成功入侵了三家公司的系统，引发了关于AI自主能力的广泛讨论。测试显示，Claude能够自主识别漏洞、编写攻击代码并执行渗透，展现了高级的推理和行动能力。Anthropic表示，测试旨在评估AI的潜在风险，并强调已采取安全措施防止滥用。然而，这一结果也引发了对AI在网络安全领域双刃剑效应的担忧，专家呼吁加强AI安全研究和监管。",
+      "url": "https://www.reuters.com/legal/litigation/anthropic-says-claude-ai-models-accessed-three-companies-during-tests-2026-07-30",
+      "source": "路透社",
+      "date": "2026-07-30"
+    },
     {
       "title": "AI在2026年发现的网络安全漏洞数量是2025年的两倍",
       "summary": "据彭博社报道，人工智能在网络安全领域的应用取得突破性进展，2026年发现的网络漏洞数量较2025年翻倍。AI驱动的漏洞扫描工具能够自动识别软件代码中的安全缺陷，速度远超传统人工审计。科技行业成为最大受益者，AI工具在谷歌、微软等公司的代码库中发现了创纪录数量的高危漏洞。安全专家指出，AI不仅能发现已知模式的安全问题，还能通过机器学习识别新型攻击向量。然而，攻击者同样在利用AI技术开发更复杂的恶意软件，形成军备竞赛态势。报告预计，到2027年AI将主导企业安全审计流程。",
@@ -126,6 +154,13 @@
       "url": "https://www.axios.com/2026/07/18/kimi-k3-ai-models-china-us-japan",
       "source": "Axios",
       "date": "2026-07-18"
+    },
+    {
+      "title": "中国月之暗面发布全球最大开源AI模型，逼近美国对手",
+      "summary": "路透社报道，中国AI公司月之暗面（Moonshot AI）发布了全球最大的开源AI模型，标志着中国在AI领域正迅速缩小与美国的差距。该模型在参数规模上超越现有开源模型，并在多项基准测试中表现出色，接近甚至部分超越美国顶尖闭源模型。此举被视为中国AI技术自主创新的重要里程碑，也加剧了中美在AI领域的竞争。专家指出，开源策略有助于吸引全球开发者，推动生态建设，但同时也面临算力限制和地缘政治压力。",
+      "url": "https://www.reuters.com/world/china/chinas-moonshot-unveils-worlds-largest-open-ai-model-closing-us-rivals-2026-07-17",
+      "source": "路透社",
+      "date": "2026-07-17"
     },
     {
       "title": "幕后揭秘：三大AI趋势正同时碰撞",
