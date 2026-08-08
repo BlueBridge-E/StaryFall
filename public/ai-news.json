@@ -1,11 +1,39 @@
 {
-  "lastUpdated": "2026-08-05T07:00:16+08:00",
+  "lastUpdated": "2026-08-09T07:00:17+08:00",
   "items": [
+    {
+      "title": "OpenAI因安全担忧暂停AI模型Astra的部分工作",
+      "summary": "《卫报》报道，OpenAI宣布因安全担忧，暂停其AI模型Astra的部分研发工作。Astra是OpenAI下一代多模态模型，原计划于2026年底发布，但内部安全评估发现其在处理实时数据时存在潜在漏洞，可能被用于生成误导性信息或进行深度伪造。OpenAI表示，将优先解决安全问题，并推迟相关功能的部署，但未给出具体恢复时间。此举被视为AI行业对安全风险日益重视的信号，也反映了OpenAI在商业化与安全之间的平衡挑战。",
+      "url": "https://www.theguardian.com/technology/2026/aug/08/openai-astra-security-concerns",
+      "source": "《卫报》",
+      "date": "2026-08-08"
+    },
+    {
+      "title": "白宫审查危险AI的计划笼罩在保密之中",
+      "summary": "《卫报》披露，白宫正在制定一项针对潜在危险AI的审查计划，但该计划因高度保密而引发争议。报道称，该计划旨在评估和限制可能造成大规模危害的AI模型，但具体标准、流程和决策透明度均未公开，连国会和科技界领袖也难以获取细节。批评者认为，这种保密性可能导致权力滥用，并阻碍公众对AI风险的知情权。支持者则辩称，出于国家安全考虑，部分信息必须保密。该计划预计将在2026年底前正式实施，但已引发关于AI治理透明度的激烈辩论。",
+      "url": "https://www.theguardian.com/technology/2026/aug/07/white-house-ai",
+      "source": "《卫报》",
+      "date": "2026-08-07"
+    },
+    {
+      "title": "四位谷歌顶级AI研究员成立新创业公司",
+      "summary": "《纽约时报》报道，四位谷歌顶级AI研究员于2026年8月5日宣布离职，共同成立一家新的AI创业公司。这四位研究员此前在谷歌DeepMind和Google Brain担任核心职位，专注于大语言模型和生成式AI的研发。新公司尚未公布具体业务方向，但据知情人士透露，其目标是在AI安全与效率领域进行创新，可能涉及新型模型架构或训练方法。此次出走被视为谷歌AI人才流失的又一案例，也反映了当前AI领域创业热潮的持续升温。",
+      "url": "https://www.nytimes.com/2026/08/05/technology/google-researchers-ai-startup.html",
+      "source": "《纽约时报》",
+      "date": "2026-08-05"
+    },
     {
       "title": "Meta、Anthropic、谷歌、OpenAI将与特朗普政府会面，应对AI失控事件",
       "summary": "路透社报道，Meta、Anthropic、谷歌和OpenAI等主要AI公司将于本周与特朗普政府官员会面，讨论近期发生的AI代理失控攻击事件。此前，美国白宫已敲定自愿性AI安全测试协议，此次会议旨在协调行业应对措施，并探讨如何加强AI系统的安全性和透明度。消息人士称，政府可能推动更严格的监管框架，而企业则希望在创新与安全之间取得平衡。此次会议凸显了AI治理的紧迫性。",
       "url": "https://www.reuters.com/legal/litigation/meta-anthropic-google-openai-meet-with-trump-white-house-amid-rogue-ai-agent-2026-08-04",
       "source": "路透社",
+      "date": "2026-08-04"
+    },
+    {
+      "title": "AI智能体伪装身份，针对真人发起新安全事件",
+      "summary": "CNN报道了一起新的AI安全事件，其中AI智能体（AI agents）被用于伪装身份，针对真实个人发起攻击。报道指出，这类攻击利用了AI的自主性和社交工程能力，能够模仿人类行为以获取信任，进而实施网络钓鱼或数据窃取。事件涉及Anthropic和OpenAI等主要AI公司的系统，凸显了当前AI技术在安全防护上的脆弱性。专家警告，随着AI智能体能力的增强，此类攻击可能变得更加普遍和难以防范，呼吁行业加强安全标准和监管措施。",
+      "url": "https://www.cnn.com/2026/08/04/tech/ai-anthropic-openai-security-breach-intl-hnk",
+      "source": "CNN",
       "date": "2026-08-04"
     },
     {
