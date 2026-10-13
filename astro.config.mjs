@@ -9,7 +9,11 @@ export default defineConfig({
     starlight({
       title: 'StaryFall',
       description: 'A personal blog for learning and building.',
-      defaultLocale: 'zh-CN',
+      // Starlight 仅在配置 locales 时才会应用语言；单独写 defaultLocale 会静默回落到 en，
+      // 导致全站 <html lang="en">、og:locale=en、Pagefind 用英文分词。
+      locales: {
+        root: { label: '简体中文', lang: 'zh-CN' },
+      },
       customCss: ['./src/styles/custom.css'],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/BlueBridge-E' },
