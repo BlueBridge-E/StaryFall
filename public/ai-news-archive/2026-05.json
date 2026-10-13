@@ -7,6 +7,13 @@
       "url": "https://www.nytimes.com/2026/05/19/business/google-seach-bar-ai-gemini.html",
       "source": "纽约时报",
       "date": "2026-05-19"
+    },
+    {
+      "title": "Transformer架构、超级能力与通往AGI之路",
+      "summary": "福布斯刊发深度分析文章，探讨Transformer架构如何成为当前AI浪潮的核心引擎，以及它与通用人工智能（AGI）之间的关系。文章回顾了Transformer自2017年提出以来如何逐步取代RNN和CNN，成为大语言模型的统一基础架构，并催生了GPT、Claude、Gemini等一系列突破性模型。作者指出，Transformer的注意力机制赋予了模型强大的上下文理解和跨模态能力，但其在推理深度、长期记忆和因果理解方面仍存在根本性局限。文章讨论了业界围绕“规模扩展是否足以通向AGI”的争论，以及混合架构、神经符号系统等替代路径的探索。核心观点是：Transformer是通往AGI道路上的里程碑而非终点，真正的AGI可能需要架构层面的下一次范式跃迁。",
+      "url": "https://www.forbes.com/sites/johnwerner/2026/05/03/transformer-architecture-superpowers-and-the-march-toward-agi/",
+      "source": "Forbes",
+      "date": "2026-05-03"
     }
   ]
 }
