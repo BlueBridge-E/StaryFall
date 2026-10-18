@@ -5,8 +5,6 @@ date: 2026-05-19
 tags: [claude-code, ai, 工具]
 ---
 
-# Claude Code 常用命令
-
 Claude Code 的命令体系分为**三类**：终端 CLI 命令、交互会话中的斜杠命令（`/`）、以及键盘快捷键。其中 CLI 命令负责启动与控制，斜杠命令负责会话内的操作，快捷键负责快速交互。
 
 ---
@@ -18,7 +16,7 @@ Claude Code 的命令体系分为**三类**：终端 CLI 命令、交互会话�
 | `claude` | 在当前目录启动交互式会话 | `claude` |
 | `claude [路径]` | 在指定项目目录启动 | `claude /path/to/project` |
 | `claude "query"` | 启动并立即执行指定任务 | `claude "fix the build error"` |
-| `claude -p "query"` | 非交互模式，执行查询后退出 | `cat logs.txt | claude -p "explain"` |
+| `claude -p "query"` | 非交互模式，执行查询后退出 | `cat logs.txt \| claude -p "explain"` |
 | `claude -c` | 继续最近一次对话 | `claude --continue` |
 | `claude -r <id>` | 通过会话 ID 恢复历史对话 | `claude -r "abc123"` |
 | `claude --add-dir <path>` | 添加额外工作目录 | `claude --add-dir ../lib` |

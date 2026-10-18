@@ -5,8 +5,6 @@ date: 2026-05-25
 tags: [ai, agent, mcp, anthropic, open-source]
 ---
 
-# 深度解析 Anthropic Knowledge Work Plugins
-
 Anthropic 开源了一个引人注目的项目：**Knowledge Work Plugins**——11 个面向知识工作者的 MCP Plugin，覆盖从销售、产品管理到数据分析、法务合规、生物研究等岗位。
 
 这个项目不只是"又一个开源工具箱"。它展示的是 Anthropic 对 **AI Agent 如何融入知识工作**这件事的系统性思考：用文件化、声明式、无代码的方式，把 AI Agent 的工作流程标准化。

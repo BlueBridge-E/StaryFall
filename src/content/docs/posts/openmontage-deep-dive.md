@@ -3,14 +3,12 @@ title: OpenMontage 深度解析：AI Agent 如何成为视频制作总导演？
 description: 首个开源、Agent 驱动的视频生产系统深度架构分析——三层知识架构、Selector 模式、预算治理、管线系统。
 date: 2026-06-25
 tags:
-  - AI
+  - ai
   - 开源项目
   - agent
   - 视频生产
   - 深度解析
 ---
-
-# OpenMontage 深度解析：AI Agent 如何成为视频制作总导演？
 
 项目地址：<https://github.com/calesthio/OpenMontage>
 

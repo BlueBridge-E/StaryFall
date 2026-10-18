@@ -2,10 +2,8 @@
 title: "Vibe-Trading 深度解析：当个人交易者拥有了一个 AI 智能体团队"
 date: 2026-07-01
 description: "GitHub 15.8k stars 的开源项目 Vibe-Trading 全面解析——技术架构、设计理念与实用评估"
-tags: [Vibe-Trading, AI Trading, 量化交易, 开源项目, Agent]
+tags: [vibe-trading, ai-trading, 量化交易, 开源项目, agent]
 ---
-
-# Vibe-Trading 深度解析：当个人交易者拥有了一个 AI 智能体团队
 
 > **一句话定义**：Vibe-Trading 是一个开源的个人交易智能体（Personal Trading Agent），它将自然语言指令转换为量化交易策略生成、回测、验证和研究的一站式工作流。
 

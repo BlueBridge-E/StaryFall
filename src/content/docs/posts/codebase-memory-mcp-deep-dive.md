@@ -3,8 +3,8 @@ title: "Codebase-Memory-MCP 深度解析：让 AI 编程 Agent 长出代码知�
 description: "33K stars，单二进制零依赖，158 语言 Tree-sitter 解析，毫秒级知识图谱构建，token 消耗降低 99%。源自柏林 Charité 医学院的学术项目，有 arXiv 论文支撑。"
 date: 2026-07-22
 tags:
-  - MCP
-  - AI Agent
+  - mcp
+  - ai-agent
   - 代码分析
   - 知识图谱
   - 开源

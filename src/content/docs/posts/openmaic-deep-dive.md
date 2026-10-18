@@ -5,8 +5,6 @@ date: 2026-09-02
 tags: [多智能体, 教育AI, LangGraph, AI Agent, OpenMAIC, Next.js]
 ---
 
-# OpenMAIC 源码级解析：一句 prompt 生成一场 AI 授课，是怎么做到的？
-
 > **信息来源：** 本文基于 THU-MAIC/OpenMAIC `main` 分支（v1.0.0，2026-08-27）源码实读 + 官方 README / CHANGELOG。涉及文件：`lib/orchestration/director-graph.ts`、`lib/orchestration/stateless-generate.ts`、`lib/orchestration/ai-sdk-adapter.ts`、`lib/playback/engine.ts`、`package.json`。文中标注「源码」指直接引自主仓库文件。
 
 ---

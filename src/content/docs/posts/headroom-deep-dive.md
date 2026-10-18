@@ -190,7 +190,7 @@ Headroom 的分发设计是一个工程亮点——不是"你用我的库"或者
 |---------|--------|---------|
 | **Library** `compress(messages)` | 低 | Python/TS 内联调用 |
 | **Proxy** `headroom proxy --port 8787` | 零 | 任何语言，改环境变量即可 |
-| **Agent Wrap** `headroom wrap claude|codex|cursor|aider|copilot|gemini` | 零（一次性） | 一键包装编码 Agent |
+| **Agent Wrap** `headroom wrap claude\|codex\|cursor\|aider\|copilot\|gemini` | 零（一次性） | 一键包装编码 Agent |
 | **MCP Server** 暴露工具给 MCP 客户端 | 低 | MCP 生态自动集成 |
 | **MCP Install** `headroom mcp install` | 零 | 一键安装到 MCP 客户端 |
 
