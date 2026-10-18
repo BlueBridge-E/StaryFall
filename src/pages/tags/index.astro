@@ -1,20 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/TagLayout.astro';
+import { base } from '../../consts';
+import { getPosts, postSlug } from '../../lib/posts';
 
-const base = '/StaryFall';
-const docs = await getCollection('docs');
-const posts = docs.filter((d) => d.id.startsWith('posts/'));
+const posts = await getPosts();
 
 const tagMap = new Map<string, { title: string; path: string }[]>();
 for (const post of posts) {
-  const tags: string[] = post.data.tags ?? [];
-  const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
-  for (const tag of tags) {
+  for (const tag of post.data.tags) {
     if (!tagMap.has(tag)) tagMap.set(tag, []);
     tagMap.get(tag)!.push({
       title: post.data.title,
-      path: `${base}/posts/${slug}/`,
+      path: `${base}/posts/${postSlug(post.id)}/`,
     });
   }
 }
@@ -22,11 +19,14 @@ for (const post of posts) {
 const sortedTags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 ---
 
-<Layout title="标签">
+<Layout
+  title="标签"
+  description={`StaryFall 全部 ${sortedTags.length} 个标签的文章归档索引。`}
+>
   <ul class="tag-list">
     {sortedTags.map(([tag, posts]) => (
       <li>
-        <a href={`${base}/tags/${tag}/`}>
+        <a href={`${base}/tags/${encodeURIComponent(tag)}/`}>
           <span class="tag-name">#{tag}</span>
           <span class="tag-count">{posts.length} 篇</span>
         </a>
@@ -56,6 +56,10 @@ const sortedTags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].lengt
   .tag-list a:hover {
     border-color: var(--sl-color-text-accent);
     background: var(--sl-color-gray-7);
+  }
+  .tag-list a:focus-visible {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
   }
   .tag-name { font-weight: 600; color: var(--sl-color-text-accent); }
   .tag-count { font-size: 0.85rem; color: var(--sl-color-gray-2); }

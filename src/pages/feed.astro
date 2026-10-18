@@ -1,7 +1,10 @@
 ---
 // src/pages/feed.astro — AI 新闻速递
 // 数据文件: public/ai-news.json（由 cron 定时更新）
-const base = '/StaryFall';
+import { base, absoluteUrl } from '../consts';
+import '../styles/tokens.css';
+import '../styles/hero.css';
+
 interface NewsItem {
   title: string;
   summary: string;
@@ -15,13 +18,31 @@ interface NewsData {
 }
 let newsData: NewsData | null = null;
 try {
-  const mod = await import(`../../public/ai-news.json`) as { default: NewsData };
+  const mod = await import('../../public/ai-news.json') as { default: NewsData };
   newsData = mod.default;
-} catch {
-  newsData = null;
+} catch (error) {
+  // 不再静默吞掉：JSON 损坏或文件缺失时必须在构建期暴露，
+  // 否则 cron 写出坏数据会以「成功」的构建发布一个空状态页面。
+  throw new Error(
+    `无法加载 public/ai-news.json，请检查 cron 输出是否为合法 JSON：${(error as Error).message}`,
+  );
 }
 const items = newsData?.items ?? [];
 const lastUpdated = newsData?.lastUpdated ?? '';
+
+const pageTitle = 'AI 速递 — StaryFall';
+const pageDescription = 'AI 热点资讯精选，每周三、周日更新，聚合多源报道与要点摘要。';
+const canonical = absoluteUrl('/feed/');
+
+// 按月分组：月份标题在分页容器之外，因此始终可见，
+// 用 #YYYY-MM 锚点即可分享/直达某个月（由 scripts/pagination.ts 跳到该月所在页）。
+const monthOf = (date: string | undefined) => (date ?? '').slice(0, 7);
+const months = [...new Set(items.map((item) => monthOf(item.date)).filter(Boolean))].sort().reverse();
+const monthLabel = (key: string) => {
+  const [year, month] = key.split('-');
+  return `${year} 年 ${Number(month)} 月`;
+};
+const monthCount = (key: string) => items.filter((item) => monthOf(item.date) === key).length;
 ---
 
 <!doctype html>
@@ -29,50 +50,92 @@ const lastUpdated = newsData?.lastUpdated ?? '';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI 速递 — StaryFall</title>
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="StaryFall" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
   </head>
   <body>
     <header class="hero">
-      <h1>🤖 AI 速递</h1>
-      <p class="tagline">AI 热点资讯精选 · 每周三、周日更新</p>
-      <nav class="hero-nav">
-        <a href={`${base}/`}>首页</a>
-        <a href={`${base}/tags/`}>标签</a>
-      </nav>
+      <div class="hero-inner">
+        <p class="hero-badge">
+          <span class="dot" aria-hidden="true"></span>
+          {items.length} 条资讯 · {months.length} 个月
+        </p>
+        <h1>🤖 AI 速递</h1>
+        <p class="tagline">AI 热点资讯精选 · 每周三、周日更新</p>
+        <nav class="hero-nav" aria-label="站点导航">
+          <a href={`${base}/`}>首页</a>
+          <a href={`${base}/tags/`}>标签</a>
+          <a href={`${base}/work/`}>作品</a>
+        </nav>
+      </div>
     </header>
 
     {lastUpdated && (
       <p class="feed-meta">最近更新：{new Date(lastUpdated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
     )}
 
+    {months.length > 1 && (
+      <nav class="month-nav" aria-label="按月跳转">
+        <span class="month-nav-label">按月跳转：</span>
+        {months.map((key) => (
+          <a href={`#${key}`}>{monthLabel(key)}<span class="month-nav-count">{monthCount(key)}</span></a>
+        ))}
+      </nav>
+    )}
+
     <main class="post-list">
       {items.length === 0 ? (
         <p class="empty-state">📭 资讯数据准备中，稍后回来查看</p>
       ) : (
-        items.map((item: NewsItem, i: number) => (
-          <article class="post-card news-card">
-            <h2 class="news-title">{item.title}</h2>
-            <div class="news-source">
-              {item.source && <span class="source-name">{item.source}</span>}
-              {item.date && <span class="source-date">{item.date}</span>}
-              <span class="source-arrow">▾</span>
-            </div>
-            <p class="news-summary">{item.summary}</p>
-            {item.url ? (
-              <a href={item.url} class="news-link" target="_blank" rel="noopener">阅读原文 ↗</a>
-            ) : (
-              <span class="news-link disabled">暂无链接</span>
-            )}
-          </article>
-        ))
+        <>
+          {months.map((key) => (
+            <h2 class="month-heading" id={key} data-month-heading={key} hidden>
+              {monthLabel(key)}
+              <span class="month-heading-count">{monthCount(key)} 条</span>
+            </h2>
+          ))}
+          {items.map((item: NewsItem) => (
+            <article class="post-card news-card" data-pagination-card data-month={monthOf(item.date)}>
+              <h2 class="news-title">{item.title}</h2>
+              <div class="news-source">
+                {item.source && <span class="source-name">{item.source}</span>}
+                {item.date && <span class="source-date">{item.date}</span>}
+                <span class="source-arrow">▾</span>
+              </div>
+              <p class="news-summary">{item.summary}</p>
+              {item.url ? (
+                <a href={item.url} class="news-link" target="_blank" rel="noopener">阅读原文 ↗</a>
+              ) : (
+                <span class="news-link disabled">暂无链接</span>
+              )}
+            </article>
+          ))}
+        </>
       )}
     </main>
 
     {items.length > 10 && (
-      <nav class="pagination" id="pagination">
+      <nav class="pagination" id="pagination" data-pagination data-page-size="10" aria-label="分页">
+        <button class="page-btn" id="firstPage">
+          <span aria-hidden="true">«</span> 第一页
+        </button>
         <button class="page-btn" id="prevPage">← 上一页</button>
         <span class="page-info" id="pageInfo"></span>
         <button class="page-btn" id="nextPage">下一页 →</button>
+        <button class="page-btn" id="lastPage">
+          最后一页 <span aria-hidden="true">»</span>
+        </button>
       </nav>
     )}
 
@@ -81,117 +144,123 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     </footer>
 
     <script>
-      (function() {
-        var PAGE_SIZE = 10;
-        var cards = document.querySelectorAll('.news-card');
-        var total = cards.length;
-        if (total === 0) return;
-        var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-        var current = 1;
-
-        var prevBtn = document.getElementById('prevPage');
-        var nextBtn = document.getElementById('nextPage');
-        var infoEl = document.getElementById('pageInfo');
-        if (!prevBtn || !nextBtn || !infoEl) return;
-
-        function showPage(n) {
-          current = n;
-          var start = (current - 1) * PAGE_SIZE;
-          var end = Math.min(start + PAGE_SIZE, total);
-          for (var i = 0; i < total; i++) {
-            cards[i].style.display = (i >= start && i < end) ? 'block' : 'none';
-          }
-          prevBtn.disabled = (current === 1);
-          nextBtn.disabled = (current === totalPages);
-          infoEl.textContent = current + ' / ' + totalPages;
-          // 翻页后滚动到页面顶部
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        prevBtn.onclick = function() {
-          if (current > 1) showPage(current - 1);
-        };
-        nextBtn.onclick = function() {
-          if (current < totalPages) showPage(current + 1);
-        };
-
-        showPage(1);
-      })();
+      import { initPagination } from '../scripts/pagination';
+      initPagination();
     </script>
 
 <style>
-  :root {
-    --accent: #2563eb;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --bg: #fafafa;
-    --card-bg: #fff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.6;
     color: var(--text);
     background: var(--bg);
   }
 
-  .hero {
-    text-align: center;
-    padding: 4rem 1.5rem 3rem;
-    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
-    border-bottom: 1px solid var(--border);
-  }
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-  }
-  .tagline {
-    margin-top: 0.5rem;
-    color: var(--muted);
-    font-size: 1.1rem;
-  }
-  .hero-nav {
-    margin-top: 1.25rem;
+  /* 头图样式在 src/styles/hero.css（与首页、/work 共用） */
+
+  /* 月份导航条 */
+  .month-nav {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 1.5rem 0.5rem;
     display: flex;
-    gap: 1.5rem;
-    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+    font-size: 0.85rem;
   }
-  .hero-nav a {
+  .month-nav-label {
     color: var(--muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s;
   }
-  .hero-nav a:hover { color: var(--accent); }
+  .month-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2em 0.6em;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--accent);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .month-nav a:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .month-nav-count {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* 月份标题（分页容器之外，始终可见；由脚本按当前页显隐） */
+  .month-heading {
+    scroll-margin-top: 1rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .month-heading:first-child {
+    margin-top: 0.5rem;
+  }
+  .month-heading[hidden] {
+    display: none;
+  }
+  .month-heading:target {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .month-heading:target .month-heading-count {
+    color: var(--accent);
+  }
+  .month-heading-count {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
 
   .feed-meta {
-    max-width: 800px;
+    max-width: var(--page-max);
     margin: 1.25rem auto 1rem;
     padding: 0 1.5rem;
     font-size: 0.85rem;
     color: var(--muted);
   }
 
+  /*
+   * 双列栅格。月份标题与卡片是同一个容器的兄弟节点（分页脚本会 insertBefore
+   * 移动标题），所以标题要显式跨满整行，否则它会挤进某一列。
+   */
   .post-list {
-    max-width: 800px;
+    max-width: var(--page-max);
     margin: 0 auto;
     padding: 1rem 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 1rem;
+    align-content: start;
+  }
+  .month-heading,
+  .empty-state {
+    grid-column: 1 / -1;
   }
 
   .post-card {
     padding: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     background: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     transition: box-shadow 0.2s, transform 0.2s;
   }
   .post-card:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
   }
 
@@ -211,7 +280,7 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     margin-bottom: 0.5rem;
   }
   .source-name { font-weight: 600; }
-  .source-date { color: #999; }
+  .source-date { color: var(--muted); }
 
   .news-summary {
     font-size: 0.95rem;
@@ -271,13 +340,15 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     background: var(--card-bg);
     color: var(--accent);
     cursor: pointer;
+    /* <button> 默认不继承字体，不写这行会掉回浏览器默认按钮字体，与整站不一致 */
+    font: inherit;
     font-size: 0.9rem;
     font-weight: 600;
     border: 1px solid var(--border);
     transition: background 0.2s, border-color 0.2s;
   }
-  .page-btn:hover {
-    background: #eff6ff;
+  .page-btn:hover:not(:disabled) {
+    background: var(--accent-soft);
     border-color: var(--accent);
   }
   .page-btn:disabled {
@@ -288,6 +359,11 @@ const lastUpdated = newsData?.lastUpdated ?? '';
     font-size: 0.9rem;
     color: var(--muted);
     font-weight: 500;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 </style>
 

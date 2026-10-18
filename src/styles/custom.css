@@ -1,33 +1,196 @@
 /* StaryFall custom styles */
 
+@import './tokens.css';
+
 :root {
-  --sl-color-text-accent: #2563eb;
-  --sl-color-bg-accent: #eff6ff;
-  --sl-content-width: 50rem;
-  --sl-sidebar-width: 0rem;
+  --sl-color-text-accent: var(--accent);
+  --sl-color-bg-accent: var(--accent-soft);
+  /*
+   * 响应式正文宽度：45rem → 50rem。
+   *
+   * 右侧要放 18.75rem 的 ToC 列，而 Starlight 的两栏断点是 72rem
+   *   .main-pane = 正文宽 + (100% - 正文宽 - 18.75rem) / 2
+   * 用固定 50rem 时，1152–1350px 这段视口下「正文 + ToC」几乎占满，
+   * 算出来的左侧留白被压到 20px 上下（实测 1200px 时仅 24px），正文看起来又贴左了。
+   * 固定 45rem 又会让 1440px 以上右侧空出太多。
+   * 所以让它随视口在 45rem–50rem 之间连续变化：
+   *   1200px → 720px 正文（左留白 55px）
+   *   1440px → 800px 正文（左留白 135px）
+   * 顺带的好处是窄屏行长更短，中文读起来更舒服。
+   */
+  --sl-content-width: clamp(45rem, 60vw, 50rem);
 }
 
-/* Hide left sidebar */
-.sidebar-pane,
-.mobile-sidebar-toggle {
+/*
+ * 暗色主题下的强调色。
+ *
+ * ⚠️ 当前全站已钉死浅色（见 src/components/ThemeProvider.astro），data-theme 恒为
+ * 'light'，所以下面这条不会生效 —— 它保留是为了「将来若重新启用暗色」时不至于踩回
+ * 同一个坑，别顺手删掉。
+ *
+ * 坑在哪：上面 :root 里那条 --sl-color-text-accent 是「无层级」声明，而 Starlight
+ * 的调色板全部包在 @layer starlight.base 里。按 CSS 级联层规则，无层级声明优先于
+ * 任何分层声明，与特异性无关 —— 所以它同时压掉了 Starlight 为明/暗两套主题准备的值。
+ * 结果：#2563eb 这个正常蓝在近黑背景上对比度只有约 3:1，目录当前项和链接几乎看不见。
+ */
+[data-theme='dark'] {
+  --sl-color-text-accent: #7ea2ff;
+  --sl-color-bg-accent: #1e2a4a;
+}
+
+/*
+ * 隐藏左侧栏。
+ * 只保留 .sidebar-pane —— .mobile-sidebar-toggle 在产物 DOM 里从未出现过
+ * （实测文章页出现 0 次），那条选择器是死代码，已删除。
+ */
+.sidebar-pane {
   display: none !important;
 }
 
-/* Hide right sidebar (ToC) */
-.right-sidebar-container {
-  display: none !important;
+/*
+ * 左栏没有内容，但 Starlight 在 Page.astro 里按 --sl-sidebar-width 给主区域留了
+ * 同样宽的左边距：
+ *   @media (min-width: 50em) { [data-has-sidebar] { --sl-content-inline-start: var(--sl-sidebar-width) } }
+ * 那 300px 左边距正是「正文看起来偏左」的真正来源（.main-frame 的 padding-inline-start）。
+ *
+ * 不要图省事把 --sl-sidebar-width 改成 0：它同时被右侧 ToC 用来算宽度，
+ * 其中 .right-sidebar-panel .sl-container 的 width 是
+ *   calc(var(--sl-sidebar-width) - 2 * var(--sl-sidebar-pad-x))
+ * 设为 0 会算出负值，ToC 直接塌成 0 宽。
+ * 所以这里只把左边距单独归零。特异性 (0,1,1) 高于 Starlight 的 (0,1,0)。
+ */
+html[data-has-sidebar] {
+  --sl-content-inline-start: 0rem;
 }
 
-/* Full-width content area, centered */
-[data-has-sidebar][data-has-toc] .main-pane {
-  width: 100% !important;
-  --sl-content-margin-inline: auto !important;
+/*
+ * 顶部导航的补丁。
+ *
+ * Header.astro 用 --__toc-width 参与 grid 第一列（站名）的最小宽度计算，而它只在
+ * `:root:not([data-has-toc])` 时被定义为 0，有 ToC 时回退成 --sl-sidebar-width。
+ * 上面我们把左边距归零、但保留了 18.75rem 的 --sl-sidebar-width 给 ToC 用，
+ * 于是这一项在公式里被多减了一次，站名被压成 0 宽直接从导航栏消失。
+ * 把这一项显式声明为 0 即可恢复原样。
+ */
+.header {
+  --__toc-width: 0rem;
+}
+
+/*
+ * 72rem 以下补居中。
+ *
+ * ContentPanel.astro 里 .sl-container 只有 max-width，水平外边距这条规则被包在
+ * @media (min-width: 72rem) 里：
+ *   @media (min-width: 72rem) { .sl-container { margin-inline: var(--sl-content-margin-inline, auto) } }
+ * 所以视口一旦宽到能容下正文列、又还没到 72rem（此时右侧 ToC 也还没出现），
+ * 正文就会贴左、右边留一条空带。这里把这一区间补回居中。
+ */
+@media (max-width: 71.999rem) {
+  .main-pane .content-panel .sl-container {
+    margin-inline: auto;
+  }
+}
+
+/*
+ * 右侧目录（ToC）。
+ *
+ * 宽度：Starlight 给 ToC 内容设的宽度是
+ *   calc(var(--sl-sidebar-width) - 2 * var(--sl-sidebar-pad-x))          → 268px
+ * 再叠加一条 @media (min-width: 72rem) 里的 max-width：
+ *   ((100vw - 侧栏宽 - 2*正文内边距 - 2*目录内边距) * 0.25)              ← 注释自称 MAGIC NUMBER
+ * 后者在 1200px 视口下只有约 205px，而目录列本身有 379px 可用，
+ * 于是一半空间闲着、条目却被挤到折行。这里改成铺满实际可用列宽并封顶 20rem。
+ *
+ * 字号/对比/当前项高亮：Starlight 的条目是 var(--sl-text-xs) + gray-3，
+ * 又小又灰像附属信息；这里放大到 0.82rem、提到 gray-2，并给当前项加左侧高亮条。
+ */
+@media (min-width: 72rem) {
+  .right-sidebar-panel .sl-container {
+    width: min(
+      20rem,
+      calc(
+        var(--sl-sidebar-width) + (100vw - var(--sl-content-width) - var(--sl-sidebar-width)) / 2 - 2rem
+      )
+    );
+    max-width: none;
+  }
+}
+
+.right-sidebar-panel {
+  padding-block: 2.6rem 2.5rem;
+}
+
+/* 「本页内容」标题：弱化成小字标签，用一条细线分隔，避免和正文 H2 抢注意力 */
+.right-sidebar-panel h2 {
+  margin: 0 0 0.7rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--sl-color-gray-3);
+}
+
+.right-sidebar-panel a {
+  position: relative;
+  padding-block: 0.32rem;
+  /* 保留 Starlight 按层级缩进的逻辑（--depth 由组件注入），只是加大基础缩进给高亮条留位 */
+  padding-inline: calc(1rem * var(--depth, 0) + 0.85rem) 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--sl-color-gray-2);
+  border-radius: 0;
+  transition: color 0.15s;
+}
+
+/* 当前项的左侧高亮条：用一个独立伪元素，避免影响缩进与折行 */
+.right-sidebar-panel a::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.28rem;
+  inset-inline-start: 0;
+  width: 2px;
+  border-radius: 1px;
+  background-color: transparent;
+  transition: background-color 0.15s;
+}
+
+.right-sidebar-panel a:hover {
+  color: var(--sl-color-white);
+}
+
+.right-sidebar-panel a:hover::before {
+  background-color: var(--sl-color-gray-4);
+}
+
+.right-sidebar-panel a[aria-current='true'] {
+  color: var(--sl-color-text-accent);
+  font-weight: 600;
+}
+
+.right-sidebar-panel a[aria-current='true']::before {
+  background-color: var(--sl-color-text-accent);
+}
+
+/*
+ * 文章页标题区留白。
+ *
+ * Starlight 把标题和正文分别放在两个 .content-panel 里，中间那条
+ * `.content-panel + .content-panel { border-top }` 横跨整个主栏 ——
+ * 从视口最左一直画到目录边界，和缩进排版的正文完全对不齐，看着像一条多余的线。
+ * 这里去掉它，改用留白分隔，并把标题区整体抬高一点。
+ */
+.main-pane .content-panel:first-of-type {
+  padding-block: 2.75rem 2rem;
+}
+
+.main-pane .content-panel + .content-panel {
+  border-top: 0;
 }
 
 /* Chinese-optimized font stack */
 html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Better article typography */
@@ -45,9 +208,13 @@ html {
   border-left-color: var(--sl-color-text-accent);
 }
 
+/*
+ * 行内代码：原来写死了浅色底 + 深蓝字（#1e40af），在暗色主题下会变成一块刺眼的
+ * 亮斑。改用 Starlight 的主题变量，明暗两种模式都能自适应。
+ */
 .sl-markdown-content code:not(pre code) {
-  background: #eff6ff;
-  color: #1e40af;
+  background: var(--sl-color-bg-inline-code);
+  color: var(--sl-color-text-accent);
   padding: 0.15em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;

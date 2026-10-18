@@ -1,16 +1,31 @@
 ---
 // src/pages/work.astro — 作品集页面（GitHub API 自动拉取 + 静态 fallback）
 
-const base = '/StaryFall';
+import { base, absoluteUrl } from '../consts';
+import '../styles/tokens.css';
+import '../styles/hero.css';
+
+const pageTitle = '作品 — StaryFall';
+const pageDescription = 'AI 工具与工程化项目作品集：MCP Server、Tauri 桌面应用、Agent 工作流与自建基础设施。';
+const canonical = absoluteUrl('/work/');
 
 // Repos 配置（自动拉取的 GitHub 仓库）
+// 注意：这里列出的仓库若不存在，构建时会打印 404 警告并在页面上留下坏链接。
+// 2026-06 移除了 cyber-coin 与 Giuseppe 两个已失效（404）的仓库。
 const GITHUB_REPOS = [
   'BlueBridge-E/lighthouse-mcp',
-  'BlueBridge-E/cyber-coin',
   'BlueBridge-E/StaryFall',
   'BlueBridge-E/cn30days-skill',
-  'BlueBridge-E/Giuseppe',
 ];
+
+/**
+ * 模板里手写的静态项目卡片数量（见下方「非 GitHub 项目（纯静态）」注释块，当前 2 张）。
+ * 头图徽标显示的是「项目总数」，必须是 GITHUB_REPOS.length + 本值 ——
+ * 之前只写了 GITHUB_REPOS.length，徽标显示「3 个项目」而页面实际有 5 张卡片。
+ * 增删静态卡片时记得同步这里。
+ */
+const STATIC_PROJECT_COUNT = 2;
+const TOTAL_PROJECTS = GITHUB_REPOS.length + STATIC_PROJECT_COUNT;
 
 // 项目元数据（描述、标签、icon 等）手写，其他字段自动从 GitHub API 拉取
 const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: string; class?: string }[] }> = {
@@ -23,18 +38,9 @@ const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: 
       { label: '腾讯云' },
     ],
   },
-  'cyber-coin': {
-    icon: '💎',
-    desc: '基于 Tauri v2 + Rust 的跨平台桌面应用。实践前端与系统级语言的混合架构，探索本地化桌面工具的开发、打包与自动更新全链路。',
-    tags: [
-      { label: 'Rust', class: 'rust' },
-      { label: 'TypeScript', class: 'ts' },
-      { label: 'Tauri v2' },
-    ],
-  },
   'StaryFall': {
     icon: '🌠',
-    desc: '个人技术博客，基于 Astro + Starlight 构建，GitHub Actions 自动部署至腾讯云 Nginx。涵盖前端开发、AI 编码工具、协议分析等深度技术文章，支持标签分类与 SEO。',
+    desc: '个人技术博客，基于 Astro + Starlight 构建，GitHub Actions 自动部署至 GitHub Pages。涵盖前端开发、AI 编码工具、协议分析等深度技术文章，支持标签分类与 SEO。',
     tags: [
       { label: 'Astro' },
       { label: 'Starlight' },
@@ -50,40 +56,65 @@ const PROJECT_META: Record<string, { icon: string; desc: string; tags: { label: 
       { label: '多源聚合' },
     ],
   },
-  'Giuseppe': {
-    icon: '💰',
-    desc: 'iOS 原生记账应用 — SwiftUI + SwiftData，核心概念"财富支撑日"（存款 ÷ 日均支出），每笔收支都直观反馈自由天数。极简风格，高度自定义，记账音效反馈。开发中。',
-    tags: [
-      { label: 'Swift', class: 'swift' },
-      { label: 'SwiftUI' },
-      { label: 'iOS' },
-    ],
-  },
 };
 
 // 从 GitHub API 拉取 repo 数据（构建时运行）
-async function fetchGithubRepos() {
-  const results: Record<string, { stars: number; language: string; updatedAt: string } | null> = {};
-  try {
-    const responses = await Promise.all(
-      GITHUB_REPOS.map((repo) =>
-        fetch(`https://api.github.com/repos/${repo}`, {
-          headers: { 'User-Agent': 'StaryFall/1.0', Accept: 'application/vnd.github+json' },
-        }).then((r) => (r.ok ? r.json() : null)),
-      ),
-    );
-    for (const repo of responses) {
-      if (repo && repo.name) {
-        results[repo.name] = {
-          stars: repo.stargazers_count ?? 0,
-          language: repo.language ?? '',
-          updatedAt: repo.pushed_at ?? repo.updated_at,
-        };
+interface GithubRepo {
+  name: string;
+  stargazers_count?: number;
+  language?: string | null;
+  pushed_at?: string;
+  updated_at?: string;
+}
+
+type RepoData = { stars: number; language: string; updatedAt: string };
+
+async function fetchGithubRepos(): Promise<Record<string, RepoData>> {
+  const results: Record<string, RepoData> = {};
+  // 有 token 时用认证请求（5000 次/小时），否则退化为匿名 60 次/小时（按 IP）。
+  const token = process.env.GITHUB_TOKEN;
+  const headers: Record<string, string> = {
+    'User-Agent': 'StaryFall/1.0',
+    Accept: 'application/vnd.github+json',
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const responses = await Promise.all(
+    GITHUB_REPOS.map(async (repo) => {
+      try {
+        const r = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+        if (!r.ok) {
+          console.warn(
+            `[work] GitHub API ${r.status} for ${repo}` +
+              (r.status === 403 || r.status === 429
+                ? '（很可能是限流：未设置 GITHUB_TOKEN 时限额为 60 次/小时/IP）'
+                : ''),
+          );
+          return null;
+        }
+        return (await r.json()) as GithubRepo;
+      } catch (error) {
+        console.warn(`[work] GitHub API 请求失败 ${repo}: ${(error as Error).message}`);
+        return null;
       }
+    }),
+  );
+
+  for (const repo of responses) {
+    if (repo?.name) {
+      results[repo.name] = {
+        stars: repo.stargazers_count ?? 0,
+        language: repo.language ?? '',
+        updatedAt: repo.pushed_at ?? repo.updated_at ?? '',
+      };
     }
-  } catch {
-    // 静默失败，前端用 fallback
   }
+
+  const missing = GITHUB_REPOS.filter((full) => !results[full.split('/')[1]!]);
+  if (missing.length > 0) {
+    console.warn(`[work] ${missing.length}/${GITHUB_REPOS.length} 个仓库未取到数据，卡片将省略 star 与更新时间：${missing.join(', ')}`);
+  }
+
   return results;
 }
 
@@ -102,6 +133,11 @@ function fmtDate(iso: string | undefined) {
   return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
 }
 
+/** 1234 -> 1.2k，避免长数字撑破卡片 */
+function fmtStars(n: number) {
+  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k` : String(n);
+}
+
 // 获取项目数据
 function getProject(name: string) {
   const meta = PROJECT_META[name];
@@ -115,18 +151,36 @@ function getProject(name: string) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>作品 — StaryFall</title>
-    <meta name="description" content="AI 工具与工程化项目作品集" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="StaryFall" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
   </head>
   <body>
     <header class="hero">
-      <h1>作品</h1>
-      <p class="tagline">Build AI-powered tools.</p>
-      <nav class="hero-nav">
-        <a href={`${base}/`}>首页</a>
-        <a href={`${base}/tags/`}>标签</a>
-        <a href="https://github.com/BlueBridge-E">GitHub</a>
-      </nav>
+      <div class="hero-inner">
+        <p class="hero-badge">
+          <span class="dot" aria-hidden="true"></span>
+          {TOTAL_PROJECTS} 个项目 · 持续更新
+        </p>
+        <h1>作品</h1>
+        <p class="tagline">Build AI-powered tools.</p>
+        <nav class="hero-nav" aria-label="站点导航">
+          <a href={`${base}/`}>首页</a>
+          <a href={`${base}/tags/`}>标签</a>
+          <a href={`${base}/feed/`}>AI 速递</a>
+          <a href="https://github.com/BlueBridge-E">GitHub</a>
+        </nav>
+      </div>
     </header>
 
     <main class="work-list">
@@ -151,7 +205,14 @@ function getProject(name: string) {
                 <div class="work-stats">
                   {github && (
                     <>
-                      <span class="stat stat--time">{fmtDate(github.updatedAt)}</span>
+                      {github.stars > 0 && (
+                        <span class="stat stat--stars" title={`${github.stars} stars`}>
+                          ★ {fmtStars(github.stars)}
+                        </span>
+                      )}
+                      {github.updatedAt && (
+                        <span class="stat stat--time">{fmtDate(github.updatedAt)}</span>
+                      )}
                     </>
                   )}
                 </div>
@@ -204,80 +265,45 @@ function getProject(name: string) {
     </main>
 
     <footer class="footer">
-      <p>Built with Astro · Deployed on Tencent Cloud</p>
+      <p>Built with Astro · Deployed on GitHub Pages</p>
     </footer>
   </body>
 </html>
 
 <style>
-  :root {
-    --accent: #2563eb;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --bg: #fafafa;
-    --card-bg: #fff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.6;
     color: var(--text);
     background: var(--bg);
   }
 
-  .hero {
-    text-align: center;
-    padding: 4rem 1.5rem 3rem;
-    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
-    border-bottom: 1px solid var(--border);
-  }
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-  }
-  .tagline {
-    margin-top: 0.5rem;
-    color: var(--muted);
-    font-size: 1.1rem;
-  }
-  .hero-nav {
-    margin-top: 1.25rem;
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-  }
-  .hero-nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-  }
-  .hero-nav a:hover { color: var(--accent); }
+  /* 头图样式在 src/styles/hero.css（与首页、/feed 共用） */
 
   .work-list {
-    max-width: 800px;
+    max-width: var(--page-max);
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 1.15rem;
+    align-content: start;
   }
 
   .work-card {
     display: block;
     padding: 1.75rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0;
     background: var(--card-bg);
-    border-radius: 14px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
     border: 1px solid transparent;
   }
   a.work-card:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
     border-color: var(--accent);
   }
@@ -285,7 +311,7 @@ function getProject(name: string) {
     cursor: default;
   }
   .work-card--no-link:hover {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-card);
     transform: none;
     border-color: transparent;
   }
@@ -321,11 +347,10 @@ function getProject(name: string) {
     background: #f0f4ff;
     color: #4a6cc1;
   }
-  .lang-tag.ts { background: #e6f4ff; color: #3178c6; }
-  .lang-tag.swift { background: #fff3e0; color: #c17538; }
-  .lang-tag.swift { background: #f0fff0; color: #c17538; }
-  .lang-tag.rust { background: #fff3e0; color: #c17538; }
-  .lang-tag.swift { background: #fff3e0; color: #c17538; }
+  /* 对比度需 ≥4.5:1（0.78rem 太小不算「大号文本」） */
+  .lang-tag.ts { background: #e6f4ff; color: #1f5fa0; }
+  .lang-tag.swift { background: #fff3e0; color: #8a4b1a; }
+  .lang-tag.rust { background: #fff3e0; color: #8a4b1a; }
 
   .work-stats {
     margin-left: auto;
@@ -340,6 +365,10 @@ function getProject(name: string) {
     align-items: center;
     gap: 0.2rem;
   }
+  .stat--stars {
+    color: #b45309;
+    font-weight: 600;
+  }
   .stat--time {
     font-size: 0.8rem;
   }
@@ -348,6 +377,11 @@ function getProject(name: string) {
     color: var(--muted);
     font-size: 0.95rem;
     line-height: 1.7;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .footer {

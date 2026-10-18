@@ -1,14 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
+import { base, absoluteUrl } from '../consts';
+import { getPosts, postSlug, readingMinutes } from '../lib/posts';
+import '../styles/tokens.css';
+import '../styles/hero.css';
 
-const base = '/StaryFall';
-const docs = await getCollection('docs');
-const posts = docs
-  .sort((a, b) => {
-    const da = a.data.date?.getTime() ?? 0;
-    const db = b.data.date?.getTime() ?? 0;
-    return db - da;
-  });
+const posts = await getPosts();
+
+const siteTitle = 'StaryFall — 学习与构建的技术博客';
+const siteDescription = '关于 AI Agent、MCP、开源项目深度解析与前端工程化的技术博客。';
+const canonical = absoluteUrl('/');
+
+// 首屏统计与标签
+const tagCount = new Set(posts.flatMap((post) => post.data.tags)).size;
+const latestDate = posts[0]?.data.date;
+
+// 最新一篇做成横跨整行的特稿卡片，其余走两列栅格
+const [featured, ...rest] = posts;
+// 特稿 + 其余合并成一个有序数组，保证 data-pagination-card 的全局顺序与文章顺序一致
+const ordered = featured ? [featured, ...rest] : [];
 ---
 
 <!doctype html>
@@ -16,209 +25,290 @@ const posts = docs
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>StaryFall — 学习与构建的技术博客</title>
-    <meta name="description" content="一个关于前端开发、编程语言和工具链的技术博客。" />
+    <title>{siteTitle}</title>
+    <meta name="description" content={siteDescription} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="StaryFall" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
   </head>
   <body>
     <header class="hero">
-      <h1>StaryFall</h1>
-      <p class="tagline">学习与构建的技术博客</p>
-      <nav class="hero-nav">
-        <a href={`${base}/tags/`}>标签</a>
-        <a href={`${base}/work/`}>作品</a>
-        <a href={`${base}/feed/`}>AI 速递</a>
-        <a href="https://github.com/BlueBridge-E">GitHub</a>
-      </nav>
+      <div class="hero-inner">
+        <p class="hero-badge">
+          <span class="dot" aria-hidden="true"></span>
+          {posts.length} 篇文章 · {tagCount} 个标签
+        </p>
+        <h1>StaryFall</h1>
+        <p class="tagline">学习与构建的技术博客</p>
+        <nav class="hero-nav" aria-label="站点导航">
+          <a href={`${base}/tags/`}>标签</a>
+          <a href={`${base}/work/`}>作品</a>
+          <a href={`${base}/feed/`}>AI 速递</a>
+          <a href={`${base}/rss.xml`}>RSS</a>
+          <a href="https://github.com/BlueBridge-E" rel="me">GitHub</a>
+        </nav>
+      </div>
     </header>
 
-    <main class="post-list">
-      {posts.map((post) => {
-        const slug = post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '');
-        const tags = (post.data.tags ?? []) as string[];
-        return (
-          <article class="post-card">
-            <a href={`${base}/posts/${slug}/`} class="post-title">
-              {post.data.title}
-            </a>
-            <p class="post-desc">{post.data.description}</p>
-            <div class="post-meta">
-              {post.data.date && (
-                <time datetime={post.data.date.toISOString()}>
-                  {post.data.date.toLocaleDateString('zh-CN')}
-                </time>
-              )}
+    <main class="page">
+      <div class="section-head">
+        <h2>最近更新</h2>
+        {latestDate && (
+          <time datetime={latestDate.toISOString()}>
+            最新一篇 · {latestDate.toLocaleDateString('zh-CN')}
+          </time>
+        )}
+      </div>
+
+      <div class="post-grid">
+        {ordered.map((post, index) => {
+          const tags = post.data.tags;
+          const minutes = readingMinutes(post.body);
+          const isFeatured = index === 0;
+          return (
+            <article
+              class:list={['post-card', { 'post-card--featured': isFeatured }]}
+              data-pagination-card
+            >
+              {isFeatured && <span class="featured-badge">最新</span>}
+              <div class="card-top">
+                {post.data.date && (
+                  <time datetime={post.data.date.toISOString()}>
+                    {post.data.date.toLocaleDateString('zh-CN')}
+                  </time>
+                )}
+                <span class="dot" aria-hidden="true"></span>
+                <span>{minutes} 分钟</span>
+              </div>
+              <a href={`${base}/posts/${postSlug(post.id)}/`} class="post-title">
+                {post.data.title}
+              </a>
+              <p class="post-desc">{post.data.description}</p>
               {tags.length > 0 && (
-                <span class="post-tags">
-                  {tags.map((tag) => (
-                    <a href={`${base}/tags/${tag}/`} class="tag">#{tag}</a>
+                <ul class="post-tags">
+                  {tags.slice(0, isFeatured ? 8 : 4).map((tag) => (
+                    <li>
+                      <a href={`${base}/tags/${encodeURIComponent(tag)}/`} class="tag">
+                        #{tag}
+                      </a>
+                    </li>
                   ))}
-                </span>
+                </ul>
               )}
-            </div>
-          </article>
-        );
-      })}
+            </article>
+          );
+        })}
+      </div>
+
+      <nav class="pagination" id="pagination" data-pagination data-page-size="10" aria-label="分页">
+        <button class="page-btn" id="firstPage">
+          <span aria-hidden="true">«</span> 第一页
+        </button>
+        <button class="page-btn" id="prevPage">← 上一页</button>
+        <span class="page-info" id="pageInfo"></span>
+        <button class="page-btn" id="nextPage">下一页 →</button>
+        <button class="page-btn" id="lastPage">
+          最后一页 <span aria-hidden="true">»</span>
+        </button>
+      </nav>
     </main>
 
-    <nav class="pagination" id="pagination">
-      <button class="page-btn" id="prevPage">← 上一页</button>
-      <span class="page-info" id="pageInfo"></span>
-      <button class="page-btn" id="nextPage">下一页 →</button>
-    </nav>
-
     <footer class="footer">
-      <p>Built with Astro + Starlight</p>
+      <p>Built with Astro + Starlight · <a href={`${base}/rss.xml`}>RSS</a></p>
     </footer>
 
     <script>
-      (function() {
-        var PAGE_SIZE = 10;
-        var cards = document.querySelectorAll('.post-card');
-        var total = cards.length;
-        var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-        var current = 1;
-
-        var prevBtn = document.getElementById('prevPage');
-        var nextBtn = document.getElementById('nextPage');
-        var infoEl = document.getElementById('pageInfo');
-
-        function showPage(n) {
-          current = n;
-          var start = (current - 1) * PAGE_SIZE;
-          var end = Math.min(start + PAGE_SIZE, total);
-          for (var i = 0; i < total; i++) {
-            cards[i].style.display = (i >= start && i < end) ? 'block' : 'none';
-          }
-          prevBtn.disabled = (current === 1);
-          nextBtn.disabled = (current === totalPages);
-          infoEl.textContent = current + ' / ' + totalPages;
-          // 翻页后滚动到页面顶部，无论容器高度
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        prevBtn.onclick = function() {
-          if (current > 1) showPage(current - 1);
-        };
-        nextBtn.onclick = function() {
-          if (current < totalPages) showPage(current + 1);
-        };
-
-        showPage(1);
-      })();
+      import { initPagination } from '../scripts/pagination';
+      initPagination();
     </script>
 
 <style>
-  :root {
-    --accent: #2563eb;
-    --text: #1a1a2e;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --bg: #fafafa;
-    --card-bg: #fff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.6;
     color: var(--text);
     background: var(--bg);
+    -webkit-font-smoothing: antialiased;
   }
 
-  .hero {
-    text-align: center;
-    padding: 4rem 1.5rem 3rem;
-    background: linear-gradient(135deg, #eff6ff 0%, #fafafa 100%);
+  /* ── 头图样式在 src/styles/hero.css（与 /feed、/work 共用） ── */
+
+  /* ── 正文容器 ── */
+  .page {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.35rem;
+    padding-bottom: 0.7rem;
     border-bottom: 1px solid var(--border);
   }
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.02em;
+  .section-head h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
   }
-  .tagline {
-    margin-top: 0.5rem;
+  .section-head time {
+    font-size: 0.82rem;
     color: var(--muted);
-    font-size: 1.1rem;
   }
-  .hero-nav {
-    margin-top: 1.25rem;
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-  }
-  .hero-nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-  }
-  .hero-nav a:hover { color: var(--accent); }
 
-  .post-list {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+  /* ── 卡片栅格 ── */
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 1.15rem;
   }
+
   .post-card {
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    /* 注意：分页脚本会给卡片写内联 display:block，所以卡片的排版不要依赖 display，
+       内部布局用块级/普通流，需要横排的地方用 flex 放在子元素上。 */
+    position: relative;
+    padding: 1.4rem 1.5rem;
     background: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.2s, transform 0.2s;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  }
+  /* 左侧强调条：hover 时滑出 */
+  .post-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.1rem;
+    bottom: 1.1rem;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+    opacity: 0;
+    transform: scaleY(0.4);
+    transition: opacity 0.2s, transform 0.2s;
   }
   .post-card:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(37, 99, 235, 0.28);
     transform: translateY(-2px);
   }
-  .post-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text);
-    text-decoration: none;
-    transition: color 0.2s;
+  .post-card:hover::before {
+    opacity: 1;
+    transform: scaleY(1);
   }
-  .post-title:hover { color: var(--accent); }
-  .post-desc {
-    margin-top: 0.35rem;
-    color: var(--muted);
-    font-size: 0.95rem;
-    line-height: 1.65;
+
+  /* 最新一篇横跨两列 */
+  .post-card--featured {
+    grid-column: 1 / -1;
+    padding: 1.8rem 2rem;
+    background:
+      radial-gradient(600px 200px at 100% 0%, rgba(37, 99, 235, 0.07), transparent 70%),
+      var(--card-bg);
   }
-  .post-meta {
-    margin-top: 0.6rem;
+  .post-card--featured .post-title {
+    font-size: 1.55rem;
+    line-height: 1.4;
+  }
+  .post-card--featured .post-desc {
+    max-width: 62ch;
+    font-size: 1rem;
+  }
+  .featured-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.75rem;
+    padding: 0.16rem 0.6rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .card-top {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 0.85rem;
+    gap: 0.55rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.79rem;
     color: var(--muted);
+    letter-spacing: 0.02em;
   }
-  .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .tag {
-    color: var(--accent);
+
+  .post-title {
+    display: block;
+    font-size: 1.16rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--text);
     text-decoration: none;
-    font-size: 0.82rem;
+    transition: color 0.18s;
   }
-  .tag:hover { text-decoration: underline; }
+  .post-title:hover {
+    color: var(--accent);
+  }
 
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.85rem;
+  .post-desc {
+    margin-top: 0.5rem;
     color: var(--muted);
+    font-size: 0.93rem;
+    line-height: 1.7;
+    /* 最多三行，避免卡片高低参差 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /*
+     * 占满三行的高度。卡片由栅格拉伸成等高，但内部是普通块级流
+     * （分页脚本会给卡片写内联 display:block，不能用 flex 把标签顶到底部），
+     * 描述短的那张会让标签浮起来、和邻列对不齐。给个最小高度即可对齐底部。
+     * 5.1em = 3 行 × line-height 1.7。
+     */
+    min-height: 5.1em;
+  }
+  .post-card--featured .post-desc {
+    -webkit-line-clamp: 2;
+    /* 2 行 × 1.7 */
+    min-height: 3.4em;
   }
 
-  @media (max-width: 480px) {
-    .hero { padding: 3rem 1.25rem 2rem; }
-    .hero h1 { font-size: 2rem; }
-    .post-list { padding: 1.5rem 1rem 3rem; }
-    .post-meta { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
-    .pagination { flex-wrap: wrap; }
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    padding: 0;
+    list-style: none;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.1rem 0.52rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: background 0.18s, color 0.18s;
+  }
+  .tag:hover {
+    background: var(--accent);
+    color: #fff;
   }
 
-  /* 分页 */
+  /* ── 分页 ── */
   .pagination {
     display: flex;
     justify-content: center;
@@ -230,18 +320,19 @@ const posts = docs
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.5em 1.2em;
-    border-radius: 8px;
+    padding: 0.55em 1.25em;
+    border-radius: 999px;
     background: var(--card-bg);
     color: var(--accent);
     cursor: pointer;
-    font-size: 0.9rem;
+    font: inherit;
+    font-size: 0.88rem;
     font-weight: 600;
     border: 1px solid var(--border);
     transition: background 0.2s, border-color 0.2s;
   }
-  .page-btn:hover {
-    background: #eff6ff;
+  .page-btn:hover:not(:disabled) {
+    background: var(--accent-soft);
     border-color: var(--accent);
   }
   .page-btn:disabled {
@@ -249,10 +340,60 @@ const posts = docs
     cursor: default;
   }
   .page-info {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--muted);
     font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer {
+    padding: 2.25rem 1.5rem 3rem;
+    text-align: center;
+    font-size: 0.84rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+    .post-card--featured {
+      padding: 1.5rem 1.4rem;
+    }
+    .post-card--featured .post-title {
+      font-size: 1.3rem;
+    }
+    .featured-badge {
+      position: static;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page {
+      padding: 1.75rem 1rem 3rem;
+    }
+    .section-head {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .pagination {
+      flex-wrap: wrap;
+    }
   }
 </style>
+
   </body>
 </html>
