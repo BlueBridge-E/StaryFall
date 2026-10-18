@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bluebridge-e.github.io/StaryFall/sitemap-index.xml

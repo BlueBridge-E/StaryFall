@@ -9,13 +9,17 @@ export const collections = {
     schema: docsSchema({
       extend: z.object({
         date: z.date().optional(),
+        // 标签统一规范化：
+        //  - 去首尾空白 + 转小写，避免 `ai`/`AI`、`mcp`/`MCP` 这类大小写变体
+        //    各自生成标签页并在大小写不敏感文件系统上互相覆盖；
+        //  - 空白折叠为连字符，避免 `/tags/ai%20agent/` 这种带空格的 URL。
         tags: z
           .array(z.string())
           .optional()
           .default([])
-          // 统一小写 + 去空格，避免 ai/AI、agent/Agent、mcp/MCP 等变体
-          // 在大小写不敏感文件系统上归并到同一路由目录导致文章丢失。
-          .transform((t) => t.map((s) => s.trim().toLowerCase())),
+          .transform((tags) =>
+            tags.map((tag) => tag.trim().toLowerCase().replace(/\s+/g, '-')),
+          ),
       }),
     }),
   }),

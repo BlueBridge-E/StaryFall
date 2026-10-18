@@ -1,0 +1,21 @@
+---
+// 覆盖 Starlight 的 Footer，在页脚之前插入「上一篇/下一篇」与「相关文章」。
+// 只对 /posts/* 生效（route.id 以 posts/ 开头），标签页、首页等不受影响。
+import Default from '@astrojs/starlight/components/Footer.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import { getPosts } from '../lib/posts';
+
+const route = Astro.locals.starlightRoute;
+const isPost = route.id.startsWith('posts/');
+
+const posts = isPost ? await getPosts() : [];
+const current = isPost ? posts.find((entry) => entry.id === route.id) : undefined;
+---
+
+{
+  current && (
+    <RelatedPosts current={current} all={posts} />
+  )
+}
+
+<Default><slot /></Default>

@@ -1,12 +1,13 @@
 {
-  "name": "\u84dd\u6865\u6613",
+  "name": "蓝桥易",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check": "astro check"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,12 @@
   },
   "homepage": "https://github.com/BlueBridge-E/StaryFall#readme",
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/starlight": "^0.39.2",
     "astro": "^6.3.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }

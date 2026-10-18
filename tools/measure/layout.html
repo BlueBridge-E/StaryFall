@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>布局测量</title>
+    <style>
+      html, body { margin: 0; }
+      iframe { width: 100vw; height: 900px; border: 0; display: block; }
+      #out { font: 12px/1.5 monospace; white-space: pre-wrap; padding: 8px; }
+    </style>
+  </head>
+  <body>
+    <div id="out">pending</div>
+    <iframe id="f"></iframe>
+    <script>
+      const f = document.getElementById('f');
+      // ?theme=dark|light 用于验暗色主题：必须在 iframe 加载前写入 localStorage，
+      // 否则 Starlight 的 ThemeProvider 在读不到值时按 prefers-color-scheme 走。
+      // 所以 src 由脚本赋值，而不是写在 iframe 的 HTML 属性上。
+      const qs = new URLSearchParams(location.search);
+      const theme = qs.get('theme');
+      if (theme === 'dark' || theme === 'light') localStorage.setItem('starlight-theme', theme);
+      else localStorage.removeItem('starlight-theme');
+      f.src = '/StaryFall/posts/' + (qs.get('post') || 'mcp-protocol') + '/';
+      setTimeout(function () {
+        let s = '';
+        try {
+          const d = f.contentDocument, w = f.contentWindow;
+          s += 'iframe 主题 = ' + (d.documentElement.getAttribute('data-theme') || '(未设置)') + '\n';
+          const rootCS = w.getComputedStyle(d.documentElement);
+          s += '强调色 --sl-color-text-accent = ' + rootCS.getPropertyValue('--sl-color-text-accent').trim() + '\n';
+          const tocLink = d.querySelector('.right-sidebar-panel a');
+          if (tocLink) s += '目录条目 color = ' + w.getComputedStyle(tocLink).color + '\n';
+          const th = d.querySelector('.sl-markdown-content thead th');
+          if (th) {
+            s += '表头 th 背景 = ' + w.getComputedStyle(th).backgroundColor +
+                 '  color = ' + w.getComputedStyle(th).color + '\n';
+          } else {
+            s += '表头 th = (本页无表格)\n';
+          }
+          // 注意：当前项高亮由 IntersectionObserver + requestIdleCallback 驱动，
+          // 在 headless 的 iframe 里 idle 回调会被节流，跑不出来是正常现象，
+          // 所以这里只做信息性输出，不作为断言依据。
+          const active = d.querySelector('.right-sidebar-panel a[aria-current="true"]');
+          s += '目录当前项 = ' + (active ? '"' + active.textContent.trim() + '"' : '(iframe 内未触发，正常)') + '\n';
+          s += '\n';
+          const rect = (el) => {
+            const r = el.getBoundingClientRect();
+            return 'left=' + String(Math.round(r.left)).padStart(5) +
+                   ' right=' + String(Math.round(r.right)).padStart(5) +
+                   ' w=' + String(Math.round(r.width)).padStart(5) +
+                   ' top=' + String(Math.round(r.top)).padStart(5) +
+                   ' h=' + String(Math.round(r.height)).padStart(4);
+          };
+          const mp = d.querySelector('.main-pane');
+          const panel = mp.querySelector('.content-panel');
+          const cont = panel.querySelector('.sl-container');
+          const md = d.querySelector('.sl-markdown-content');
+
+          const vw = w.innerWidth;
+          s += 'iframe innerWidth = ' + vw + '\n';
+          s += '.main-pane 变量 --sl-content-margin-inline = [' +
+            w.getComputedStyle(mp).getPropertyValue('--sl-content-margin-inline') + ']\n\n';
+
+          s += '.main-pane                              ' + rect(mp) + '\n';
+          s += '.content-panel                          ' + rect(panel) + '\n';
+          s += '.sl-container                           ' + rect(cont) + '\n';
+          s += '  ├ marginLeft=' + w.getComputedStyle(cont).marginLeft +
+               '  marginRight=' + w.getComputedStyle(cont).marginRight + '\n';
+          s += '.sl-markdown-content                    ' + rect(md) + '\n';
+          s += 'h1                                      ' + rect(d.querySelector('h1')) + '\n';
+          s += '.right-sidebar-container                ' + rect(d.querySelector('.right-sidebar-container')) + '\n\n';
+
+          const hdr = d.querySelector('header.header');          const inner = hdr && hdr.querySelector('.header');
+          if (hdr) {
+            s += 'header.header (fixed)                   ' + rect(hdr) + '\n';
+            const hs = w.getComputedStyle(hdr);
+            s += '  display=' + hs.display + '  --sl-content-inline-start=[' +
+                 hs.getPropertyValue('--sl-content-inline-start') + ']\n';
+            if (inner) {
+              const is2 = w.getComputedStyle(inner);
+              s += 'div.header (grid)                       ' + rect(inner) + '\n';
+              s += '  display=' + is2.display + '  columns=[' + is2.gridTemplateColumns + ']\n';
+              s += '  --__toc-width=[' + is2.getPropertyValue('--__toc-width') + ']  --__main-column-fr=[' +
+                   is2.getPropertyValue('--__main-column-fr') + ']  --__sidebar-width=[' +
+                   is2.getPropertyValue('--__sidebar-width') + ']\n';
+              s += '  matchMedia(50rem)=' + w.matchMedia('(min-width: 50rem)').matches +
+                   '  bodyW=' + d.body.getBoundingClientRect().width + '\n';
+            }
+            const tw = d.querySelector('.title-wrapper');
+            const rg = d.querySelector('.right-group');
+            if (tw) s += '.title-wrapper                           ' + rect(tw) + '\n';
+            if (rg) s += '.right-group                             ' + rect(rg) + '\n';
+            s += '.right-sidebar-panel .sl-container       ' +
+                 rect(d.querySelector('.right-sidebar-panel .sl-container')) + '\n';
+            s += '\n';
+          }
+
+          const c = cont.getBoundingClientRect();
+          const gapL = Math.round(c.left);
+          const gapR = Math.round(vw - c.right);
+          const tocEl = d.querySelector('.right-sidebar-panel');
+          const tocR = tocEl.getBoundingClientRect();
+          const tocW = Math.round(tocR.width);
+          s += '正文左右留白: 左=' + gapL + 'px  右=' + gapR + 'px\n';
+          if (tocW > 0) {
+            const gapToToc = Math.round(tocR.left - c.right);
+            const inner = d.querySelector('.right-sidebar-panel .sl-container').getBoundingClientRect();
+            s += '两栏模式: 左留白=' + gapL + 'px  正文→ToC=' + gapToToc +
+                 'px  ToC内容宽=' + Math.round(inner.width) + 'px\n';
+            s += gapL >= 40 && gapToToc >= 12
+              ? '=> 两栏间距正常 ✅\n'
+              : '=> 两栏过挤，正文贴左 ❌\n';
+          } else {
+            s += '单栏模式（无 ToC），左右差=' + Math.abs(gapL - gapR) + 'px\n';
+            s += Math.abs(gapL - gapR) <= 2 ? '=> 已水平居中 ✅\n' : '=> 未居中 ❌\n';
+          }
+        } catch (e) { s = 'ERR ' + e.message; }
+        document.getElementById('out').textContent = s;
+      }, 3000);
+    </script>
+  </body>
+</html>

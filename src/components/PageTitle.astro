@@ -1,0 +1,128 @@
+---
+/**
+ * 覆盖 Starlight 的 PageTitle，把文章页的标题区做成「博客/杂志」式的头部：
+ *   日期 · 阅读时长
+ *   大标题
+ *   摘要（frontmatter.description）
+ *   标签胶囊
+ *
+ * 注意：全站只有 posts/ 下的文章走 Starlight（首页、/feed、/work、/tags 都是独立
+ * Astro 页面），所以这层覆盖实际只影响文章页。
+ */
+import { base } from '../consts';
+import { readingMinutes } from '../lib/posts';
+
+const { entry } = Astro.locals.starlightRoute;
+const { title, description, date, tags } = entry.data;
+
+const minutes = readingMinutes(entry.body);
+const tagList = tags ?? [];
+
+// 统一用 UTC 取值：frontmatter 的 `date: YYYY-MM-DD` 被解析为 UTC 零点，
+// 用本地时区的 getDate() 在负时区会退一天；用 UTC 也能保证 CI 与本机结果一致。
+const isoDate = date ? date.toISOString().slice(0, 10) : undefined;
+const displayDate = date
+  ? `${date.getUTCFullYear()} 年 ${date.getUTCMonth() + 1} 月 ${date.getUTCDate()} 日`
+  : undefined;
+
+const tagHref = (tag: string) => `${base}/tags/${encodeURIComponent(tag)}/`;
+---
+
+<header class="post-head">
+  <p class="post-meta">
+    {
+      displayDate && (
+        <time datetime={isoDate}>{displayDate}</time>
+      )
+    }
+    {displayDate && <span class="post-meta-sep" aria-hidden="true">·</span>}
+    <span>约 {minutes} 分钟</span>
+  </p>
+
+  {/* id 必须保留为 Starlight 的 PAGE_TITLE_ID（'_top'）：右侧目录首项与「跳到正文」都用它 */}
+  <h1 id="_top" class="post-title">{title}</h1>
+
+  {description && <p class="post-lead">{description}</p>}
+
+  {
+    tagList.length > 0 && (
+      <ul class="post-tags">
+        {tagList.map((tag) => (
+          <li>
+            <a class="post-tag" href={tagHref(tag)}>
+              #{tag}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</header>
+
+<style>
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.85rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    color: var(--sl-color-gray-3);
+  }
+
+  .post-meta-sep {
+    opacity: 0.45;
+  }
+
+  .post-title {
+    margin: 0;
+    /* 杂志式标题：随视口小幅缩放，中文标题用较重的字重才压得住 */
+    font-size: clamp(1.75rem, 1.1rem + 1.9vw, 2.45rem);
+    font-weight: 800;
+    line-height: 1.28;
+    letter-spacing: -0.01em;
+    color: var(--sl-color-white);
+    text-wrap: balance;
+  }
+
+  .post-lead {
+    margin: 1.1rem 0 0;
+    max-width: 46rem;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--sl-color-gray-2);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.3rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post-tag {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    text-decoration: none;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+
+  .post-tag:hover,
+  .post-tag:focus-visible {
+    color: var(--sl-color-text-accent);
+    border-color: var(--sl-color-text-accent);
+    background: transparent;
+  }
+</style>

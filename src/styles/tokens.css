@@ -1,0 +1,135 @@
+/**
+ * 全站共享设计 token。
+ * 首页 / AI 速递 / 作品 / 标签页原先各自内联了一份近乎相同的变量定义，
+ * 此处统一为唯一来源；Starlight 的自定义样式也复用同一组值。
+ */
+:root {
+  --accent: #2563eb;
+  --accent-soft: #eff6ff;
+
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #fafafa;
+  --card-bg: #fff;
+
+  --radius-card: 12px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.1);
+
+  /*
+   * 独立页面（首页 / feed / work / tags）的内容最大宽度。
+   * 原来是各页各写一个 720–800px 的值，在 1440 视口下每边要空 300px 以上，
+   * 整站显得又窄又素。统一到 1200px 并配合多列栅格。
+   */
+  --page-max: 1200px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC',
+    'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/*
+ * 重置：只做 box-sizing 与根元素外边距。
+ *
+ * ⚠️ 切勿对通用选择器同时归零 margin 与 padding。
+ * Starlight 的文章排版依赖浏览器默认的 UA 外边距 —— 它自身并不定义
+ * p / h2 / pre / table / ul 的 margin 与 padding。一旦对通用选择器把
+ * 两者清零，正文的标题、段落、代码块、表格就会挤成一团（曾因此出过问题）。
+ *
+ * 另外这段必须放在被 import 的 .css 中：Astro 会把组件 <style> 里的
+ * 通用选择器改写成 :where(.astro-xxxx)，只命中带作用域类的元素，对 body 失效。
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 文章内排版间距（Starlight 未定义，需显式给出） ── */
+
+.sl-markdown-content > * + * {
+  margin-top: 1rem;
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+
+.sl-markdown-content > :first-child {
+  margin-top: 0;
+}
+
+.sl-markdown-content :is(ul, ol) {
+  padding-inline-start: 1.5rem;
+  list-style-position: outside;
+}
+
+.sl-markdown-content li + li {
+  margin-top: 0.35rem;
+}
+
+.sl-markdown-content li > :is(ul, ol) {
+  margin-top: 0.35rem;
+}
+
+/* 代码块 */
+.sl-markdown-content pre {
+  padding: 1rem 1.15rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.sl-markdown-content pre code {
+  padding: 0;
+  background: none;
+}
+
+/* 表格：Starlight 未提供单元格内边距与边框 */
+.sl-markdown-content table {
+  border-collapse: collapse;
+}
+
+.sl-markdown-content :is(th, td) {
+  padding: 0.5rem 0.85rem;
+  text-align: start;
+  vertical-align: top;
+  border: 1px solid var(--sl-color-hairline, var(--border));
+}
+
+/*
+ * 表头底色必须用主题变量。
+ * 原来写死 var(--accent-soft)（#eff6ff），在暗色主题下会变成一块近白色的底，
+ * 而表头文字色是 --sl-color-white（暗色下为纯白）—— 白字白底，表头直接看不见。
+ * 实测修复前：暗色 th 背景 rgb(239,246,255) / 文字 rgb(255,255,255)。
+ */
+.sl-markdown-content thead th {
+  background: var(--sl-color-bg-accent, var(--accent-soft));
+  font-weight: 600;
+}
+
+/* 引用块 */
+.sl-markdown-content blockquote {
+  margin-inline: 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-inline-start: 3px solid var(--sl-color-text-accent, var(--accent));
+  color: var(--sl-color-gray-2, var(--muted));
+}
+
+.sl-markdown-content blockquote > * + * {
+  margin-top: 0.75rem;
+}
+
+/* 分隔线 */
+.sl-markdown-content hr {
+  margin-block: 2rem;
+  border: 0;
+  border-top: 1px solid var(--sl-color-hairline, var(--border));
+}

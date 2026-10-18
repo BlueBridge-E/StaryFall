@@ -1,0 +1,24 @@
+---
+/**
+ * 覆盖 Starlight 的 ThemeProvider，把全站钉死为浅色主题。
+ *
+ * 为什么这么做：本站只有 /posts/* 走 Starlight，首页 / /feed/ / /work/ / /tags/
+ * 都是独立的 Astro 页面，它们用的是 src/styles/tokens.css 里那套写死的浅色 token，
+ * 没有任何暗色版本。Starlight 默认的主题策略是 auto（跟随系统），于是深色系统的访客
+ * 会看到「白底首页 → 点进文章变黑底」的割裂。
+ *
+ * 与其给 4 个独立页面各补一套暗色，不如统一钉死浅色。
+ * 默认的 ThemeProvider 会读 localStorage / prefers-color-scheme，然后按结果写
+ * data-theme（系统不是 light 时写 dark），这里直接固定写 light。
+ *
+ * 这段是 is:inline，会被内联进 <head> 并在首次绘制前执行，
+ * 用来覆盖 Page.astro 在 SSR 时给出的 data-theme="dark"，因此不会闪一下深色。
+ */
+---
+
+<script is:inline>
+  document.documentElement.dataset.theme = 'light';
+  // ThemeSelect.astro 的脚本会调用它；我们把选择器换成了空组件，
+  // 这里仍保留一个 no-op 以防其它脚本引用。
+  window.StarlightThemeProvider = { updatePickers() {} };
+</script>

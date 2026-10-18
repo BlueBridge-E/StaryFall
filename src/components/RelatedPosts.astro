@@ -1,0 +1,171 @@
+---
+import { base } from '../consts';
+import { findRelated, findSiblings, postSlug, type Post } from '../lib/posts';
+
+export interface Props {
+  current: Post;
+  all: Post[];
+}
+
+const { current, all } = Astro.props;
+
+const related = findRelated(current, all);
+const { newer, older } = findSiblings(current, all);
+
+const href = (entry: Post) => `${base}/posts/${postSlug(entry.id)}/`;
+const tagHref = (tag: string) => `${base}/tags/${encodeURIComponent(tag)}/`;
+---
+
+{
+  (newer || older) && (
+    <nav class="post-siblings" aria-label="上一篇 / 下一篇">
+      {newer ? (
+        <a class="sibling sibling--prev" href={href(newer)} rel="prev">
+          <span class="sibling-label">← 上一篇（更新）</span>
+          <span class="sibling-title">{newer.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {older && (
+        <a class="sibling sibling--next" href={href(older)} rel="next">
+          <span class="sibling-label">下一篇（更早）→</span>
+          <span class="sibling-title">{older.data.title}</span>
+        </a>
+      )}
+    </nav>
+  )
+}
+
+{
+  related.length > 0 && (
+    <section class="related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="related-heading">相关文章</h2>
+      <ul class="related-list">
+        {related.map((entry) => (
+          <li>
+            <a href={href(entry)}>
+              <span class="related-title">{entry.data.title}</span>
+              {entry.data.date && (
+                <time datetime={entry.data.date.toISOString()}>
+                  {entry.data.date.toLocaleDateString('zh-CN')}
+                </time>
+              )}
+            </a>
+            <p class="related-desc">{entry.data.description}</p>
+            {entry.data.tags.length > 0 && (
+              <p class="related-tags">
+                {entry.data.tags.slice(0, 4).map((tag) => (
+                  <a href={tagHref(tag)} class="related-tag">#{tag}</a>
+                ))}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .post-siblings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .sibling {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--sl-color-gray-2);
+    box-shadow: var(--sl-shadow-md);
+    overflow-wrap: anywhere;
+  }
+  .sibling--next {
+    text-align: end;
+  }
+  .sibling:hover {
+    border-color: var(--sl-color-gray-2);
+  }
+  .sibling-label {
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+  .sibling-title {
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-lg);
+    line-height: var(--sl-line-height-headings);
+  }
+
+  .related {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+  .related-heading {
+    font-size: var(--sl-text-xl);
+    margin: 0 0 1rem;
+  }
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1rem;
+  }
+  .related-list li {
+    border: 1px solid var(--sl-color-gray-6, var(--sl-color-gray-5));
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+  .related-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .related-title {
+    font-weight: 600;
+    color: var(--sl-color-white);
+    line-height: 1.4;
+  }
+  .related-list time {
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+    white-space: nowrap;
+  }
+  .related-desc {
+    margin: 0.5rem 0 0;
+    font-size: var(--sl-text-sm);
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+  }
+  .related-tags {
+    margin: 0.5rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .related-tag {
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+  }
+  .related-tag:hover {
+    text-decoration: underline;
+  }
+  .sibling:focus-visible,
+  .related-list a:focus-visible,
+  .related-tag:focus-visible {
+    outline: 2px solid var(--sl-color-text-accent);
+    outline-offset: 2px;
+  }
+</style>
