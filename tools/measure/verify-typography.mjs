@@ -71,9 +71,12 @@ check('robots.txt 仍在', fs.existsSync('dist/robots.txt'));
 check('Pagefind zh-cn', read('dist/pagefind/pagefind-entry.json').includes('"zh-cn"'));
 check('twitter:card=summary 唯一', (post.match(/name="twitter:card"/g) || []).length === 1);
 check('tags/ai-agent 合并', (read('dist/tags/ai-agent/index.html').match(/class="post-title/g) || []).length === 2);
-check('feed 124 卡片', (read('dist/feed/index.html').match(/data-pagination-card/g) || []).length === 124);
-check('首页 28 卡片', (read('dist/index.html').match(/data-pagination-card/g) || []).length === 28);
-check('文章数 28', fs.readdirSync('dist/posts').filter((d) => fs.existsSync(`dist/posts/${d}/index.html`)).length === 28);
+// 期望值从数据源现算：新增文章或 CI 刷新 news 之后，断言不该跟着过期。
+const EXPECTED_POSTS = fs.readdirSync('src/content/docs/posts').filter((f) => f.endsWith('.md')).length;
+const EXPECTED_NEWS = JSON.parse(fs.readFileSync('public/ai-news.json', 'utf8')).items.length;
+check(`feed ${EXPECTED_NEWS} 卡片`, (read('dist/feed/index.html').match(/data-pagination-card/g) || []).length === EXPECTED_NEWS);
+check(`首页 ${EXPECTED_POSTS} 卡片`, (read('dist/index.html').match(/data-pagination-card/g) || []).length === EXPECTED_POSTS);
+check(`文章数 ${EXPECTED_POSTS}`, fs.readdirSync('dist/posts').filter((d) => fs.existsSync(`dist/posts/${d}/index.html`)).length === EXPECTED_POSTS);
 // 主题与内容清理
 check('全站钉死浅色（主题选择器已移除）', !post.includes('starlight-theme-select'));
 check('work 页不再引用 404 仓库', !read('dist/work/index.html').match(/cyber-coin|Giuseppe/));
@@ -86,7 +89,7 @@ check('首页/feed/work 共用头图样式', ['dist/index.html', 'dist/feed/inde
 check('rss.xml 引用 XSL 样式表', /<\?xml-stylesheet href="\/StaryFall\/rss\.xsl" type="text\/xsl"\?>/.test(read('dist/rss.xml')));
 check('rss.xsl 已生成且是样式表', read('dist/rss.xsl').includes('<xsl:stylesheet'));
 check('rss.xsl 里的订阅地址是生产绝对地址', read('dist/rss.xsl').includes('https://bluebridge-e.github.io/StaryFall/rss.xml'));
-check('rss.xml 仍有 28 条 item', (read('dist/rss.xml').match(/<item>/g) || []).length === 28);
+check(`rss.xml 仍有 ${EXPECTED_POSTS} 条 item`, (read('dist/rss.xml').match(/<item>/g) || []).length === EXPECTED_POSTS);
 // A 组修复回归（2026-10）：重复 h1、表格竖线、work 徽标计数
 {
   const htmls = [];
