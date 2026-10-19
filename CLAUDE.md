@@ -5,13 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```
-npm run dev        # Astro 开发服务器（热更新），http://localhost:4321/StaryFall/
-npm run build      # 构建静态站点到 ./dist
-npm run preview    # 本地预览已构建产物
-npm run check      # astro check（类型 + 模板诊断，CI 也会跑，必须 0 error）
+npm run dev            # Astro 开发服务器（热更新），http://localhost:4321/StaryFall/
+npm run build          # 构建静态站点到 ./dist
+npm run preview        # 本地预览已构建产物
+npm run check          # astro check（类型 + 模板诊断，CI 也会跑，必须 0 error）
+npm run check:content  # 内容规范检查（frontmatter / 标签 / 排版 / 代码块语言），CI 也会跑
 ```
 
-无独立的 test / lint 脚本。`npm run check` 是唯一的静态校验，改动后请务必跑一遍。
+`npm run check` 负责代码层（类型与模板），`npm run check:content` 负责内容层（见
+「Content conventions」）。**改完内容或样式后两个都要跑。** 内容检查支持 `-- --fix` 自动修
+机械性问题。
 
 ## Architecture
 
@@ -118,19 +121,54 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
 ## CI/CD
 
 `.github/workflows/deploy.yml`：`main` 推送（或 PR / 手动触发）→ Node 24 → `npm ci` →
-`npm run check` → `npm run build`（`env: GITHUB_TOKEN`，供 `work.astro` 构建时请求 GitHub API）→
-仅 `main` 的非 PR 构建上传并部署 `./dist` 到 GitHub Pages。
+`npm run check` → `npm run check:content` → `npm run build`（`env: GITHUB_TOKEN`，供 `work.astro`
+构建时请求 GitHub API）→ 仅 `main` 的非 PR 构建上传并部署 `./dist` 到 GitHub Pages。
+
+内容规范检查进了 CI 就意味着**一个缺空格也会让构建失败**。如果哪次赶时间不想被拦，
+就临时在本地跑 `npm run check:content -- --fix`，而不是去改 CI。
 
 **只维护 `package-lock.json` 一份锁文件，用 `npm ci`。** 不要再引入 pnpm/yarn 锁文件。
 
 ## Content conventions
 
-- 全部内容使用简体中文（zh-CN）。
-- 每篇 frontmatter：`title`（必填）、`description`（必填，会渲染成文章头部导语，**不只是给 SEO 用**）、
-  `date`（可选 YAML date）、`tags`（可选字符串数组）。
-- `tags` 会被 schema 转成小写、空格转 `-` 的 slug，所以 `AI Agent` 与 `ai-agent` 等价；
-  **请统一写小写短横线形式**，避免产生两个看起来一样的标签入口。
-- 正文从 `##` 开始（`#` 由 `PageTitle` 渲染），标题层级会直接影响右侧目录。
+**这一节是硬规则，`node tools/check-content.mjs` 会逐条实现**（`npm run check:content`，
+CI 也会跑）。**改规则必须两处同步**，否则文档和检查器会分叉。
+
+```
+npm run check:content            # 只报告，有问题退出码 1
+npm run check:content -- --fix   # 自动修「机械性」问题（见下）
+```
+
+`--fix` 只处理无歧义项：中英文空格、`...` → `……`、行尾空白、末尾换行、CRLF、语言别名。
+需要判断的一律不自动改（补代码块语言、翻译标签、改写 description）。
+
+**frontmatter**
+
+- 字段固定四项、顺序固定：`title` → `description` → `date` → `tags`。
+- `description` **40–120 字**。它不只是 SEO —— 会渲染成文章头部导语，太短撑不住，太长会被截断。
+- `date` 写裸值 `YYYY-MM-DD`，**不加引号、不带时间**。
+- `tags` 写**小写短横线英文**，2–6 个。schema 的 transform 会把中文/大写/空格规范化成 slug，
+  但源文件里也必须写规范形式 —— 否则同一个标签会分裂成多个看起来一样的入口。
+  块状（`tags:` 换行 + `- x`）与内联（`tags: [x, y]`）两种写法都允许，同一批文章应统一。
+- `title` / `description` 也会被排版规则检查（它们同样是读者可见的文本）。
+
+**正文结构**
+
+- 正文从 `##` 开始，`#` 由 `PageTitle` 渲染 —— 正文出现 h1 会导致一页两个 h1。
+- 标题层级不得跳跃（`##` 下只能接 `###`）。
+- **代码块必须标语言**。ASCII 架构图 / 目录树 / 流程箭头用 `text`；shell 命令用 `bash`。
+  语言只能在 `tools/check-content.mjs` 的 `LANGS` 集合内，别名会被要求改正：
+  `typescript` → `ts`、`shell` / `sh` → `bash`、`py` → `python`、`yml` → `yaml`。
+- 表格各行列数必须与表头一致；单元格里的 `|` 要转义成 `\|`。
+
+**中文排版**
+
+- 中文与英文/数字之间加空格：`Word 文档`、`2024 年`、`多 Agent 流水线`。
+- 中文后接全角标点：`，。；：！？`。
+- 省略号用 `……`，不用 `...`。
+- 站内链接用 `src/consts.ts` 的 `base` 拼，写全路径并以 `/` 结尾（`/StaryFall/posts/foo/`）。
+
+**文件层**：UTF-8 无 BOM、LF 换行、末尾有换行、行尾无空白、不用 Tab 缩进。
 
 ## 开发注意
 
@@ -144,6 +182,8 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
   node tools/measure/run.mjs 1440 4321 post=<slug>        # 指定文章
   node tools/measure/verify-typography.mjs                # 断言式回归检查（需先 build）
   ```
+- 改完内容的固定顺序：`npm run check:content` → `npm run check` → `npm run build` →
+  `node tools/measure/verify-typography.mjs`。
 - 写含中文的源文件时不要用 PowerShell 的 `Set-Content` / `Out-File`（默认编码会在 UTF-8 文件前加 BOM，
   且在部分环境下把中文写坏）。用 Node 的 `fs` 或编辑器直接写。
 
