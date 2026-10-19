@@ -107,6 +107,19 @@ html[data-has-sidebar] {
  *   父级 0.95rem / 600 / 近黑      子级 0.88rem / 400 / gray-3
  * 整条列表左侧有一条 2px 竖轨，当前项在轨上点亮一段强调色，替代原来悬空的左竖条。
  */
+
+/*
+ * 去掉正文与右侧目录之间那条竖线。
+ * Starlight 在 @media (min-width: 72rem) 里给 `.right-sidebar` 加了
+ * border-inline-start: 1px solid var(--sl-color-hairline)，从视口顶一直画到底。
+ * 本项目的正文与目录之间本来就有 41px 留白，这条线在浅色页面里只是一条
+ * 没有来由的悬空细线，删掉更干净。自定义样式不带 layer，稳压 Starlight 的
+ * @layer starlight.core，不需要提高选择器权重。
+ */
+.right-sidebar {
+  border-inline-start: 0;
+}
+
 @media (min-width: 72rem) {
   /* 字号调大后长标题会折行，21rem 是「二、斜杠命令（会话中交互使用，以 / 开头）」
      这类最宽条目在 0.95rem 下不折行的最小容器宽度 */
