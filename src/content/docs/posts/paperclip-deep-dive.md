@@ -322,7 +322,7 @@ export const DEFAULT_MAX_LIVENESS_CONTINUATION_ATTEMPTS = 2;
 
 最多继续 2 次，每次的幂等键由 `(issueId, sourceRunId, livenessState, attempt)` 组成，保证不会重复入队。两次之后如果还是没产出，就留下一条审计评论交给人处理，而不是无限烧钱：
 
-```
+```text
 Bounded liveness continuation exhausted
 - Last liveness state: `plan_only`
 - Attempts used: 2/2

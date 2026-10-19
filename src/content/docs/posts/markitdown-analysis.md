@@ -5,7 +5,7 @@ date: 2026-05-31
 tags: [microsoft, open-source, python, llm, document-processing]
 ---
 
-在 LLM 应用工程中，"把各种乱七八糟的文件喂给大模型"是个绕不开的脏活。PDF 表格、Word文档、Excel报表、图片截图、会议录音……每种格式都需要专门的提取逻辑，输出质量参差不齐，还要考虑 token 效率。
+在 LLM 应用工程中，"把各种乱七八糟的文件喂给大模型"是个绕不开的脏活。PDF 表格、Word 文档、Excel 报表、图片截图、会议录音……每种格式都需要专门的提取逻辑，输出质量参差不齐，还要考虑 token 效率。
 
 微软最近开源了 **MarkItDown**，一个轻量级 Python 工具，目标很明确：**把各种文件格式统一转为 Markdown，专为 LLM 消费优化**。项目上线后在 GitHub 上获得了不少关注。
 
@@ -40,7 +40,7 @@ tags: [microsoft, open-source, python, llm, document-processing]
 
 ### 整体分层
 
-```
+```text
 ┌─ Entry ──────────────────────┐
 │  MarkItDown(client)          │ ← 核心调度器
 │   ├── convert(url)           │ ← 从 URL 读取
@@ -183,7 +183,7 @@ PDF 转换用了两层引擎，策略上很讲究：
 
 Word 文档走的是 `mammoth → HTML → markdownify → Markdown`：
 
-```
+```text
 .docx ──[mammoth]──→ HTML ──[markdownify]──→ Markdown
 ```
 
@@ -234,7 +234,7 @@ md = MarkItDown(
 | 特性 | **MarkItDown** | Pandoc | textract | Unstructured |
 |------|---------------|--------|----------|-------------|
 | **定位** | LLM 预处理 | 通用文档转换 | 文本提取 | 非结构化数据管线 |
-| **输出** | Markdown | 任意格式 | 纯文本 | Markdown+chunk元数据 |
+| **输出** | Markdown | 任意格式 | 纯文本 | Markdown+chunk 元数据 |
 | **表格提取** | ✅ 列对齐 MD | ✅ 格式保留 | ❌ | ✅ |
 | **OCR** | 可选 LLM/云端 | ❌ | Tesseract | 内置 |
 | **LLM Vision** | ✅ 原生可用 | ❌ | ❌ | ❌ |
@@ -242,7 +242,7 @@ md = MarkItDown(
 | **插件体系** | entry_points | lua 过滤器 | ❌ | ❌ |
 | **文件检测** | magika AI | 扩展名 | libmagic | libmagic |
 | **安装复杂度** | pip install | 大包 | 本地依赖多 | 较重(30+MB) |
-| **依赖体积** | 较小（core~5个包） | 大 | 中 | 大 |
+| **依赖体积** | 较小（core~5 个包） | 大 | 中 | 大 |
 
 **MarkItDown 的差异化优势**：
 - LLM 粘性最强：输出原生 Markdown，Accept 头优先请求 text/markdown

@@ -1,6 +1,6 @@
 ---
 title: TypeScript 泛型入门
-description: 理解 TypeScript 泛型的基本概念和使用场景
+description: 从类型参数、约束与类型推断入手，讲清 TypeScript 泛型的基本概念、典型使用场景，以及容易踩的几个误区。
 date: 2026-05-10
 tags: [typescript, frontend]
 ---
@@ -9,7 +9,7 @@ tags: [typescript, frontend]
 
 泛型让你在定义函数、接口或类时不预先指定具体类型，而是在使用时再指定。
 
-```typescript
+```ts
 // 没有泛型：只能处理 number
 function identity(arg: number): number {
   return arg;
@@ -31,7 +31,7 @@ const inferred = identity(42);      // number
 
 用 `extends` 给泛型加上约束，限制可以传入的类型：
 
-```typescript
+```ts
 interface HasLength {
   length: number;
 }
@@ -48,7 +48,7 @@ logLength([1, 2, 3]);   // OK: array has length
 
 ## 泛型在 React 中的使用
 
-```typescript
+```ts
 // 泛型组件 props
 interface ListProps<T> {
   items: T[];
@@ -76,7 +76,7 @@ function List<T>({ items, renderItem }: ListProps<T>) {
 
 TypeScript 内置了很多实用的泛型工具：
 
-```typescript
+```ts
 interface User {
   id: number;
   name: string;

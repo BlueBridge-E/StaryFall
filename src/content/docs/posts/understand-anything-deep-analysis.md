@@ -1,13 +1,13 @@
 ---
 title: 深度解析 Understand Anything：让 Claude Code 也能"看懂"任何代码库
-description: 对开源项目 Understand Anything 的代码级深度分析——一个将代码库转成交互式知识图谱的 Claude Code 插件，剖析其多Agent流水线、tree-sitter 静态分析引擎、Dashboard 可视化实现和架构设计哲学。
+description: 对开源项目 Understand Anything 的代码级深度分析——把代码库转成交互式知识图谱的 Claude Code 插件，剖析其多 Agent 流水线、tree-sitter 静态分析与 Dashboard 实现。
 date: 2026-05-23
 tags: [claude-code, knowledge-graph, code-analysis, open-source, ai-tools]
 ---
 
 ## 一句话定性
 
-**Understand Anything** 是一个 Claude Code Plugin（也兼容 Codex / Cursor / Copilot CLI / Gemini CLI），通过 **多Agent流水线 + tree-sitter 静态分析 → 知识图谱 → 交互式 Dashboard**，让开发者"看懂任何代码库"。
+**Understand Anything** 是一个 Claude Code Plugin（也兼容 Codex / Cursor / Copilot CLI / Gemini CLI），通过 **多 Agent 流水线 + tree-sitter 静态分析 → 知识图谱 → 交互式 Dashboard**，让开发者"看懂任何代码库"。
 
 项目地址：[github.com/Lum1104/Understand-Anything](https://github.com/Lum1104/Understand-Anything)
 
@@ -30,7 +30,7 @@ Understand Anything 的回答是：**让 AI 先帮你读完，然后给你一张
 
 ## 二、架构总览：三层结构
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                    Claude Code Plugin 入口                   │
 │  skills/  (10个skill定义: /understand, /understand-dashboard)│
@@ -53,7 +53,7 @@ Understand Anything 的回答是：**让 AI 先帮你读完，然后给你一张
 
 关键依赖设计选型值得注意：
 
-- **web-tree-sitter（WASM版）** 而非原生 tree-sitter — 避开 darwin/arm64 + Node 24 的 native binding 兼容问题
+- **web-tree-sitter（WASM 版）** 而非原生 tree-sitter — 避开 darwin/arm64 + Node 24 的 native binding 兼容问题
 - **fuse.js** 模糊搜索 + **embedding-search** 语义搜索双通道
 - **ignore** 包处理 `.gitignore` 风格的 `.understandignore` 过滤规则
 - Dashboard 通过 subpath exports（`./search`、`./types`、`./schema`）只导入浏览器安全的子模块，避免拉入 Node.js 特有代码
@@ -62,7 +62,7 @@ Understand Anything 的回答是：**让 AI 先帮你读完，然后给你一张
 
 ## 三、核心流水线：5 个 Agent 接力
 
-这是项目的核心创新——不是单次 LLM 调用，而是**编排好的多Agent流水线**。更巧妙的是，每个 Agent 内部又采用"先写脚本做确定性分析，再用 LLM 做语义理解"的两阶段模式。这解决了"让 LLM 直接扫几十万行代码"的 token 爆炸问题。
+这是项目的核心创新——不是单次 LLM 调用，而是**编排好的多 Agent 流水线**。更巧妙的是，每个 Agent 内部又采用"先写脚本做确定性分析，再用 LLM 做语义理解"的两阶段模式。这解决了"让 LLM 直接扫几十万行代码"的 token 爆炸问题。
 
 ### Agent 1: project-scanner（项目扫描员）
 
@@ -113,12 +113,12 @@ Understand Anything 的回答是：**让 AI 先帮你读完，然后给你一张
 ### Agent 5: graph-reviewer（QA 验证员）
 
 **两阶段：**
-1. **写脚本** → 7 项检查：Schema 校验（16种节点类型 × 9个必填字段）、引用完整性、完整性、层覆盖率、唯一性、导览验证、质量检查
+1. **写脚本** → 7 项检查：Schema 校验（16 种节点类型 × 9 个必填字段）、引用完整性、完整性、层覆盖率、唯一性、导览验证、质量检查
 2. **LLM 决策** → 批准或拒绝，作为流水线的质量门
 
 ### 流水线执行流程
 
-```
+```text
 ┌──────────────┐
 │   dispatch   │ ← /understand 触发
 └──────┬───────┘

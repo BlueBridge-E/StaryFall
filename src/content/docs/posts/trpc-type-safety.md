@@ -9,7 +9,7 @@ tags: [typescript, trpc, fullstack]
 
 写一个用户搜索接口，传统 REST 做法：
 
-```
+```text
 1. 后端写好 /api/users?q=xxx  →  写文档说参数是 q，返回 User[]
 2. 前端写 fetch('/api/users?q=xxx')  →  手写类型断言 as User[]
 3. 某天后端把 q 改成 query  →  前端运行时发现 400
@@ -24,7 +24,7 @@ tRPC 解决的就是这个问题。
 
 tRPC 的核心思路：**后端定义路由 → TypeScript 自动推断出完整的类型 → 前端直接导入类型使用**。没有代码生成，没有 schema 文件，没有中间表示。
 
-```typescript
+```ts
 // server/router.ts —— 后端
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
@@ -50,7 +50,7 @@ export const appRouter = t.router({
 export type AppRouter = typeof appRouter;
 ```
 
-```typescript
+```ts
 // client.ts —— 前端
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '../server/router';
@@ -81,7 +81,7 @@ const newUser = await trpc.user.create.mutate({
 
 tRPC 配合 Zod 做输入校验，既保证运行时安全，又提供类型推断：
 
-```typescript
+```ts
 const createUserSchema = z.object({
   name: z.string().min(2).max(50),
   email: z.string().email(),

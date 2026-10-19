@@ -23,7 +23,7 @@ tags: [ai, agent, context-engineering, token-optimization, open-source, headroom
 
 这是架构层面最实质的变化。从 v0.28 开始，Headroom 的架构变成了三层：
 
-```
+```text
 TypeScript SDK (npm headroom-ai)  ← 前端/Node.js 生态
         ↕
 Python CLI + 包装层 (headroom-ai) ← 面向用户的主要入口

@@ -17,7 +17,7 @@ tags: [ai, open-source, privacy, speech-to-text, rust]
 
 架构图一目了然，典型的 Tauri 分层：
 
-```
+```text
 Next.js 前端（React UI）
     ↕ Tauri Commands（进程间 IPC）
 Tauri Core（Rust）

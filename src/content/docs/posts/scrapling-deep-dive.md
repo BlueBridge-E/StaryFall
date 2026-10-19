@@ -1,13 +1,13 @@
 ---
 title: Scrapling 深度解析：当爬虫框架学会「自适应」
-description: 深度分析 Scrapling——一个 57k+ stars 的 Python 自适应爬虫框架，解析其 auto-adapting 引擎、三态 Fetcher 架构、MCP Server 集成，以及与 Scrapy/Playwright 的对比
+description: 深度分析 Scrapling——57k+ stars 的 Python 自适应爬虫框架，解析其 auto-adapting 引擎、三态 Fetcher 架构与 MCP 集成，并对比 Scrapy/Playwright
 date: 2026-06-01
 tags: [python, web-scraping, opensource, analysis]
 ---
 
 ## 引子
 
-`D4Vinci/Scrapling`，57k+ stars，2024年10月发布的 Python 爬虫框架。
+`D4Vinci/Scrapling`，57k+ stars，2024 年 10 月发布的 Python 爬虫框架。
 
 第一眼看到这个项目时，我的反应是"又一个爬虫框架"——某种程度上没错，但真正读完核心代码后，我的判断变了。
 
@@ -23,7 +23,7 @@ tags: [python, web-scraping, opensource, analysis]
 | 语言 | Python 3.10+ |
 | License | BSD-3-Clause |
 | Stars | 57k+ |
-| 首次发布 | 2024年10月 |
+| 首次发布 | 2024 年 10 月 |
 | 测试覆盖率 | 92% |
 | PyPI 日下载 | 高活跃度 |
 
@@ -49,7 +49,7 @@ products = p.css('.product', adaptive=True)
 
 Scrapling 的代码结构比我想象的干净。
 
-```
+```text
 scrapling/
 ├── parser.py         ← 核心：Selector 类（解析 + 自适应引擎）
 ├── engines/          ← 爬取引擎（静态/动态，含 Playwright 集成）
@@ -65,7 +65,7 @@ scrapling/
 
 ### 分层逻辑
 
-```
+```text
 【Fetchers】→ 获取 HTML → 【Parser/Selector】→ 解析 → 【Spiders】→ 多页爬取
    ↓                         ↓                        ↓
 HTTP/无头/隐身         自适应+相似度          断点续传/并发
@@ -108,27 +108,27 @@ HTTP/无头/隐身         自适应+相似度          断点续传/并发
 def __calculate_similarity_score(self, original, candidate):
     score = 0
     checks = 0
-    
+
     # 1. tag 是否匹配
     score += 1 if original["tag"] == data["tag"] else 0
-    
+
     # 2. 文本相似度（SequenceMatcher）
     score += SequenceMatcher(None, original["text"], data.get("text") or "").ratio()
-    
+
     # 3. 属性字典相似度（key 和 value 分别比较）
     score += dict_similarity(original["attributes"], data["attributes"])
-    
+
     # 4. 关键属性单独加权（class, id, href, src）
     for attrib in ("class", "id", "href", "src"):
         if original["attributes"].get(attrib):
             score += SequenceMatcher(...).ratio()
-    
+
     # 5. DOM 路径相似度
     score += SequenceMatcher(None, original["path"], data["path"]).ratio()
-    
+
     # 6. 父级信息（tag + 属性 + 文本）
     # 7. 兄弟节点信息
-    
+
     return round((score / checks) * 100, 2)
 ```
 

@@ -17,7 +17,7 @@ tags: [opensource, ai, vibe-coding, claude-code, tauri, desktop-app]
 
 ### 整体架构
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │                  Desktop CC GUI                   │
 │  ┌────────────────────────────────────────────┐   │
@@ -68,7 +68,7 @@ tags: [opensource, ai, vibe-coding, claude-code, tauri, desktop-app]
 
 ### 目录结构精要
 
-```
+```text
 src/
 ├── app-shell.tsx          # 主 Shell（窗口框架、布局管理）
 ├── bootstrap.tsx          # 应用启动引导
@@ -168,7 +168,7 @@ ccgui 不止是一个聊天窗，它更像一个迷你 IDE：
 
 ### 它与之前讨论项目的关系链
 
-```
+```text
 CLI-Anything        —— 让所有软件可被 Agent 操作（工具层）
 nanobot             —— Python 生态的 Agent 框架（框架层）
 CodeGraph           —— 预索引代码知识图谱（效率层）

@@ -2,7 +2,7 @@
 title: OpenMAIC 源码级解析：清华 20k star 多智能体课堂，怎么用一个 prompt 生成一场 AI 授课？
 description: 从 director-graph 编排引擎、流式结构化输出解析器，到 action engine 与播放状态机，逐层拆解 OpenMAIC 如何把「请你教我量子物理」变成一场可交互的沉浸式课堂。
 date: 2026-09-02
-tags: [多智能体, 教育AI, LangGraph, AI Agent, OpenMAIC, Next.js]
+tags: [agent, education-ai, langgraph, ai-agent, openmaic, next.js]
 ---
 
 > **信息来源：** 本文基于 THU-MAIC/OpenMAIC `main` 分支（v1.0.0，2026-08-27）源码实读 + 官方 README / CHANGELOG。涉及文件：`lib/orchestration/director-graph.ts`、`lib/orchestration/stateless-generate.ts`、`lib/orchestration/ai-sdk-adapter.ts`、`lib/playback/engine.ts`、`package.json`。文中标注「源码」指直接引自主仓库文件。
@@ -57,7 +57,7 @@ tags: [多智能体, 教育AI, LangGraph, AI Agent, OpenMAIC, Next.js]
 
 ### 3.0 整体架构
 
-```
+```text
 用户输入 / 文档
       │
       ▼
@@ -88,7 +88,7 @@ tags: [多智能体, 教育AI, LangGraph, AI Agent, OpenMAIC, Next.js]
 
 文件：`lib/orchestration/director-graph.ts`。这是整套系统的「大脑」，用 LangGraph StateGraph 搭了一个极简拓扑：
 
-```
+```text
 START → director ──(end)──→ END
            │
            └─(next)→ agent_generate ──→ END
@@ -206,7 +206,7 @@ export class AISdkLangGraphAdapter extends BaseChatModel {
 
 `PlaybackEngine` 是一个教态状态机：
 
-```
+```text
 idle ──start()──► playing ──pause()──► paused
   ▲                 ▲                    │
   └──(讨论结束)      └────resume()───────┘

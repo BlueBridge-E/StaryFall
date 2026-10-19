@@ -20,7 +20,7 @@ AI Agent 已经能写代码、改文档、管项目，但你让它去网上找�
 - "搜搜推特怎么评价这个产品" → Twitter API 要付费
 - "Reddit 上有人遇到这个 bug 吗" → 403 被封
 - "看看小红书这品的口碑" → 必须登录
-- "B站有个视频总结一下" → 被风控全面拦截
+- "B 站有个视频总结一下" → 被风控全面拦截
 
 每个平台都有自己的门槛：付费 API、反爬封锁、登录墙、要清洗的 HTML。传统做法是逐个踩坑——装 yt-dlp、配 gh、导 Cookie、调参数，光让 Agent 能读个推特就要折腾半天。
 
@@ -65,7 +65,7 @@ class BilibiliChannel:
         return ("off", "当前无可用后端")
 ```
 
-为什么这样设计？因为**依赖的外部工具总会失效**，这不是"万一"，而是"何时"。项目用真实案例佐证：yt-dlp 曾用于 B站，2026 年 6 月被 B站风控 412 封死——如果它是硬编码 yt-dlp 的封装层，B站功能当场全挂；而 Agent-Reach 只是把列表顺序调整为 bili-cli 优先，用户零感知。"换接入方式 = 调整列表顺序，不是重写代码"，这句就是整套设计的浓缩。
+为什么这样设计？因为**依赖的外部工具总会失效**，这不是"万一"，而是"何时"。项目用真实案例佐证：yt-dlp 曾用于 B 站，2026 年 6 月被 B 站风控 412 封死——如果它是硬编码 yt-dlp 的封装层，B 站功能当场全挂；而 Agent-Reach 只是把列表顺序调整为 bili-cli 优先，用户零感知。"换接入方式 = 调整列表顺序，不是重写代码"，这句就是整套设计的浓缩。
 
 ### 4.2 渠道选型：首选都是真机实测的结果
 
@@ -76,7 +76,7 @@ class BilibiliChannel:
 - **网页**：Jina Reader（免费免 Key）
 - **YouTube**：yt-dlp（154K star，此场景无可替代）
 - **GitHub**：gh CLI（官方工具）
-- **B站**：bili-cli ▸ OpenCLI ▸ 搜索 API
+- **B 站**：bili-cli ▸ OpenCLI ▸ 搜索 API
 - **Twitter**：twitter-cli ▸ OpenCLI ▸ bird
 - **全网搜索**：Exa via mcporter（MCP 接入免 Key）
 
@@ -86,11 +86,11 @@ class BilibiliChannel:
 
 项目把所有平台按配置成本分三档，工程意义很明确——**首次安装时 80% 的常用功能已经可用**，不用一上来就折腾 Cookie：
 
-- **Tier 0 装好即用**：网页、YouTube、RSS、GitHub、B站搜索——零配置
+- **Tier 0 装好即用**：网页、YouTube、RSS、GitHub、B 站搜索——零配置
 - **Tier 1 简单配置**：全网搜索（Exa MCP）、雪球——免费 Key
 - **Tier 2 需登录态**：Twitter、小红书、Reddit、Facebook、Instagram——需要会话/Cookie
 
-安装流程也贯彻渐进：默认只激活 6 个零配置渠道（网页、YouTube、RSS、GitHub、B站、全网搜索），需要用登录态的平台由 Agent 列菜单**点名才装**，降低了首次安装的认知负担。
+安装流程也贯彻渐进：默认只激活 6 个零配置渠道（网页、YouTube、RSS、GitHub、B 站、全网搜索），需要用登录态的平台由 Agent 列菜单**点名才装**，降低了首次安装的认知负担。
 
 ### 4.4 安全模型：默认安全 + 本地凭据
 
@@ -114,10 +114,10 @@ class BilibiliChannel:
 **关键亮点**：零 API 费用 + 免开发账号，个人可以直接做小范围市场调研。
 
 ### 场景 2：技术视频快速消化
-**用户输入**："总结一下这个 YouTube 教程，再看 B站有没有同题更好的"
+**用户输入**："总结一下这个 YouTube 教程，再看 B 站有没有同题更好的"
 **执行过程**：
 - YouTube：yt-dlp 拉取字幕 → Agent 总结
-- B站：bili search 搜索同类 → 对比标题/播放/时长 → 输出推荐
+- B 站：bili search 搜索同类 → 对比标题/播放/时长 → 输出推荐
 **关键亮点**：字幕转录是 Agent 刚需，yt-dlp + bili-cli 互补覆盖两个视频平台。
 
 ### 场景 3：长期信息订阅
@@ -130,7 +130,7 @@ class BilibiliChannel:
 ## 设计细节
 
 1. **真机探测而非存在性检查**：判断后端可用，是实际调用看通不通，不是看命令在不在 PATH 里——避免了很多"装了但根本跑不通"的假绿。
-2. **换后端 = 调列表顺序，不是改代码**：`channels/*.py` 的数据驱动设计，让 2026-06 yt-dlp 被 B站封死时，只需调整路由顺序即可完成迁移，用户零操作。
+2. **换后端 = 调列表顺序，不是改代码**：`channels/*.py` 的数据驱动设计，让 2026-06 yt-dlp 被 B 站封死时，只需调整路由顺序即可完成迁移，用户零操作。
 3. **OpenCLI 作为登录态统一后端**：对 Facebook/Instagram/Reddit 等必须登录的平台，统一走 OpenCLI 复用用户已有的 Chrome 会话，避免为每个平台单独维护登录逻辑。
 4. **卸载的完整性**：`agent-reach uninstall` 会清 `~/.agent-reach/`（含全部 token/cookie）、各 Agent 的 skill 文件、mcporter 里的 MCP 配置；还支持 `--keep-config`（重装保留）和 `--dry-run`。这种"进得来、出得去"的设计，在开源工具里不多见。
 

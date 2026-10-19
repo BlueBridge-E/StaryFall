@@ -17,7 +17,7 @@ MCP（Model Context Protocol）就是解决这个问题的。它是 Anthropic �
 
 MCP 是典型的客户端-服务器架构：
 
-```
+```text
 AI 应用 (Host)
     │
     ├── MCP Client
@@ -39,7 +39,7 @@ AI 应用 (Host)
 
 用 TypeScript 写一个天气查询的 MCP 服务器，代码不到 60 行：
 
-```typescript
+```ts
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
@@ -86,7 +86,7 @@ await server.connect(transport);
 
 **查数据库再写代码：**
 
-```
+```text
 你：给 users 表加一个 last_login 字段，顺便更新相关接口
 
 AI 通过 MCP：
@@ -100,7 +100,7 @@ AI 通过 MCP：
 
 **从需求到代码：**
 
-```
+```text
 1. AI 通过 Notion MCP 读取需求文档
 2. AI 通过 Figma MCP 看到设计稿
 3. AI 通过 Linear MCP 创建任务拆解

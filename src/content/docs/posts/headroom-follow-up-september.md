@@ -50,7 +50,7 @@ v0.33 落了一件事：**pluggable compressor registry + `headroom.compressor` 
 配套的还有：
 
 - **`--compressor` 显式选择 + registry 清单**；
-- **Rust 侧 parity 移植**：CodeCompressor 的 AST 压缩和 Kompress 的 ML 压prose 都往 Rust 搬了一遍（当前是 parity-only，即两边行为对齐、还没有完全替换）；
+- **Rust 侧 parity 移植**：CodeCompressor 的 AST 压缩和 Kompress 的 ML 压 prose 都往 Rust 搬了一遍（当前是 parity-only，即两边行为对齐、还没有完全替换）；
 - **per-extension token savings 统计**——你现在能看到是 `.py` 文件省得多还是 `.json` 省得多。
 
 插件化 + 按扩展名归因，这两件事通常出现在一个项目**从"我们自己的工具"变成"别人的平台"**的节点上。
@@ -130,7 +130,7 @@ Claude Code · Codex · Grok CLI · Cursor · Aider · Copilot CLI · VS Code Co
 
 - `/v1/compress` 的 session 语义会不会稳定成事实标准（其他压缩项目跟不跟）；
 - `headroom.compressor` 插件生态有没有第三方真的写东西上去——这是"平台化"的试金石；
-- **output token reduction 那个 31.7% 是估计值**（95% CI 27.7%–35.7%），官方给了 `HEADROOM_OUTPUT_HOLDOUT=0.1` 的实测方案但需要你自己留对照组。这块目前是它最弱的一环，值得盯;
+- **output token reduction 那个 31.7% 是估计值**（95% CI 27.7%–35.7%），官方给了 `HEADROOM_OUTPUT_HOLDOUT=0.1` 的实测方案但需要你自己留对照组。这块目前是它最弱的一环，值得盯；
 - 703 个 open issue 的消化速度。
 
 **一句话推荐：** 如果你每天都在跑编码 agent、且工具输出很重——值得上；如果只是偶尔问两句、或者本来就在用厂商自带的 context compaction，那这层中间件的边际收益有限，多出来的部署和排查成本不划算。

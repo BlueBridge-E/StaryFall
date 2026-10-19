@@ -17,7 +17,7 @@ tags: [ai, agent, context-engineering, token-optimization, open-source]
 
 Headroom 的架构可以用一条 11 阶段的管道描述：
 
-```
+```text
 SETUP → PRE_START → POST_START → INPUT_RECEIVED → INPUT_CACHED
 → INPUT_ROUTED → INPUT_COMPRESSED → INPUT_REMEMBERED
 → PRE_SEND → POST_SEND → RESPONSE_RECEIVED
@@ -27,7 +27,7 @@ SETUP → PRE_START → POST_START → INPUT_RECEIVED → INPUT_CACHED
 
 实际执行流程：
 
-```
+```text
 原始内容
   ↓
 ContentRouter（内容类型检测）
@@ -174,7 +174,7 @@ Cross-Agent Memory 做的是一套**共享去重存储**：
 
 架构：
 
-```
+```text
 Scanner（事件流）→ Digest Builder（会话摘要）→ LLM Analyzer → Writer（文件适配）
 ```
 

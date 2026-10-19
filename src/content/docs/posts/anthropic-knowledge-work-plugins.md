@@ -35,7 +35,7 @@ Anthropic 开源了一个引人注目的项目：**Knowledge Work Plugins**—�
 
 每个 Plugin 是一个标准化的目录布局：
 
-```
+```text
 plugin-name/
 ├── .claude-plugin/plugin.json   # 元信息（名称、版本、描述）
 ├── .mcp.json                    # MCP 工具连接声明

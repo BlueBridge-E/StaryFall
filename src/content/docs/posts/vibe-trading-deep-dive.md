@@ -1,8 +1,8 @@
 ---
 title: "Vibe-Trading 深度解析：当个人交易者拥有了一个 AI 智能体团队"
-date: 2026-07-01
 description: "GitHub 15.8k stars 的开源项目 Vibe-Trading 全面解析——技术架构、设计理念与实用评估"
-tags: [vibe-trading, ai-trading, 量化交易, 开源项目, agent]
+date: 2026-07-01
+tags: [vibe-trading, ai-trading, open-source, agent]
 ---
 
 > **一句话定义**：Vibe-Trading 是一个开源的个人交易智能体（Personal Trading Agent），它将自然语言指令转换为量化交易策略生成、回测、验证和研究的一站式工作流。
@@ -43,7 +43,7 @@ CrewAI、AutoGen、LangGraph 等框架让多个 AI 智能体协作完成复杂�
 
 ### 4.1 五层研究工作流
 
-```
+```text
 Plan → Ground → Execute → Validate → Deliver
 ```
 
@@ -101,7 +101,7 @@ Shadow Account 在多数 Agent 交易项目里看不到。它的工作流程：�
 
 A 股投资者想研究光伏板块近期的估值变化：
 
-```
+```bash
 vibe-trading "分析最近一个月光伏板块主力成分股的 PE 变化，筛选估值分位低于 30% 且换手率上升的标的"
 ```
 
@@ -111,7 +111,7 @@ vibe-trading "分析最近一个月光伏板块主力成分股的 PE 变化，�
 
 量化研究员有一个新的动量思路想试：
 
-```
+```bash
 vibe-trading research "基于过去 20 日均线突破的动量策略，在沪深 300 成分股上跑 2018-2025 的回测，加 3 倍标准差止损"
 ```
 

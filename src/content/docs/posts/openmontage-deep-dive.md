@@ -4,10 +4,10 @@ description: 首个开源、Agent 驱动的视频生产系统深度架构分析�
 date: 2026-06-25
 tags:
   - ai
-  - 开源项目
+  - open-source
   - agent
-  - 视频生产
-  - 深度解析
+  - video-production
+  - deep-dive
 ---
 
 项目地址：<https://github.com/calesthio/OpenMontage>
@@ -41,7 +41,7 @@ OpenMontage 不参与这场竞争。它的立意是在更高一层：**管理整
 | 核心理念 | Agent 读 Markdown 指令自己做决策 | 人拖拽节点，手动连线搭流程 |
 | 编排方式 | 三层知识（工具→项目技能→领域知识） | 节点图 + 自定义脚本 |
 | 可恢复性 | 内置 Checkpoint 系统，失败断点续跑 | 无状态，失败重头来 |
-| 生成层 | Agent 选模型（Kling/FLUX/ElevenLabs等） | 节点直接绑定模型 |
+| 生成层 | Agent 选模型（Kling/FLUX/ElevenLabs 等） | 节点直接绑定模型 |
 | 人的角色 | 审批决策，修正方向 | 搭流程，调试参数 |
 | 上手门槛 | 一句话指令，成本估算帮你报价 | 需熟悉节点和模型组合 |
 
@@ -55,7 +55,7 @@ OpenMontage 不参与这场竞争。它的立意是在更高一层：**管理整
 
 这是 OpenMontage 最重要的设计决策——**没有 Python 编排器**。
 
-```
+```text
 用户：一句话需求
      ↓
 Agent 读取管线 YAML

@@ -11,7 +11,7 @@ tags: [vite, rust, frontend, devtools]
 
 先看架构对比：
 
-```
+```text
 Vite 7 架构：                    Vite 8 架构：
   开发模式 → esbuild (Go)         开发模式 → Rolldown (Rust)
   生产构建 → Rollup (JS)          生产构建 → Rolldown (Rust)
@@ -41,7 +41,7 @@ Rolldown 比 Rollup（纯 JavaScript）快 **10-30 倍**，性能与 esbuild 持
 
 整个工具链由尤雨溪创立的 **VoidZero** 公司主导开发，全部用 Rust 重写：
 
-```
+```text
 Rolldown (打包器，Rust)
   └── Oxc (编译器/解析/压缩，Rust)
        ├── TypeScript 转译

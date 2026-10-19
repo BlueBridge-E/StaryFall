@@ -30,7 +30,7 @@ tags: [apple, container, virtualization, docker, macos]
 
 ### 架构分层
 
-```
+```text
 ┌──────────────────────────┐
 │     container (CLI)      │  ← 用户交互层
 ├──────────────────────────┤

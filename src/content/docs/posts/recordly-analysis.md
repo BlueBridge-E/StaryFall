@@ -27,7 +27,7 @@ tags: [open-source, electron, typescript, screen-recorder, swift]
 
 ### 技术栈全景
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                    Electron Shell                        │
 │  ┌────────────────────────────────────────────────────┐  │
@@ -154,7 +154,7 @@ Linux 没有专属原生 helper，直接走 Electron 的桌面捕获 API。局�
 
 导出不是简单的 ffmpeg 拼接。Recordly 把 PixiJS 场景**逐帧渲染为图像序列**，再合成视频。对应路径 `electron/ipc/export/`：
 
-```
+```text
 渲染场景 → 帧捕获 → 编码 → (MP4 / GIF)
 ```
 
@@ -197,7 +197,7 @@ UI 组件几乎全线走 Radix UI，配合 Tailwind CSS + class-variance-authori
 
 ### 项目结构与规模
 
-```
+```text
 Recordly/
 ├── electron/         ← 主进程 + native helpers
 │   ├── main.ts          (主入口, 28.8KB)

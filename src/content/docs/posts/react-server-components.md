@@ -1,6 +1,6 @@
 ---
 title: React Server Components 实战
-description: RSC 的核心概念、架构模式、性能优化和常见陷阱
+description: RSC（React Server Components）的核心概念、渲染边界与数据流模型，结合实际场景梳理性能优化手段与常见陷阱。
 date: 2026-05-19
 tags: [react, rsc, frontend]
 ---
@@ -52,7 +52,7 @@ export default function Dashboard() {
 
 好的设计：
 
-```
+```text
 Page (Server)
   └── Layout (Server)
        └── Header (Server)
@@ -61,7 +61,7 @@ Page (Server)
 
 差的设计：
 
-```
+```text
 Page (Client)  ← 整棵树全变成客户端代码
 ```
 

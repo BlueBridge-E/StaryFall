@@ -5,9 +5,9 @@ date: 2026-07-22
 tags:
   - mcp
   - ai-agent
-  - 代码分析
-  - 知识图谱
-  - 开源
+  - code-analysis
+  - knowledge-graph
+  - open-source
 ---
 
 ## 1. 项目速览（TL;DR）
@@ -35,7 +35,7 @@ tags:
 
 AI 编程 Agent（Claude Code、Cursor、Aider 等）探索代码库的方式极其低效：
 
-```
+```text
 用户问："ProcessOrder 被谁调用了？"
   → Agent grep "ProcessOrder" → 返回 300 个匹配文件
   → 逐个 read 文件 → 每次读几百行
@@ -139,7 +139,7 @@ typedef struct {
 
 这是整个系统最精巧的部分。论文 Section 3.4 详细描述了一个**优先级递减的 6 策略级联解析器**，用于将原始的被调用方名称（如 `pkg.Func`）解析为知识图谱中的限定节点：
 
-```
+```text
 策略 1: Import Map 精确匹配（置信度 0.95）
   → 将 callee 拆分为 prefix.suffix
   → 在文件的 import map 中查找 prefix

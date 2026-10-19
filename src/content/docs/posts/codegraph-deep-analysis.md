@@ -1,6 +1,6 @@
 ---
 title: 深度解析 CodeGraph：给 AI Coding Agent 装一个本地代码知识引擎
-description: 对开源项目 CodeGraph 的代码级深度分析——一个通过 MCP 协议为 Claude Code/Cursor/Codex 等 AI Agent 提供预索引知识图谱的工具，平均节省 35% 成本、59% Token、70% 工具调用次数，100% 本地运行。
+description: 对开源项目 CodeGraph 的代码级深度分析——通过 MCP 为 Claude Code/Cursor 等 AI Agent 提供预索引知识图谱，平均节省 35% 成本、59% Token、70% 工具调用，且 100% 本地运行。
 date: 2026-05-23
 tags: [claude-code, knowledge-graph, mcp, code-analysis, open-source, ai-tools]
 ---
@@ -32,7 +32,7 @@ tags: [claude-code, knowledge-graph, mcp, code-analysis, open-source, ai-tools]
 
 **CodeGraph 的答案：建一个本地索引，让 Agent 直接查索引，不要读文件。**
 
-```
+```text
 传统方式：Question → grep → Read → grep → Read → ... → Answer
                                                     ↑ 十几二十次调用
 CodeGraph：Question → codegraph_context → codegraph_explore → Answer
@@ -45,7 +45,7 @@ CodeGraph：Question → codegraph_context → codegraph_explore → Answer
 
 CodeGraph 是一个典型的"管道-过滤器"架构，从文件到知识图谱有五层：
 
-```
+```text
 文件系统
     │
     ▼
@@ -76,7 +76,7 @@ CodeGraph 是一个典型的"管道-过滤器"架构，从文件到知识图谱�
 
 ### 模块目录
 
-```
+```text
 src/
 ├── bin/                   CLI 入口（commander）
 │   └── codegraph.ts       子命令：install/init/index/sync/status/serve
@@ -244,7 +244,7 @@ CodeGraph 的亮点之一——能从 **14 个 Web 框架**的路由配置中提
 
 CodeGraph 用 **7 个真实开源项目、7 种语言** 做对比测试，每组 4 次取中位数，`claude -p` 无头运行，严格控制 **WITH** vs **WITHOUT** CodeGraph 变量：
 
-| 项目 | 语言/规模 | 成本节省 | Token减少 | 时间缩短 | 工具调用减少 |
+| 项目 | 语言/规模 | 成本节省 | Token 减少 | 时间缩短 | 工具调用减少 |
 |------|----------|---------|----------|---------|-----------|
 | **VS Code** | TS · ~10k 文件 | 35% | 73% | 41% | 72% |
 | **Excalidraw** | TS · ~600 | 47% | 73% | 60% | 86% |
@@ -270,7 +270,7 @@ CodeGraph 用 **7 个真实开源项目、7 种语言** 做对比测试，每组
 
 CodeGraph 的 `install` 子命令是一个精心设计的**多目标安装器**：
 
-```
+```text
 src/installer/
 ├── targets/registry.ts   ← 所有支持的 Agent 注册表
 ├── targets/types.ts      ← AgentTarget 接口定义
@@ -321,7 +321,7 @@ Codex 的配置用了**手写 TOML 序列化器**（只处理 `[mcp_servers.code
 
 先生你正在写 `desktop-cc-gui`（Tauri + Rust 的 Claude Code 桌面 GUI），这篇文章里的两个项目给了你两种集成思路：
 
-```
+```text
 desktop-cc-gui（外壳）
     ├── 内置 CodeGraph MCP（启动时自启）→ 用户省 Token
     └── 集成 Understand Anything Dashboard 嵌入 → 用户看图
@@ -367,7 +367,7 @@ codegraph serve --mcp
 
 带 CodeGraph 和不带的区别，可以用 VS Code 测试用例的感受来概括：
 
-> 不带 CodeGraph：Agent 说"让我先看看项目结构..."，然后你看着它 ls/glob/grep 了一堆文件，等 1 分 43 秒，花了 $0.64。
+> 不带 CodeGraph：Agent 说"让我先看看项目结构……"，然后你看着它 ls/glob/grep 了一堆文件，等 1 分 43 秒，花了 $0.64。
 >
 > 带 CodeGraph：Agent 直接查到 `codegraph_search` + `codegraph_context`，7 次调用出答案，42 美分，一分钟。
 >

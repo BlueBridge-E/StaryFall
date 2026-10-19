@@ -2,7 +2,7 @@
 title: Claude Code 常用命令
 description: Claude Code 的命令体系分为终端 CLI 命令、斜杠命令和键盘快捷键三类，一篇全掌握。
 date: 2026-05-19
-tags: [claude-code, ai, 工具]
+tags: [claude-code, ai, devtools]
 ---
 
 Claude Code 的命令体系分为**三类**：终端 CLI 命令、交互会话中的斜杠命令（`/`）、以及键盘快捷键。其中 CLI 命令负责启动与控制，斜杠命令负责会话内的操作，快捷键负责快速交互。
