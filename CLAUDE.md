@@ -144,3 +144,12 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
 ## Interaction
 
 - 与用户沟通时使用简体中文。
+- **推送前必须先让用户检查，不得自行 `git push`。** 完成改动后停在「已 commit、尚未推送」的状态，
+  把以下内容摆给用户看，得到明确确认后再推：
+  1. `git log --oneline origin/main..HEAD` —— 这次会推哪些提交
+  2. `git diff --stat origin/main..HEAD` —— 影响面
+  3. 逐条说清改了什么、为什么改，以及**已知的不确定处**（不要只报好消息）
+  4. 本地验证结果（`npm run check` / `npm run build` / `verify-typography.mjs`）
+
+  推送到 `main` 会直接触发 GitHub Pages 部署，等于线上变更，所以这一步不能省。
+  回滚用 `git revert <sha>` 再走一次同样的检查流程，不要用 `reset --hard` + 强推。
