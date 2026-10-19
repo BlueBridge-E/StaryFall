@@ -52,6 +52,8 @@ check('ToC 列不再被压成 0 宽', !/\.right-sidebar-container\{width:0/.test
 check('两栏断点下正文宽度自适应', /--sl-content-width: ?clamp\(45rem, ?60vw, ?50rem\)/.test(css));
 check('72rem 以下补单栏居中', /@media\(max-width:71\.999rem\)\{\s*\.main-pane \.content-panel \.sl-container\{margin-inline:auto\}\s*\}/.test(css));
 check('标题区与正文间的整栏分隔线已移除', /\.main-pane \.content-panel\+\.content-panel\{border-top:0\}/.test(css));
+// Starlight 在 ≥72rem 给 .right-sidebar 画了一条从视口顶到底的竖线，本项目已关掉
+check('正文与目录之间的竖线已移除', /\.right-sidebar\{border-inline-start:0\}/.test(css));
 check('文章页 ToC 已渲染', post.includes('right-sidebar-panel') && post.includes('本页内容'));
 check('标题区含日期与阅读时长', /class="post-meta/.test(post) && /约 \d+ 分钟/.test(post));
 check('标题区含摘要行', /class="post-lead/.test(post));
@@ -68,6 +70,24 @@ check('「本页内容」标题弱化', /\.right-sidebar-panel h2\{[^}]*letter-s
 check('「本页内容」下方强调短线', /\.right-sidebar-panel h2:after\{[^}]*width:1\.5rem/.test(css));
 check('暗色主题强调色已提亮', /\[data-theme=dark\]\{--sl-color-text-accent: ?#7ea2ff/.test(css));
 check('相关文章仍在', post.includes('related-heading'));
+check('相关文章卡片结构（日期/时长在标题上方）', /class="related-meta/.test(post) && /class="related-card/.test(post));
+check('相关文章不再有标签行', !/class="related-tags/.test(post));
+{
+  // 页脚的「上一篇/下一篇」与「相关文章」不得重复推荐同一篇
+  const dup = [];
+  for (const slug of fs.readdirSync('dist/posts')) {
+    const f = `dist/posts/${slug}/index.html`;
+    if (!fs.existsSync(f)) continue;
+    const html = read(f);
+    const sib = html.match(/<nav class="post-siblings[\s\S]*?<\/nav>/);
+    const rel = html.match(/<section class="related[\s\S]*?<\/section>/);
+    if (!sib || !rel) continue;
+    const hrefs = (s) => [...s.matchAll(/href="(\/StaryFall\/posts\/[^"]+)"/g)].map((m) => m[1]);
+    const seen = new Set(hrefs(sib[0]));
+    if (hrefs(rel[0]).some((h) => seen.has(h))) dup.push(slug);
+  }
+  check('相关文章不与上一篇/下一篇重复', dup.length === 0, dup.join(', '));
+}
 check('RSS 仍在', fs.existsSync('dist/rss.xml'));
 check('favicon.ico 已生成', fs.existsSync('dist/favicon.ico'));
 check('favicon.svg 仍在', fs.existsSync('dist/favicon.svg'));
