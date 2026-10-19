@@ -61,7 +61,9 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
   改头图只需改这一个文件，三个页面结构一致（`.hero > .hero-inner > .hero-badge / h1 / .tagline / .hero-nav`）。
 - **`--page-max`（`tokens.css`）** — 独立页面的内容最大宽度，当前 `1200px`。
   原先各页各写 720–800px，1440 视口下两侧各空 300px 以上，整站显得又窄又素。
-  首页与 `/feed`、`/work` 同时改成 `repeat(auto-fill, minmax(420px, 1fr))` 的双列栅格。
+  首页与 `/feed`、`/work` 同时改成 `repeat(auto-fill, minmax(min(420px, 100%), 1fr))` 的双列栅格。
+  **`min()` 那一层不能省**：裸写 `minmax(420px, 1fr)` 时列宽下限恒为 420px，视口窄于 420px
+  （手机竖屏）会把整页撑出横向滚动条，实测 375px 下溢出约 93px。
 
 **Starlight 组件覆盖（`astro.config.mjs` 的 `components`）：**
 
@@ -87,15 +89,19 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
    整条 `grid-template-columns` 失效，导航栏站名会直接消失。
 3. **导航栏需要 `--__toc-width: 0rem` 补丁。** `Header.astro` 用它算网格第一列（站名）的最小宽度，
    而它只在无 ToC 时才被定义；有 ToC 时会回退成 `--sl-sidebar-width`，让站名被挤成 0 宽。
-4. **`--sl-content-width` 用 `clamp(45rem, 60vw, 50rem)` 而不是固定值。** 固定 50rem 时
-   1152–1350px 视口下「正文 + ToC」几乎占满，正文左留白被压到 20px 上下，看起来又像贴左；
-   固定 45rem 又让宽屏右侧空太多。
+4. **`--sl-content-width` 用 `clamp(45rem, 61vw, 51.5rem)` 而不是固定值。** 上限原本是 50rem，
+   但那样正文在 1440px 以上被锁死在 800px，1920px 视口下两侧各空 366–378px、正文只占视口 42%。
+   56rem / 54rem / 52rem 都试过偏宽，最终 51.5rem = 824px = **每行 49.05 个中文字**（正文 16.8px）。
+   **这个值是被表格卡住的**：51rem（816px / 48.57 字）时 `claude-code-commands` 表格里
+   `cat logs.txt | claude -p "explain"` 会折行，实测折行临界就在 824px。
+   对应视口：1152px → 720px、1280px → 781px、1339px 以上封顶 824px。
+   **下限别动**：实测抬到 46rem 会让 1152px 下左留白从 34px 掉到 26px（正文贴边）。
 5. **72rem 以下要补一条居中规则。** `ContentPanel.astro` 里 `.sl-container { margin-inline: … }`
    被包在 `@media (min-width: 72rem)` 内，所以「视口已能容下正文列、但 ToC 还没出现」的那段区间，
    正文会贴左。
 6. **目录宽度覆盖了 Starlight 的"魔法数"。** ToC 内容宽原本被一条
    `((100vw - …) * 0.25)` 的 `max-width` 卡到 200px 上下（源码注释自称 `MAGIC NUMBER`），
-   而目录列实际有 379px，导致条目折行。现在改为铺满实际列宽并封顶 `20rem`。
+   而目录列实际有 379px，导致条目折行。现在改为铺满实际列宽并封顶 `21rem`。
 
 ## 主题：全站只有浅色
 
