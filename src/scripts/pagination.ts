@@ -5,8 +5,10 @@
  * 约定：
  *  - `[data-pagination-card]`      参与分页的卡片
  *  - `[data-pagination]`           分页容器，`data-page-size` 指定每页条数
- *  - `[data-month-heading="YYYY-MM"]`（可选）月份标题，按当前页可见卡片
- *    自动显隐；配合 `#YYYY-MM` 锚点可直接跳到该月所在页
+ *  - `[data-month-heading="YYYY-MM"]`（可选）月份标题。页面必须把它就地渲染在
+ *    该月首张卡片之前（见 feed.astro），本脚本只在「该月跨页」时把它搬到当前页
+ *    的首张该月卡片前，并隐藏当前页没有的月份。这样即使脚本不运行（无 JS、
+ *    或条目不足一页导致页面未渲染分页容器），分组结构依然正确。
  *
  * 分页状态写入 `?page=N`，支持分享/收藏与浏览器前进后退。
  * 禁用 JS 时仍会一次性显示全部卡片（保留 Ctrl+F 全量检索能力）。
@@ -52,8 +54,9 @@ export function initPagination(): void {
     return { heading, month, firstIndex };
   });
 
-  // 标题初始位于所有卡片之前，需要按当前页的首条该月卡片重新定位，
-  // 否则跨页的月份（例如 75 条跨 9 页）只有第一页能看到标题。
+  // 标题已经就地渲染在所属月份之前，正常情况下无需移动；
+  // 只有当某个月跨页时，才把它搬到当前页首条该月卡片之前，
+  // 否则第 2 页以后的续页会看不到月份上下文。
   const cardParent = cards[0]?.parentElement ?? null;
 
   function placeHeadingBefore(heading: HTMLElement, card: HTMLElement): void {
@@ -132,7 +135,7 @@ export function initPagination(): void {
     render(readPageFromUrl(totalPages), { updateUrl: 'none', scrollTop: false });
   });
 
-  // 月份锚点：跳到该月所在页，再滚动到该标题（标题在分页容器之外，始终可见）
+  // 月份锚点：跳到该月所在页，再滚动到该标题
   function applyHash(): boolean {
     const hash = decodeURIComponent(window.location.hash.replace(/^#/, ''));
     if (!hash) return false;

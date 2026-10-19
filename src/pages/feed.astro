@@ -34,8 +34,7 @@ const pageTitle = 'AI 速递 — StaryFall';
 const pageDescription = 'AI 热点资讯精选，每周三、周日更新，聚合多源报道与要点摘要。';
 const canonical = absoluteUrl('/feed/');
 
-// 按月分组：月份标题在分页容器之外，因此始终可见，
-// 用 #YYYY-MM 锚点即可分享/直达某个月（由 scripts/pagination.ts 跳到该月所在页）。
+// 按月分组，用 #YYYY-MM 锚点分享/直达某个月（由 scripts/pagination.ts 跳到该月所在页）。
 const monthOf = (date: string | undefined) => (date ?? '').slice(0, 7);
 const months = [...new Set(items.map((item) => monthOf(item.date)).filter(Boolean))].sort().reverse();
 const monthLabel = (key: string) => {
@@ -43,6 +42,16 @@ const monthLabel = (key: string) => {
   return `${year} 年 ${Number(month)} 月`;
 };
 const monthCount = (key: string) => items.filter((item) => monthOf(item.date) === key).length;
+
+// 月份标题必须就地渲染在所属月份的第一张卡片之前，不能集中放在所有卡片之前：
+// 集中放置时标题只能靠 JS 搬回原位，而条目不足一页时 feed.astro 根本不渲染分页容器，
+// pagination.ts 会在拿到容器前就 return —— 标题全部停留在顶部（或带 hidden 时全部消失），
+// 整页退化成不带分组的裸列表。就地渲染后，无 JS 也是正确的分组结构。
+const itemsWithMonthStart = items.map((item, i) => {
+  const month = monthOf(item.date);
+  const prev = i > 0 ? monthOf(items[i - 1]!.date) : null;
+  return { item, month, monthStart: month !== '' && prev !== month };
+});
 ---
 
 <!doctype html>
@@ -71,7 +80,7 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
           <span class="dot" aria-hidden="true"></span>
           {items.length} 条资讯 · {months.length} 个月
         </p>
-        <h1>🤖 AI 速递</h1>
+        <h1><span aria-hidden="true">🤖</span> AI 速递</h1>
         <p class="tagline">AI 热点资讯精选 · 每周三、周日更新</p>
         <nav class="hero-nav" aria-label="站点导航">
           <a href={`${base}/`}>首页</a>
@@ -96,30 +105,34 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
 
     <main class="post-list">
       {items.length === 0 ? (
-        <p class="empty-state">📭 资讯数据准备中，稍后回来查看</p>
+        <p class="empty-state"><span aria-hidden="true">📭</span> 资讯数据准备中，稍后回来查看</p>
       ) : (
         <>
-          {months.map((key) => (
-            <h2 class="month-heading" id={key} data-month-heading={key} hidden>
-              {monthLabel(key)}
-              <span class="month-heading-count">{monthCount(key)} 条</span>
-            </h2>
-          ))}
-          {items.map((item: NewsItem) => (
-            <article class="post-card news-card" data-pagination-card data-month={monthOf(item.date)}>
-              <h2 class="news-title">{item.title}</h2>
-              <div class="news-source">
-                {item.source && <span class="source-name">{item.source}</span>}
-                {item.date && <span class="source-date">{item.date}</span>}
-                <span class="source-arrow">▾</span>
-              </div>
-              <p class="news-summary">{item.summary}</p>
-              {item.url ? (
-                <a href={item.url} class="news-link" target="_blank" rel="noopener">阅读原文 ↗</a>
-              ) : (
-                <span class="news-link disabled">暂无链接</span>
+          {itemsWithMonthStart.map(({ item, month, monthStart }) => (
+            <>
+              {monthStart && (
+                <h2 class="month-heading" id={month} data-month-heading={month}>
+                  {monthLabel(month)}
+                  <span class="month-heading-count">{monthCount(month)} 条</span>
+                </h2>
               )}
-            </article>
+              <article class="post-card news-card" data-pagination-card data-month={month}>
+                <h3 class="news-title">{item.title}</h3>
+                <div class="news-source">
+                  {item.source && <span class="source-name">{item.source}</span>}
+                  {item.date && <span class="source-date">{item.date}</span>}
+                  <span class="source-arrow" aria-hidden="true">▾</span>
+                </div>
+                <p class="news-summary">{item.summary}</p>
+                {item.url ? (
+                  <a href={item.url} class="news-link" target="_blank" rel="noopener">
+                    阅读原文 <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  <span class="news-link disabled">暂无链接</span>
+                )}
+              </article>
+            </>
           ))}
         </>
       )}
@@ -130,9 +143,9 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
         <button class="page-btn" id="firstPage">
           <span aria-hidden="true">«</span> 第一页
         </button>
-        <button class="page-btn" id="prevPage">← 上一页</button>
+        <button class="page-btn" id="prevPage"><span aria-hidden="true">←</span> 上一页</button>
         <span class="page-info" id="pageInfo"></span>
-        <button class="page-btn" id="nextPage">下一页 →</button>
+        <button class="page-btn" id="nextPage">下一页 <span aria-hidden="true">→</span></button>
         <button class="page-btn" id="lastPage">
           最后一页 <span aria-hidden="true">»</span>
         </button>
@@ -193,7 +206,8 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
     color: var(--muted);
   }
 
-  /* 月份标题（分页容器之外，始终可见；由脚本按当前页显隐） */
+  /* 月份标题：就地渲染在所属月份之前；脚本只在「该月跨页」时把它搬到当前页首条卡片前。
+     没有 JS（或条目不足一页、分页容器未渲染）时，标题留在原位即可正确分组。 */
   .month-heading {
     scroll-margin-top: 1rem;
     margin: 2rem 0 0.75rem;
@@ -242,7 +256,9 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
     margin: 0 auto;
     padding: 1rem 1.5rem 4rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    /* min() 夹住列宽下限：视口窄于 420px 时列宽自动退到 100%，
+       否则 minmax(420px, 1fr) 会强制 420px 把整页撑出横向滚动条（手机竖屏） */
+    grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr));
     gap: 1rem;
     align-content: start;
   }
@@ -264,10 +280,11 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
     transform: translateY(-2px);
   }
 
+  /* 条目标题是 h3（月份标题才是 h2），显式清掉 UA 外边距，避免卡片内顶部留白随层级变化 */
   .news-title {
+    margin: 0 0 0.35rem;
     font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 0.35rem;
     line-height: 1.5;
   }
 
@@ -318,7 +335,6 @@ const monthCount = (key: string) => items.filter((item) => monthOf(item.date) ==
 
   @media (max-width: 480px) {
     .hero { padding: 3rem 1.25rem 2rem; }
-    .hero h1 { font-size: 2rem; }
     .post-list { padding: 1.5rem 1rem 3rem; }
     .pagination { flex-wrap: wrap; }
   }

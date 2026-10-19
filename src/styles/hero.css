@@ -119,4 +119,9 @@
   .hero {
     padding: 3rem 1.25rem 2.5rem;
   }
+  /* 手机竖屏下 clamp() 的 2.25rem 下限仍然偏大，压到 2rem；
+     各页面不再各自重复这条覆盖。 */
+  .hero h1 {
+    font-size: 2rem;
+  }
 }
