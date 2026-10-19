@@ -57,11 +57,15 @@ check('标题区含日期与阅读时长', /class="post-meta/.test(post) && /约
 check('标题区含摘要行', /class="post-lead/.test(post));
 check('标题区含标签胶囊', /class="post-tag/.test(post));
 check('标题锚点 _top 保留', /id="_top"/.test(post));
-// 目录改版：宽度不再被 25% 魔法数压住 + 字号放大 + 当前项高亮
-check('目录宽度铺满列宽（封顶 20rem）', /\.right-sidebar-panel \.sl-container\{width:min\(20rem,calc\(/.test(css));
-check('目录条目字号放大到 .82rem', /\.right-sidebar-panel a\{[^}]*font-size:\.82rem/.test(css));
-check('目录当前项高亮条', /a\[aria-current=true\]\{color:var\(--sl-color-text-accent\)/.test(css));
-check('「本页内容」标题弱化', /\.right-sidebar-panel h2\{[^}]*letter-spacing:\.1em/.test(css));
+// 目录改版（2026-10 第二版）：竖轨 + 分层字号 + 当前项在轨上高亮
+check('目录宽度铺满列宽（封顶 21rem）', /\.right-sidebar-panel \.sl-container\{width:min\(21rem,calc\(/.test(css));
+check('目录父级字号 .95rem', /\.right-sidebar-panel nav>ul>li>a\{[^}]*font-size:\.95rem/.test(css));
+check('目录子级字号 .88rem', /\.right-sidebar-panel nav ul ul a\{[^}]*font-size:\.88rem/.test(css));
+check('目录父级加粗 600', /\.right-sidebar-panel nav>ul>li>a\{[^}]*font-weight:600/.test(css));
+check('目录左侧竖轨 2px', /\.right-sidebar-panel nav>ul:before\{[^}]*width:2px/.test(css));
+check('目录当前项高亮条', /a\[aria-current=true\]\{color:var\(--sl-color-text-accent/.test(css));
+check('「本页内容」标题弱化', /\.right-sidebar-panel h2\{[^}]*letter-spacing:\.14em/.test(css));
+check('「本页内容」下方强调短线', /\.right-sidebar-panel h2:after\{[^}]*width:1\.5rem/.test(css));
 check('暗色主题强调色已提亮', /\[data-theme=dark\]\{--sl-color-text-accent: ?#7ea2ff/.test(css));
 check('相关文章仍在', post.includes('related-heading'));
 check('RSS 仍在', fs.existsSync('dist/rss.xml'));
