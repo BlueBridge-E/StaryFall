@@ -101,13 +101,18 @@ html[data-has-sidebar] {
  * 后者在 1200px 视口下只有约 205px，而目录列本身有 379px 可用，
  * 于是一半空间闲着、条目却被挤到折行。这里改成铺满实际可用列宽并封顶 20rem。
  *
- * 字号/对比/当前项高亮：Starlight 的条目是 var(--sl-text-xs) + gray-3，
- * 又小又灰像附属信息；这里放大到 0.82rem、提到 gray-2，并给当前项加左侧高亮条。
+ * 字号/对比/层级：Starlight 的条目是 var(--sl-text-xs) + gray-3，又小又灰像附属信息；
+ * 父级与子级原本字号、字重、颜色完全相同，只靠 16px 缩进区分，而子级带 emoji
+ * 反而显得比父级更重 —— 层级是倒挂的。现在改成：
+ *   父级 0.95rem / 600 / 近黑      子级 0.88rem / 400 / gray-3
+ * 整条列表左侧有一条 2px 竖轨，当前项在轨上点亮一段强调色，替代原来悬空的左竖条。
  */
 @media (min-width: 72rem) {
+  /* 字号调大后长标题会折行，21rem 是「二、斜杠命令（会话中交互使用，以 / 开头）」
+     这类最宽条目在 0.95rem 下不折行的最小容器宽度 */
   .right-sidebar-panel .sl-container {
     width: min(
-      20rem,
+      21rem,
       calc(
         var(--sl-sidebar-width) + (100vw - var(--sl-content-width) - var(--sl-sidebar-width)) / 2 - 2rem
       )
@@ -120,34 +125,78 @@ html[data-has-sidebar] {
   padding-block: 2.6rem 2.5rem;
 }
 
-/* 「本页内容」标题：弱化成小字标签，用一条细线分隔，避免和正文 H2 抢注意力 */
+/* 「本页内容」：全宽横线会一路拉到容器右边缘、在文本下方悬空，
+   改成小号标签 + 一小段强调色短线，和左侧竖轨是同一套线条语言 */
 .right-sidebar-panel h2 {
-  margin: 0 0 0.7rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid var(--sl-color-hairline);
-  font-size: 0.8rem;
+  margin: 0 0 0.55rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: var(--sl-color-gray-3);
+}
+
+.right-sidebar-panel h2::after {
+  content: '';
+  display: block;
+  width: 1.5rem;
+  height: 2px;
+  margin-top: 0.5rem;
+  border-radius: 1px;
+  background-color: var(--sl-color-text-accent, var(--accent));
+}
+
+/* 竖轨：整条目录左侧一条 2px 淡轨，把松散的一列灰字收成一个整体 */
+.right-sidebar-panel nav > ul {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.right-sidebar-panel nav > ul::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.15rem;
+  inset-inline-start: 0;
+  width: 2px;
+  border-radius: 1px;
+  background-color: var(--sl-color-hairline, var(--border));
 }
 
 .right-sidebar-panel a {
   position: relative;
-  padding-block: 0.32rem;
-  /* 保留 Starlight 按层级缩进的逻辑（--depth 由组件注入），只是加大基础缩进给高亮条留位 */
-  padding-inline: calc(1rem * var(--depth, 0) + 0.85rem) 0.5rem;
-  font-size: 0.82rem;
-  line-height: 1.55;
-  color: var(--sl-color-gray-2);
+  padding-block: 0.28rem;
+  padding-inline: 1rem 0.4rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--sl-color-gray-3);
   border-radius: 0;
   transition: color 0.15s;
 }
 
-/* 当前项的左侧高亮条：用一个独立伪元素，避免影响缩进与折行 */
+/* 父级（## 标题）：更大更深更重，作为一级节点 */
+.right-sidebar-panel nav > ul > li > a {
+  padding-block: 0.32rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--sl-color-white);
+}
+
+/* 子级（### 标题）：缩进 + 降一档，形成可读的层级差 */
+.right-sidebar-panel nav ul ul a {
+  padding-inline: 1.9rem 0.4rem;
+  padding-block: 0.26rem;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--sl-color-gray-3);
+}
+
+/* 当前项：在竖轨上点亮一段强调色，位置与轨重合，不额外占缩进 */
 .right-sidebar-panel a::before {
   content: '';
   position: absolute;
-  inset-block: 0.28rem;
+  inset-block: 0.14rem;
   inset-inline-start: 0;
   width: 2px;
   border-radius: 1px;
@@ -156,7 +205,7 @@ html[data-has-sidebar] {
 }
 
 .right-sidebar-panel a:hover {
-  color: var(--sl-color-white);
+  color: var(--sl-color-text-accent, var(--accent));
 }
 
 .right-sidebar-panel a:hover::before {
@@ -164,12 +213,11 @@ html[data-has-sidebar] {
 }
 
 .right-sidebar-panel a[aria-current='true'] {
-  color: var(--sl-color-text-accent);
-  font-weight: 600;
+  color: var(--sl-color-text-accent, var(--accent));
 }
 
 .right-sidebar-panel a[aria-current='true']::before {
-  background-color: var(--sl-color-text-accent);
+  background-color: var(--sl-color-text-accent, var(--accent));
 }
 
 /*
