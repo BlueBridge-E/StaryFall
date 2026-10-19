@@ -82,7 +82,12 @@ async function fetchGithubRepos(): Promise<Record<string, RepoData>> {
   const responses = await Promise.all(
     GITHUB_REPOS.map(async (repo) => {
       try {
-        const r = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+        const r = await fetch(`https://api.github.com/repos/${repo}`, {
+          headers,
+          // 构建期请求必须带超时：api.github.com 一旦卡住，没有 signal 会把 CI
+          // 一直挂到 runner 上限。8 秒仍未响应就退化为「省略 star 与更新时间」。
+          signal: AbortSignal.timeout(8000),
+        });
         if (!r.ok) {
           console.warn(
             `[work] GitHub API ${r.status} for ${repo}` +
@@ -193,7 +198,7 @@ function getProject(name: string) {
           return (
             <a href={`https://github.com/${fullName}`} class="work-card" target="_blank" rel="noopener">
               <div class="work-header">
-                <span class="work-icon">{meta.icon}</span>
+                <span class="work-icon" aria-hidden="true">{meta.icon}</span>
                 <div>
                   <h2 class="work-title">{name}</h2>
                   <p class="work-tags">
@@ -227,7 +232,7 @@ function getProject(name: string) {
 
       <div class="work-card work-card--no-link">
         <div class="work-header">
-          <span class="work-icon">🤖</span>
+          <span class="work-icon" aria-hidden="true">🤖</span>
           <div>
             <h2 class="work-title">OpenClaw Agent 工作流系统</h2>
             <p class="work-tags">
@@ -246,7 +251,7 @@ function getProject(name: string) {
 
       <div class="work-card work-card--no-link">
         <div class="work-header">
-          <span class="work-icon">☁️</span>
+          <span class="work-icon" aria-hidden="true">☁️</span>
           <div>
             <h2 class="work-title">自建 AI 基础设施</h2>
             <p class="work-tags">
@@ -285,7 +290,9 @@ function getProject(name: string) {
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    /* min() 夹住列宽下限：视口窄于 420px 时列宽自动退到 100%，
+       否则 minmax(420px, 1fr) 会强制 420px 把整页撑出横向滚动条（手机竖屏） */
+    grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr));
     gap: 1.15rem;
     align-content: start;
   }
@@ -349,8 +356,6 @@ function getProject(name: string) {
   }
   /* 对比度需 ≥4.5:1（0.78rem 太小不算「大号文本」） */
   .lang-tag.ts { background: #e6f4ff; color: #1f5fa0; }
-  .lang-tag.swift { background: #fff3e0; color: #8a4b1a; }
-  .lang-tag.rust { background: #fff3e0; color: #8a4b1a; }
 
   .work-stats {
     margin-left: auto;
@@ -394,7 +399,6 @@ function getProject(name: string) {
 
   @media (max-width: 480px) {
     .hero { padding: 3rem 1.25rem 2rem; }
-    .hero h1 { font-size: 2rem; }
     .work-list { padding: 1.5rem 1rem 3rem; }
     .work-header { gap: 0.5rem; }
     .work-stats { margin-left: 0; margin-top: 0.25rem; }

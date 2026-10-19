@@ -7,7 +7,7 @@ tags: [ai, agent, context-engineering, token-optimization, open-source, headroom
 
 ## 补一个背景
 
-6 月 19 日我写了 [Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive)，当时项目 17k stars，刚引入 Output Token Reduction 和 Cross-Agent Memory。两周半过去，Headroom 已经 56.7k stars，翻了三倍不止，而且经历了一次 repo 迁移和至少四个大版本迭代。
+6 月 19 日我写了 [Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive/)，当时项目 17k stars，刚引入 Output Token Reduction 和 Cross-Agent Memory。两周半过去，Headroom 已经 56.7k stars，翻了三倍不止，而且经历了一次 repo 迁移和至少四个大版本迭代。
 
 这不是"哦又多了几个 stars"级别的更新。这是从"一个值得关注的项目"到"Agent 基础设施事实标准"的质变。以下几个变化值得单独写一篇跟进。
 
@@ -136,4 +136,4 @@ Headroom 的定位恰好卡在了这个位置：不需要你换模型、不需�
 
 ---
 
-_上一篇文章：[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive)（2026-06-19）_
+_上一篇文章：[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive/)（2026-06-19）_

@@ -9,8 +9,8 @@ tags: [ai, agent, context-engineering, token-optimization, open-source, headroom
 
 这条线我写过两次了：
 
-- 6 月 19 日，[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive)，当时 17k stars；
-- 7 月 5 日，[Headroom 跟进更新](/StaryFall/posts/headroom-follow-up-july)，当时 56.7k stars，刚经历 repo 迁移和 Rust 核心重写。
+- 6 月 19 日，[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive/)，当时 17k stars；
+- 7 月 5 日，[Headroom 跟进更新](/StaryFall/posts/headroom-follow-up-july/)，当时 56.7k stars，刚经历 repo 迁移和 Rust 核心重写。
 
 现在是 9 月 21 日，**73,290 stars**（+29%），**5,636 forks**，最新版本 **v0.37.0**（8 月 27 日发布），代码库 80 MB 量级，Apache-2.0。
 
@@ -137,6 +137,6 @@ Claude Code · Codex · Grok CLI · Cursor · Aider · Copilot CLI · VS Code Co
 
 ---
 
-_前情：[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive)（2026-06-19）· [Headroom 跟进更新：从 17k 到 56k Stars](/StaryFall/posts/headroom-follow-up-july)（2026-07-05）_
+_前情：[Headroom 深度解析（2026 版）](/StaryFall/posts/headroom-deep-dive/)（2026-06-19）· [Headroom 跟进更新：从 17k 到 56k Stars](/StaryFall/posts/headroom-follow-up-july/)（2026-07-05）_
 
 > **信息来源：** GitHub API `headroomlabs-ai/headroom`（star/fork/license/版本，2026-09-21 抓取）· 各版本 release notes（v0.28–v0.37）· 仓库 `README.md` main 分支 · 官方站点 headroomlabs.ai 与 docs.headroomlabs.ai。文中版本号、提交排序与 benchmark 数字均取自上述来源，未做推算。
