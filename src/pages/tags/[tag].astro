@@ -29,7 +29,7 @@ const posts = (await getPosts()).filter((post) => post.data.tags.includes(tag));
       {posts.map((post) => (
         <li>
           <a href={`${base}/posts/${postSlug(post.id)}/`}>
-            <span class="post-title">{post.data.title}</span>
+            <h2 class="post-title">{post.data.title}</h2>
             {post.data.date && (
               <span class="post-date">
                 {post.data.date.toLocaleDateString('zh-CN')}
@@ -44,7 +44,7 @@ const posts = (await getPosts()).filter((post) => post.data.tags.includes(tag));
   )}
 
   <p style="margin-top: 2rem;">
-    <a href={`${base}/tags/`}>&larr; 查看所有标签</a>
+    <a href={`${base}/tags/`}><span aria-hidden="true">&larr;</span> 查看所有标签</a>
   </p>
 </Layout>
 
@@ -52,6 +52,19 @@ const posts = (await getPosts()).filter((post) => post.data.tags.includes(tag));
   .post-count { margin-bottom: 1rem; color: var(--sl-color-gray-2); }
   .post-list { list-style: none; padding: 0; }
   .post-list li { margin-bottom: 0.5rem; }
+  /*
+   * 这页不走 Starlight，`.post-list a` 也没有 color 规则；TagLayout 里的
+   * `a { color: inherit }` 会被 Astro 作用域化成 a:where(.astro-taglayout)，
+   * 而列表是本站组件渲染的，匹配不上 —— 不显式指定就会退化成浏览器默认的链接蓝。
+   * 同理 h2 需要清掉 UA 的字号/粗细/外边距，才能保持原来的纯文本观感。
+   */
+  .post-title {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    color: var(--text);
+    transition: color 0.18s;
+  }
   .post-list a {
     display: flex;
     justify-content: space-between;

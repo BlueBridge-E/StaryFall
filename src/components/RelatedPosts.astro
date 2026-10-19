@@ -21,7 +21,7 @@ const tagHref = (tag: string) => `${base}/tags/${encodeURIComponent(tag)}/`;
     <nav class="post-siblings" aria-label="上一篇 / 下一篇">
       {newer ? (
         <a class="sibling sibling--prev" href={href(newer)} rel="prev">
-          <span class="sibling-label">← 上一篇（更新）</span>
+          <span class="sibling-label"><span aria-hidden="true">←</span> 上一篇（更新）</span>
           <span class="sibling-title">{newer.data.title}</span>
         </a>
       ) : (
@@ -29,7 +29,7 @@ const tagHref = (tag: string) => `${base}/tags/${encodeURIComponent(tag)}/`;
       )}
       {older && (
         <a class="sibling sibling--next" href={href(older)} rel="next">
-          <span class="sibling-label">下一篇（更早）→</span>
+          <span class="sibling-label">下一篇（更早）<span aria-hidden="true">→</span></span>
           <span class="sibling-title">{older.data.title}</span>
         </a>
       )}

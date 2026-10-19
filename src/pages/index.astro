@@ -88,9 +88,11 @@ const ordered = featured ? [featured, ...rest] : [];
                 <span class="dot" aria-hidden="true"></span>
                 <span>{minutes} 分钟</span>
               </div>
-              <a href={`${base}/posts/${postSlug(post.id)}/`} class="post-title">
-                {post.data.title}
-              </a>
+              <h2 class="post-card-title">
+                <a href={`${base}/posts/${postSlug(post.id)}/`} class="post-title">
+                  {post.data.title}
+                </a>
+              </h2>
               <p class="post-desc">{post.data.description}</p>
               {tags.length > 0 && (
                 <ul class="post-tags">
@@ -112,9 +114,9 @@ const ordered = featured ? [featured, ...rest] : [];
         <button class="page-btn" id="firstPage">
           <span aria-hidden="true">«</span> 第一页
         </button>
-        <button class="page-btn" id="prevPage">← 上一页</button>
+        <button class="page-btn" id="prevPage"><span aria-hidden="true">←</span> 上一页</button>
         <span class="page-info" id="pageInfo"></span>
-        <button class="page-btn" id="nextPage">下一页 →</button>
+        <button class="page-btn" id="nextPage">下一页 <span aria-hidden="true">→</span></button>
         <button class="page-btn" id="lastPage">
           最后一页 <span aria-hidden="true">»</span>
         </button>
@@ -170,7 +172,9 @@ const ordered = featured ? [featured, ...rest] : [];
   /* ── 卡片栅格 ── */
   .post-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    /* min() 夹住列宽下限：视口窄于 420px 时列宽自动退到 100%，
+       否则 minmax(420px, 1fr) 会强制 420px 把整页撑出横向滚动条（手机竖屏） */
+    grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr));
     gap: 1.15rem;
   }
 
@@ -246,6 +250,11 @@ const ordered = featured ? [featured, ...rest] : [];
     font-size: 0.79rem;
     color: var(--muted);
     letter-spacing: 0.02em;
+  }
+
+  /* 卡片标题是 h2（里层仍是唯一可点的 a），这里只负责清掉 UA 外边距 */
+  .post-card-title {
+    margin: 0;
   }
 
   .post-title {
