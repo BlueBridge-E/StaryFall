@@ -49,7 +49,7 @@ check('文章页 lang=zh-CN', /<html[^>]*lang="zh-CN"/.test(post));
 check('正文左边距已归零（不留 300px 空档）', /\{--sl-content-inline-start: ?0rem\}/.test(css));
 check('导航 --__toc-width 补丁存在', /\.header\{--__toc-width: ?0rem\}/.test(css));
 check('ToC 列不再被压成 0 宽', !/\.right-sidebar-container\{width:0/.test(css));
-check('两栏断点下正文宽度自适应', /--sl-content-width: ?clamp\(45rem, ?60vw, ?50rem\)/.test(css));
+check('正文宽度随视口自适应（45–51.5rem 区间）', /--sl-content-width: ?clamp\(45rem, ?61vw, ?51\.5rem\)/.test(css));
 check('72rem 以下补单栏居中', /@media\(max-width:71\.999rem\)\{\s*\.main-pane \.content-panel \.sl-container\{margin-inline:auto\}\s*\}/.test(css));
 check('标题区与正文间的整栏分隔线已移除', /\.main-pane \.content-panel\+\.content-panel\{border-top:0\}/.test(css));
 // Starlight 在 ≥72rem 给 .right-sidebar 画了一条从视口顶到底的竖线，本项目已关掉

@@ -6,19 +6,24 @@
   --sl-color-text-accent: var(--accent);
   --sl-color-bg-accent: var(--accent-soft);
   /*
-   * 响应式正文宽度：45rem → 50rem。
+   * 响应式正文宽度：45rem → 51.5rem。
    *
    * 右侧要放 18.75rem 的 ToC 列，而 Starlight 的两栏断点是 72rem
    *   .main-pane = 正文宽 + (100% - 正文宽 - 18.75rem) / 2
-   * 用固定 50rem 时，1152–1350px 这段视口下「正文 + ToC」几乎占满，
-   * 算出来的左侧留白被压到 20px 上下（实测 1200px 时仅 24px），正文看起来又贴左了。
-   * 固定 45rem 又会让 1440px 以上右侧空出太多。
-   * 所以让它随视口在 45rem–50rem 之间连续变化：
-   *   1200px → 720px 正文（左留白 55px）
-   *   1440px → 800px 正文（左留白 135px）
-   * 顺带的好处是窄屏行长更短，中文读起来更舒服。
+   * 上限原本是 50rem，但那样正文在 1440px 以上就被锁死在 800px：
+   * 1920px 视口下两侧各空 366–378px，正文只占视口 42%，整页读起来发紧。
+   * 56rem（约 53 字）、54rem（约 51 字）、52rem（49.5 字）都试过，偏宽。
+   *
+   * 最终 51.5rem = 824px = **每行 49.05 个中文字**（正文 16.8px 字号）。
+   * 这个值是被表格卡住的：51rem（816px，48.57 字）时
+   * claude-code-commands 的表格里 `cat logs.txt | claude -p "explain"` 会折行，
+   * 实测折行/不折行的临界就在 824px，所以取 824 而不是更小的 816。
+   *   1152px → 720px 正文（与旧版一致，两栏刚出现时不会更贴边）
+   *   1280px → 781px
+   *   1339px 以上 → 824px 封顶（原版 800px）
+   * 下限保持 45rem：实测抬到 46rem 会让 1152px 下左留白从 34px 掉到 26px。
    */
-  --sl-content-width: clamp(45rem, 60vw, 50rem);
+  --sl-content-width: clamp(45rem, 61vw, 51.5rem);
 }
 
 /*
