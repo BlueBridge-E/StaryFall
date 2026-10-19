@@ -34,6 +34,8 @@ export interface RelatedOptions {
   seriesBonus?: number;
   /** 标签不足时的兜底：不足 limit 时用最新文章补齐，默认 true。 */
   fillWithLatest?: boolean;
+  /** 需要排除的 entry id。用于避免「相关文章」重复「上一篇/下一篇」已推荐的文章。 */
+  exclude?: string[];
 }
 
 /**
@@ -41,13 +43,14 @@ export interface RelatedOptions {
  * 纯构建期计算，无运行时开销，也不改动任何文章内容。
  */
 export function findRelated(current: Post, all: Post[], options: RelatedOptions = {}): Post[] {
-  const { limit = 4, tagWeight = 3, seriesBonus = 5, fillWithLatest = true } = options;
+  const { limit = 4, tagWeight = 3, seriesBonus = 5, fillWithLatest = true, exclude = [] } = options;
   const currentTags = new Set(current.data.tags);
   const currentSlug = postSlug(current.id);
   const currentSeries = seriesKey(currentSlug);
+  const excluded = new Set(exclude);
 
   const scored = all
-    .filter((entry) => entry.id !== current.id)
+    .filter((entry) => entry.id !== current.id && !excluded.has(entry.id))
     .map((entry) => {
       const slug = postSlug(entry.id);
       const shared = entry.data.tags.filter((tag) => currentTags.has(tag));
@@ -69,7 +72,8 @@ export function findRelated(current: Post, all: Post[], options: RelatedOptions 
   const related = scored.slice(0, limit);
 
   if (fillWithLatest && related.length < limit) {
-    const chosen = new Set([current.id, ...related.map((entry) => entry.id)]);
+    // 兜底同样要排除被剔除的文章，否则「相关文章」会从最新几篇里把它们又捞回来
+    const chosen = new Set([current.id, ...exclude, ...related.map((entry) => entry.id)]);
     for (const entry of all) {
       if (related.length >= limit) break;
       if (chosen.has(entry.id)) continue;
