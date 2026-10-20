@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 
 // 与 src/consts.ts 的 site / base 保持一致。
 // 这里的值不能从 consts.ts 导入：那个文件靠 import.meta.env 派生路径，
@@ -71,5 +72,16 @@ export default defineConfig({
       ],
       sidebar: [],
     }),
+    /*
+     * 显式挂载 sitemap 集成，唯一目的是把 /sky/（隐藏的星图页）排除出去。
+     *
+     * Starlight 只在自己没找到名为 `@astrojs/sitemap` 的集成时才挂它自己的，
+     * 所以这里挂上就等于接管，Starlight 不会重复生成。我们只有单一 locale，
+     * Starlight 那边本来也只传一个空配置，所以行为不变。
+     *
+     * 星图是彩蛋页，内容全是图形、没有可索引的正文，留在 sitemap 里只会稀释
+     * 站点在搜索结果里的信号，也可能让人搜到它从而失去"隐藏"的意义。
+     */
+    sitemap({ filter: (page) => !page.includes('/sky/') }),
   ],
 });

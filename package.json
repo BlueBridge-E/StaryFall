@@ -34,6 +34,7 @@
   "homepage": "https://github.com/BlueBridge-E/StaryFall#readme",
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/starlight": "^0.39.2",
     "astro": "^6.3.1"
   },

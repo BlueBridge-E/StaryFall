@@ -1,0 +1,593 @@
+---
+/**
+ * 星图（隐藏页）：31 篇文章组成的 3D 星云。
+ *
+ * 第一版是静态 SVG 节点连线图 —— 那是"关系图"，不是星图：不动、没纵深、
+ * 和任何一张力导向示例图长得一样。这一版改成 Canvas：
+ *  - 立体星云，缓慢自转，鼠标有视差，可以拖动旋转
+ *  - 入场是"星落"：文章按日期先后落到自己的位置
+ *  - 悬停保留该文的连线，其余暗下去
+ *
+ * 布局仍在构建期算完（src/lib/constellation.ts），页面只做渲染与交互，
+ * 运行时没有物理模拟，首帧就能出内容。
+ */
+import { base } from '../consts';
+import SiteHead from '../components/SiteHead.astro';
+import { getPosts, postSlug, readingMinutes } from '../lib/posts';
+import { buildSkyMap } from '../lib/constellation';
+import '../styles/tokens.css';
+
+const posts = await getPosts();
+
+// 按日期正序：入场时"星落"的顺序就是文章发布的顺序
+const ordered = [...posts].reverse();
+
+const sky = buildSkyMap(
+  ordered.map((post) => ({
+    slug: postSlug(post.id),
+    title: post.data.title,
+    date: post.data.date ? post.data.date.toISOString().slice(0, 10) : '',
+    tags: post.data.tags ?? [],
+    minutes: readingMinutes(post.body),
+  })),
+);
+
+const payload = JSON.stringify({
+  base,
+  stars: sky.stars,
+  links: sky.links,
+  clusters: sky.clusters,
+});
+
+const isolated = sky.stars.filter((star) => star.degree === 0).length;
+const pageTitle = '星图 | StaryFall';
+const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗星是一篇文章，共享标签的星彼此靠近。`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <SiteHead title={pageTitle} description={pageDescription} path="/sky/" />
+  </head>
+  <body>
+    <header class="sky-head">
+      <a class="back" href={`${base}/`}><span aria-hidden="true">←</span> 返回</a>
+      <h1>星图</h1>
+      <p class="lede">
+        {sky.stars.length} 颗星，每颗是一篇文章；两颗星之间有一条线，表示它们共享标签。
+        星越大，读得越久。
+      </p>
+      <p class="meta">
+        {sky.stars.length} 篇文章 · {sky.tagTotal} 个标签 · {sky.links.length} 条连线
+        {isolated > 0 && ` · ${isolated} 颗孤星`}
+      </p>
+    </header>
+
+    <main class="sky-stage">
+      <canvas id="sky" class="sky" aria-hidden="true"></canvas>
+
+      <div class="hud" aria-live="polite">
+        <p class="hint" id="hint">拖动可以转动星云 · 悬停或 Tab 逐颗浏览</p>
+        <div class="detail" id="detail" hidden>
+          <p class="d-title"></p>
+          <p class="d-meta"></p>
+          <p class="d-tags"></p>
+        </div>
+      </div>
+    </main>
+
+    <!--
+      Canvas 对键盘和读屏软件是不可见的，所以纯 canvas 的星图等于把 31 篇文章
+      从可访问性里抹掉了。这里保留一份真实链接列表：视觉上隐藏，但 Tab 可达、
+      读屏可读；聚焦某一项时星云里对应的星会亮起来。
+    -->
+    <ul class="sr-links">
+      {
+        sky.stars.map((star) => (
+          <li>
+            <a href={`${base}/posts/${star.slug}/`} data-slug={star.slug}>
+              {star.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <footer class="sky-foot">
+      <p>
+        孤星表示这篇文章的标签都只被它自己使用 —— 本站 {sky.tagTotal} 个标签里有相当一部分
+        只出现过一次。
+      </p>
+      <p><a href={`${base}/`}>回首页</a> · <a href={`${base}/tags/`}>按标签浏览</a></p>
+    </footer>
+
+    <script type="application/json" id="sky-data" set:html={payload}></script>
+
+    <script>
+      interface StarData {
+        slug: string;
+        title: string;
+        date: string;
+        tags: string[];
+        x: number;
+        y: number;
+        z: number;
+        r: number;
+        degree: number;
+      }
+      interface SkyData {
+        base: string;
+        stars: StarData[];
+        links: { a: string; b: string; weight: number }[];
+        clusters: { tag: string; x: number; y: number; z: number; count: number }[];
+      }
+
+      const data = JSON.parse(document.getElementById('sky-data')!.textContent!) as SkyData;
+      const canvas = document.getElementById('sky') as HTMLCanvasElement;
+      const ctx = canvas.getContext('2d')!;
+      const hint = document.getElementById('hint')!;
+      const detail = document.getElementById('detail')!;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const bySlug = new Map(data.stars.map((star) => [star.slug, star]));
+      const starIndex = new Map(data.stars.map((star, i) => [star.slug, i]));
+      const edges = data.links;
+      const touching = new Map<string, number[]>();
+      edges.forEach((edge, i) => {
+        for (const slug of [edge.a, edge.b]) {
+          const list = touching.get(slug) ?? [];
+          list.push(i);
+          touching.set(slug, list);
+        }
+      });
+
+      /** 每根线 / 每颗星当前的透明度，逐帧向目标值缓动，避免悬停时"啪"地切换 */
+      const edgeAlpha = new Float32Array(edges.length);
+      const starAlpha = new Float32Array(data.stars.length).fill(1);
+      /** 当前悬停星的相邻文章，用于"亮起一小片星群"而不是只亮一个点 */
+      let neighbours = new Set<string>();
+
+      /* ── 画布尺寸 ── */
+      let W = 0;
+      let H = 0;
+      function resize() {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        const rect = canvas.getBoundingClientRect();
+        W = rect.width;
+        H = rect.height;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        // 视差偏移以画面中心为原点，否则首帧会整体偏一下
+        if (!pointerX && !pointerY) {
+          pointerX = W / 2;
+          pointerY = H / 2;
+        }
+        fitToCanvas();
+      }
+
+      /* ── 星的光晕素材：预渲染一次，之后每帧只做 drawImage ── */
+      const glow = document.createElement('canvas');
+      glow.width = glow.height = 64;
+      const gctx = glow.getContext('2d')!;
+      const gradient = gctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.18, 'rgba(224,242,254,0.9)');
+      gradient.addColorStop(0.45, 'rgba(96,165,250,0.35)');
+      gradient.addColorStop(1, 'rgba(37,99,235,0)');
+      gctx.fillStyle = gradient;
+      gctx.fillRect(0, 0, 64, 64);
+
+      /* ── 相机 ── */
+      let yaw = 0.6;
+      let pitch = -0.22;
+      let autoYaw = 0;
+      let dragging = false;
+      let lastX = 0;
+      let lastY = 0;
+      let downX = 0;
+      let downY = 0;
+      let pointerX = 0;
+      let pointerY = 0;
+      let active: string | null = null;
+
+      const FOCAL = 2.4;
+      // 相机拉近 → 近处与远处星的尺寸差更大，这是"体积感"最强的线索
+      const DIST = 3.2;
+
+      /**
+       * 视口缩放不是常数：透视会把靠近相机的星放大，同一个归一化坐标在不同
+       * 旋转角度下投影出来的半径不一样。固定系数要么装不下（切边），要么浪费
+       * 一大半画布。这里采样 8 个旋转角度，取所有星投影后的最大半径反推缩放，
+       * 保证转到任何角度都不会切到画面外。
+       */
+      let viewScale = 300;
+      function fitToCanvas() {
+        let maxRx = 0.0001;
+        let maxRy = 0.0001;
+        for (let k = 0; k < 8; k += 1) {
+          const a = (k / 8) * Math.PI;
+          const ca = Math.cos(a);
+          const sa = Math.sin(a);
+          const cp = Math.cos(pitch);
+          const sp = Math.sin(pitch);
+          for (const star of data.stars) {
+            const rx = star.x * ca - star.z * sa;
+            const rz = star.x * sa + star.z * ca;
+            const ry = star.y * cp - rz * sp;
+            const rz2 = star.y * sp + rz * cp;
+            const persp = FOCAL / Math.max(0.35, DIST + rz2);
+            maxRx = Math.max(maxRx, Math.abs(rx) * persp);
+            maxRy = Math.max(maxRy, Math.abs(ry) * persp);
+          }
+        }
+        // 横纵分别算限额：只按 min(宽,高) 会浪费宽画布的左右空间，
+        // 盘状星云会被压成中间一小团
+        viewScale = Math.min((W / 2 - 14) / maxRx, (H / 2 - 14) / maxRy);
+      }
+
+      interface Projected {
+        x: number;
+        y: number;
+        depth: number;
+        persp: number;
+      }
+
+      function project(point: { x: number; y: number; z: number }): Projected {
+        const cy = Math.cos(yaw);
+        const sy = Math.sin(yaw);
+        const rx = point.x * cy - point.z * sy;
+        const rz = point.x * sy + point.z * cy;
+        const cp = Math.cos(pitch);
+        const sp = Math.sin(pitch);
+        const ry = point.y * cp - rz * sp;
+        const rz2 = point.y * sp + rz * cp;
+        const persp = FOCAL / Math.max(0.35, DIST + rz2);
+        const scale = viewScale;
+        return {
+          x: W / 2 + rx * persp * scale + (pointerX / W - 0.5) * 18,
+          y: H / 2 + ry * persp * scale + (pointerY / H - 0.5) * 14,
+          depth: rz2,
+          persp,
+        };
+      }
+
+      /* ── 入场：星落 ── */
+      let intro = reduced ? 1 : 0;
+      let raf = 0;
+      let last = 0;
+
+      function starProgress(index: number): number {
+        if (intro >= 1) return 1;
+        const delay = (index / Math.max(1, data.stars.length)) * 0.55;
+        return Math.min(1, Math.max(0, (intro - delay) / 0.45));
+      }
+
+      function setActive(slug: string | null) {
+        active = slug;
+        const star = slug ? bySlug.get(slug) : null;
+        neighbours = new Set<string>();
+        if (star) {
+          for (const i of touching.get(star.slug) ?? []) {
+            const edge = edges[i];
+            neighbours.add(edge.a === star.slug ? edge.b : edge.a);
+          }
+          hint.hidden = true;
+          detail.hidden = false;
+          detail.querySelector('.d-title')!.textContent = star.title;
+          const count = (touching.get(star.slug) ?? []).length;
+          detail.querySelector('.d-meta')!.textContent = `${star.date} · 与 ${count} 篇文章共享标签`;
+          detail.querySelector('.d-tags')!.textContent = star.tags.map((t) => `#${t}`).join('  ');
+          canvas.style.cursor = 'pointer';
+        } else {
+          hint.hidden = false;
+          detail.hidden = true;
+          canvas.style.cursor = dragging ? 'grabbing' : 'grab';
+        }
+      }
+
+      function paint(now: number) {
+        const dt = last ? Math.min(48, now - last) : 16;
+        last = now;
+
+        if (intro < 1) intro = Math.min(1, intro + dt / 1900);
+        if (!dragging && !reduced) autoYaw += dt * 0.000045;
+        yaw += (autoYaw - yaw) * 0.06;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // 先画连线，再画星，近的盖住远的
+        ctx.globalCompositeOperation = 'lighter';
+        const projected = data.stars.map((star) => project(star));
+
+        /*
+         * 悬停不是"瞬间点亮连线" —— 那是硬切，眼睛会觉得突兀，而且度数高的星
+         * （ai 有 14 条边）一下子炸出一张蜘蛛网。这里改成：
+         *   1. 每根线有独立的 alpha 状态，每帧向目标值缓动（约 140ms），进出都是渐隐渐显
+         *   2. 悬停时不只是"这根星变亮"，而是它和相邻的星一起亮，其余星压暗 ——
+         *      读到的是一小片星群，而不是从一个点炸出去的线
+         *   3. 亮的连线保持中等亮度（0.5），不拉到接近实心
+         */
+        const ease = Math.min(1, dt / 140);
+
+        for (let i = 0; i < edges.length; i += 1) {
+          const a = starIndex.get(edges[i].a) ?? -1;
+          const b = starIndex.get(edges[i].b) ?? -1;
+          if (a < 0 || b < 0) continue;
+          const pa = projected[a];
+          const pb = projected[b];
+          const related = active !== null && (edges[i].a === active || edges[i].b === active);
+
+          const fade =
+            Math.min(starProgress(a), starProgress(b)) *
+            Math.min(1, Math.max(0.25, 1.6 - (pa.depth + pb.depth) * 0.35));
+
+          let target = (0.05 + Math.min(edges[i].weight, 3) * 0.03) * fade;
+          // 悬停时相关连线只比平时"稍清楚一点"，不拉到实心：
+          // 靠压暗其余部分形成对比，而不是让一堆线凭空亮起来
+          if (active) target = related ? 0.28 * fade : 0.005;
+
+          edgeAlpha[i] += (target - edgeAlpha[i]) * ease;
+          const alpha = edgeAlpha[i];
+          if (alpha < 0.004) continue;
+
+          ctx.strokeStyle = related
+            ? `rgba(191, 219, 254, ${alpha})`
+            : `rgba(96, 165, 250, ${alpha})`;
+          ctx.lineWidth = related ? 1.1 : 0.7;
+          ctx.beginPath();
+          ctx.moveTo(pa.x, pa.y);
+          ctx.lineTo(pb.x, pb.y);
+          ctx.stroke();
+        }
+
+        // 星按深度排序：远处的先画
+        const order = data.stars
+          .map((star, i) => ({ i, depth: projected[i].depth, p: projected[i], star }))
+          .sort((a, b) => b.depth - a.depth);
+
+        for (const item of order) {
+          const { i, p, star } = item;
+          const t = starProgress(i);
+          if (t <= 0) continue;
+
+          const isActive = active === star.slug;
+          const isNeighbour = active !== null && neighbours.has(star.slug);
+          let target = 1;
+          if (active) target = isActive ? 1 : isNeighbour ? 0.62 : 0.12;
+          starAlpha[i] += (target - starAlpha[i]) * ease;
+
+          const size = star.r * p.persp * Math.min(W, H) * (isActive ? 0.18 : 0.145);
+          // 入场时从上方落下
+          const drop = (1 - t) * H * 0.5;
+          // 远近明暗差（深度雾）：越远越暗，和"近大远小"配合才读得出纵深
+          const depthK = Math.min(1, Math.max(0, (p.persp - 0.52) / 0.6));
+          const fog = 0.4 + 0.6 * depthK;
+          const alpha = starAlpha[i] * t * fog;
+
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(glow, p.x - size / 2, p.y - size / 2 + drop, size, size);
+          ctx.globalAlpha = 1;
+        }
+
+        // 标签：只在前景画，否则会糊成一团
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.textAlign = 'center';
+        ctx.font = '600 11px system-ui, -apple-system, "Segoe UI", sans-serif';
+        for (const cluster of data.clusters) {
+          const p = project(cluster);
+          const alpha = Math.max(0, Math.min(0.85, (p.depth + 1.5) * 0.45)) * intro;
+          if (alpha < 0.08) continue;
+          ctx.shadowColor = 'rgba(5, 7, 15, 0.9)';
+          ctx.shadowBlur = 6;
+          ctx.fillStyle = `rgba(170, 200, 232, ${alpha})`;
+          ctx.fillText(cluster.tag.toUpperCase(), p.x, p.y - 14);
+        }
+        ctx.shadowBlur = 0;
+
+        // 悬停中的那颗星，标题跟着走
+        if (active) {
+          const i = data.stars.findIndex((s) => s.slug === active);
+          if (i >= 0) {
+            const p = projected[i];
+            ctx.fillStyle = 'rgba(226, 232, 240, 0.95)';
+            ctx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+            ctx.fillText(data.stars[i].title, p.x, p.y - 18);
+          }
+        }
+
+        raf = requestAnimationFrame(paint);
+      }
+
+      /* ── 交互 ── */
+      function pick(clientX: number, clientY: number): string | null {
+        const rect = canvas.getBoundingClientRect();
+        const mx = clientX - rect.left;
+        const my = clientY - rect.top;
+        let best: { slug: string; d: number } | null = null;
+        for (const star of data.stars) {
+          const p = project(star);
+          const d = Math.hypot(p.x - mx, p.y - my);
+          const radius = Math.max(14, star.r * p.persp * Math.min(W, H) * 0.12);
+          if (d < radius && (!best || d < best.d)) best = { slug: star.slug, d };
+        }
+        return best?.slug ?? null;
+      }
+
+      canvas.addEventListener('pointermove', (event) => {
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (dragging) {
+          yaw += (event.clientX - lastX) * 0.006;
+          pitch = Math.max(-0.6, Math.min(0.6, pitch + (event.clientY - lastY) * 0.003));
+          autoYaw = yaw;
+          lastX = event.clientX;
+          lastY = event.clientY;
+          return;
+        }
+        const slug = pick(event.clientX, event.clientY);
+        if (slug !== active) setActive(slug);
+      });
+
+      canvas.addEventListener('pointerdown', (event) => {
+        dragging = true;
+        downX = event.clientX;
+        downY = event.clientY;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        canvas.setPointerCapture(event.pointerId);
+        canvas.style.cursor = 'grabbing';
+      });
+
+      canvas.addEventListener('pointerup', (event) => {
+        dragging = false;
+        canvas.releasePointerCapture?.(event.pointerId);
+        // 只有"按下到松开几乎没移动"才算点击；否则是拖动转星云，
+        // 拖动后在星星上松手不应该跳走
+        const moved = Math.hypot(event.clientX - downX, event.clientY - downY);
+        const slug = pick(event.clientX, event.clientY);
+        if (slug && moved < 8) {
+          location.href = `${data.base}/posts/${slug}/`;
+        } else {
+          setActive(slug);
+        }
+      });
+
+      canvas.addEventListener('pointerleave', () => {
+        if (!dragging) setActive(null);
+      });
+
+      // 键盘/读屏：隐藏列表获得焦点时，星云里对应的星亮起来
+      document.querySelectorAll<HTMLAnchorElement>('.sr-links a').forEach((link) => {
+        link.addEventListener('focus', () => setActive(link.dataset.slug ?? null));
+        link.addEventListener('blur', () => setActive(null));
+      });
+
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+      canvas.style.cursor = 'grab';
+      raf = requestAnimationFrame(paint);
+      addEventListener('pagehide', () => cancelAnimationFrame(raf));
+    </script>
+
+    <style>
+      :global(html) {
+        background: #05070f;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(1200px 700px at 50% -15%, rgba(37, 99, 235, 0.16), transparent 70%),
+          radial-gradient(900px 600px at 10% 100%, rgba(79, 70, 229, 0.12), transparent 70%),
+          #05070f;
+        color: #cbd5e1;
+        font-family: var(--font-sans);
+        padding: 2.5rem 1.5rem 3rem;
+      }
+
+      .sky-head {
+        max-width: 900px;
+        margin: 0 auto 1rem;
+      }
+      .back {
+        font-size: 0.85rem;
+        color: #7dd3fc;
+        text-decoration: none;
+      }
+      .back:hover { text-decoration: underline; }
+      h1 {
+        margin: 0.6rem 0 0.4rem;
+        font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(120deg, #dbeafe 10%, #93c5fd 55%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lede {
+        margin: 0 0 0.5rem;
+        color: #94a3b8;
+        line-height: 1.7;
+        max-width: 42rem;
+      }
+      .meta {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #64748b;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .sky-stage {
+        position: relative;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      .sky {
+        display: block;
+        width: 100%;
+        height: min(80vh, 800px);
+        min-height: 460px;
+        border-radius: 18px;
+        background:
+          radial-gradient(60% 60% at 50% 45%, rgba(37, 99, 235, 0.12), transparent 75%),
+          #04060d;
+        box-shadow: inset 0 0 120px rgba(37, 99, 235, 0.08), 0 24px 60px rgba(0, 0, 0, 0.45);
+        touch-action: none;
+      }
+
+      .hud {
+        min-height: 3.6rem;
+        padding: 0.75rem 0.25rem 0;
+      }
+      .hint {
+        margin: 0;
+        font-size: 0.82rem;
+        color: #526079;
+      }
+      .detail p {
+        margin: 0;
+        line-height: 1.55;
+      }
+      .d-title {
+        color: #e2e8f0;
+        font-weight: 600;
+      }
+      .d-meta {
+        font-size: 0.78rem;
+        color: #64748b;
+        font-variant-numeric: tabular-nums;
+      }
+      .d-tags {
+        font-size: 0.78rem;
+        color: #60a5fa;
+      }
+
+      /* 给键盘和读屏用，视觉上完全隐藏 */
+      .sr-links {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .sky-foot {
+        max-width: 900px;
+        margin: 2rem auto 0;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(96, 165, 250, 0.15);
+        font-size: 0.8rem;
+        color: #475569;
+        line-height: 1.7;
+      }
+      .sky-foot a { color: #7dd3fc; text-decoration: none; }
+      .sky-foot a:hover { text-decoration: underline; }
+    </style>
+  </body>
+</html>

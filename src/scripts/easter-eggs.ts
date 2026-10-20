@@ -226,10 +226,13 @@ function toast(message: string): void {
 /* ── 4. 控制台签名 ── */
 
 function signature(): void {
+  // 星图是隐藏页，没有入口链接 —— 控制台是它唯一"被发现"的地方
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const sky = `${location.origin}${basePath}/sky/`;
   console.log(
     '%c ✦ StaryFall ',
     'background:#2563eb;color:#fff;padding:3px 8px;border-radius:4px;font-weight:700',
-    '\n学习与构建的技术博客\nAstro + Starlight · 静态托管在 GitHub Pages\n\n彩蛋：↑ ↑ ↓ ↓ ← → ← → B A\n',
+    `\n学习与构建的技术博客\nAstro + Starlight · 静态托管在 GitHub Pages\n\n彩蛋：↑ ↑ ↓ ↓ ← → ← → B A\n星图：${sky}\n`,
   );
 }
 
