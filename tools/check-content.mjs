@@ -107,8 +107,15 @@ for (const f of files) {
     if (FIX) raw = raw.replace(/^\uFEFF/, '');
   }
   if (raw.includes('\r\n')) {
-    add(f, 0, 'file/crlf', '含 CRLF 换行（应为 LF）');
-    if (FIX) raw = raw.replace(/\r\n/g, '\n');
+    add(f, 0, 'file/crlf', '含 CRLF 换行（应为 LF，可 --fix 就地归一）');
+    // 无论有没有 --fix 都要就地归一化。否则下面的 /^---\n/ 匹配不到 CRLF 的
+    // frontmatter，会误报「缺少 frontmatter」；标题 / 代码块 / 排版那些逐行检查
+    // 也会因为行尾多出一个 \r 而全部失真。
+    //
+    // 这个坑在 Windows 上是**默认触发**的：core.autocrlf=true 时，仓库里存的是 LF，
+    // 检出到工作区却变成 CRLF。实测两篇由他人推送的文章在本机报「缺少 frontmatter」，
+    // 而 CI（Linux）一路 success —— 误报，不是文章的问题。
+    raw = raw.replace(/\r\n/g, '\n');
   }
   if (/[ \t]+$/m.test(raw)) {
     const n = (raw.match(/[ \t]+$/gm) || []).length;
