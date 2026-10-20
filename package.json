@@ -1,8 +1,12 @@
 {
-  "name": "蓝桥易",
+  "name": "staryfall",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI Agent、MCP、开源项目深度解析与前端工程化笔记（Astro + Starlight）",
   "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -14,8 +18,15 @@
     "type": "git",
     "url": "git+https://github.com/BlueBridge-E/StaryFall.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "astro",
+    "starlight",
+    "blog",
+    "ai-agent",
+    "mcp",
+    "typescript"
+  ],
+  "author": "BlueBridge-E (https://github.com/BlueBridge-E)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/BlueBridge-E/StaryFall/issues"
