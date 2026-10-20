@@ -32,7 +32,7 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
 | `/tags/` | `src/pages/tags/index.astro` | 独立页：标签索引 |
 | `/tags/[tag]/` | `src/pages/tags/[tag].astro` | 独立页：标签详情，`getStaticPaths` 按内容枚举 |
 | `/posts/*` | `src/content/docs/posts/*.md` | Starlight 渲染，带右侧目录 + 文章头部 + 相关文章 |
-| `/rss.xml` | `src/pages/rss.xml.ts` | RSS，`@astrojs/rss`，全量文章。正文通过 `content:encoded` 输出**全文**（用 `astro/container` 把内容组件渲染成 HTML，并把 `/StaryFall/…` 补成绝对地址）。代价是整份 feed 约 1.5 MB —— 代码块的 Shiki 高亮是内联 `style`，这是体积的主要来源；gzip 后约 200–300 KB |
+| `/rss.xml` | `src/pages/rss.xml.ts` | RSS，`@astrojs/rss`，全量文章。正文通过 item 的 `content` 字段输出**全文**（用 `astro/container` 把内容组件渲染成 HTML，并把 `/StaryFall/…` 补成绝对地址）。库会自动声明 `xmlns:content` 并写成**实体转义的文本**（`&lt;div&gt;`），这是 RSS 承载 HTML 的常规写法。**不要自己包 CDATA** —— 库内部用 XML 解析器重建 `customData`，CDATA 标记会被吃掉、只剩正文，包装纯属空转（踩过）。代价是整份 feed 约 1.7 MB —— 代码块的 Shiki 高亮是内联 `style`，这是体积的主要来源；gzip 后约 235 KB |
 | `/rss.xsl` | `src/pages/rss.xsl.ts` | `/rss.xml` 的 XSL 样式表：浏览器里打开 rss.xml 会渲染成可读的订阅页，而不是原始 XML。做成 Astro 路由（返回 `application/xml`）而不是放 `public/`，是为了确保 MIME 类型可被浏览器接受，否则样式表会被静默忽略 |
 | `/404` | Starlight 内置 | 无需自己写 |
 
