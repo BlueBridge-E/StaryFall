@@ -32,7 +32,7 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
 | `/tags/` | `src/pages/tags/index.astro` | 独立页：标签索引 |
 | `/tags/[tag]/` | `src/pages/tags/[tag].astro` | 独立页：标签详情，`getStaticPaths` 按内容枚举 |
 | `/posts/*` | `src/content/docs/posts/*.md` | Starlight 渲染，带右侧目录 + 文章头部 + 相关文章 |
-| `/rss.xml` | `src/pages/rss.xml.ts` | RSS，`@astrojs/rss`，全量文章 |
+| `/rss.xml` | `src/pages/rss.xml.ts` | RSS，`@astrojs/rss`，全量文章。正文通过 `content:encoded` 输出**全文**（用 `astro/container` 把内容组件渲染成 HTML，并把 `/StaryFall/…` 补成绝对地址）。代价是整份 feed 约 1.5 MB —— 代码块的 Shiki 高亮是内联 `style`，这是体积的主要来源；gzip 后约 200–300 KB |
 | `/rss.xsl` | `src/pages/rss.xsl.ts` | `/rss.xml` 的 XSL 样式表：浏览器里打开 rss.xml 会渲染成可读的订阅页，而不是原始 XML。做成 Astro 路由（返回 `application/xml`）而不是放 `public/`，是为了确保 MIME 类型可被浏览器接受，否则样式表会被静默忽略 |
 | `/404` | Starlight 内置 | 无需自己写 |
 
@@ -53,7 +53,7 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
   `OG_IMAGE`（分享卡片路径）、`themeColor`（仅给 `theme-color` 这类内联字符串用）。
   **站内链接一律用它拼 base，不要硬编码 `/StaryFall`。**
 - **`src/components/SiteHead.astro`** — 首页 / `/feed/` / `/work/` / `/tags/` 共用的 `<head>` **内容**
-  （canonical + og:* + twitter:* + RSS alternate）。加一个 meta 只改这里。
+  （canonical + og:* + twitter:* + apple-touch-icon + RSS alternate）。加一个 meta 只改这里。
   **它只收 `<head>` 内容，不产出 `<html>` / `<body>`**：各页 `<style>` 里的 `body { … }` 会被 Astro
   作用域化成 `body:where(.astro-xxxx)`，作用域类只加在渲染该元素的文件上，把 `<body>` 搬进 layout
   会让四页的字体/行高/max-width 静默失配。文章页不走这里，head 由 Starlight 生成，
@@ -64,7 +64,9 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
   月份标题移动到当前页首张卡片之前、响应 `popstate`/`hashchange`。
   上一页/下一页是必需按钮，**第一页/最后一页跳转是可选按钮**（页面提供 `#firstPage`/`#lastPage` 才启用）；
   只有一页时会整条隐藏分页栏。
-- **`src/styles/tokens.css`** — 全站设计 token + 文章排版间距 + 重置。
+- **`src/styles/tokens.css`** — 全站设计 token + 文章排版间距 + 重置，另外托管独立页面共用的
+  `.footer` 与分页（`.pagination` / `.page-btn` / `.page-info`）—— 这些原来各页各写一份，
+  后来分别漂移（页脚 padding 三种、分页有两种外观），收回这里才有唯一来源。
   **重置只允许 `box-sizing` 和 `html, body` 的 margin/padding**：Starlight 的正文排版依赖浏览器默认
   UA 外边距，它自身不定义 `p`/`h2`/`pre`/`table`/`ul` 的 margin 与 padding，一旦对通用选择器清零，
   正文会挤成一团（曾因此出过事故）。
@@ -195,9 +197,10 @@ npm run check:content -- --fix   # 自动修「机械性」问题（见下）
   `node tools/measure/verify-typography.mjs`。
 - 写含中文的源文件时不要用 PowerShell 的 `Set-Content` / `Out-File`（默认编码会在 UTF-8 文件前加 BOM，
   且在部分环境下把中文写坏）。用 Node 的 `fs` 或编辑器直接写。
-- **分享卡片 `public/og-image.png` 是生成物**，不是手绘：改站名 / 副标题 / 域名后要重跑
-  `python tools/og/make-og-image.py`（需要 Pillow + 系统中文字体），否则卡片上还是旧文案。
-  这个脚本**不参与构建、不在 CI 里**，所以它坏了不会有人告诉你 —— 只有重跑时才会发现。
+- **`public/og-image.png` 与 `public/apple-touch-icon.png` 是生成物**，不是手绘：改站名 / 副标题 /
+  域名 / 图标后要重跑 `python tools/og/make-images.py`（需要 Pillow、numpy、系统中文字体），
+  否则卡片上还是旧文案。这个脚本**不参与构建、不在 CI 里**，所以它坏了不会有人告诉你 ——
+  只有重跑时才会发现。好消息是它幂等：同一份脚本重跑出来字节完全一致，可以直接对比 hash。
 
 ## Interaction
 
