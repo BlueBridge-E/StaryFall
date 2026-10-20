@@ -160,9 +160,22 @@ check(`rss.xml 仍有 ${EXPECTED_POSTS} 条 item`, (read('dist/rss.xml').match(/
     ),
   );
 }
-check('feed 月份标题跨满整行', /grid-column:1 ?\/ ?-1/.test(
-  read(`dist/_astro/${fs.readdirSync('dist/_astro').find((x) => /^feed\..*\.css$/.test(x))}`),
-));
+/*
+ * feed 的页面样式落在哪里取决于体积：Astro 的 inlineStylesheets: 'auto' 会在
+ * 样式表足够小时直接内联进 HTML，否则单独出一个 chunk。这里两种位置都找，
+ * 避免断言因为「构建产物的文件布局」变化而假失败（曾因为删除几条 footer 规则
+ * 让 feed 的样式掉到内联阈值以下，脚本直接 ENOENT 崩掉）。
+ */
+const feedCss = () => {
+  const inline = (read('dist/feed/index.html').match(/<style>[\s\S]*?<\/style>/g) || []).join('\n');
+  const chunks = fs
+    .readdirSync('dist/_astro')
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => read(`dist/_astro/${f}`))
+    .join('\n');
+  return `${inline}\n${chunks}`;
+};
+check('feed 月份标题跨满整行', /grid-column:1 ?\/ ?-1/.test(feedCss()));
 
 console.log(`\n===== 合计: ${pass} PASS / ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
