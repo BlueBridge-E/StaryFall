@@ -16,6 +16,7 @@
  * astro.config.mjs 的 `head` 里统一注入。
  */
 import { base, absoluteUrl, OG_IMAGE, themeColor } from '../consts';
+import EasterEggs from './EasterEggs.astro';
 
 export interface Props {
   /** 完整 <title>，调用方自己决定是否带 " | StaryFall" */
@@ -61,3 +62,5 @@ const image = absoluteUrl(OG_IMAGE);
 <meta name="twitter:image:alt" content={imageAlt} />
 <meta name="theme-color" content={themeColor} />
 <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
+<!-- 站点彩蛋（落星 / Konami / 控制台签名）。文章页走 src/components/Head.astro -->
+<EasterEggs />

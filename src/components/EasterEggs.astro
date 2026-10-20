@@ -1,0 +1,14 @@
+---
+/**
+ * 站点彩蛋的统一挂载点（落星 / Konami 机器人 / 控制台签名）。
+ *
+ * 逻辑全在 src/scripts/easter-eggs.ts，这里只负责让它在两种页面形态上都执行：
+ *  - Starlight 页面（/posts/*）→ src/components/Head.astro 里引用
+ *  - 独立页面（首页 / feed / work / tags）→ SiteHead.astro 里引用
+ *
+ * 想整体关掉彩蛋：删掉本文件与那两处引用即可，不涉及任何 CSS。
+ */
+---
+<script>
+  import '../scripts/easter-eggs';
+</script>

@@ -36,6 +36,8 @@ export default defineConfig({
         // 若文章页跟随系统变暗会出现「白底首页 → 黑底文章」的割裂
         ThemeProvider: './src/components/ThemeProvider.astro',
         ThemeSelect: './src/components/ThemeSelect.astro',
+        // 只为在文章页注入站点彩蛋脚本，其余行为与 Starlight 默认 Head 一致
+        Head: './src/components/Head.astro',
       },
       head: [
         {

@@ -1,0 +1,15 @@
+---
+/**
+ * 覆盖 Starlight 的 Head，唯一目的是**追加一个模块脚本**（站点彩蛋）。
+ *
+ * 为什么不走 astro.config 的 `head` 选项：那里只能塞内联字符串或固定 attrs，
+ * 拿不到构建后带 hash 的资源路径，也就引不到 src/scripts 里的模块。
+ * Starlight 的默认 Head 只是把 `head` 配置渲染成标签，所以这里原样转出它，
+ * 再追加自己的脚本，行为与默认完全一致。
+ */
+import Default from '@astrojs/starlight/components/Head.astro';
+import EasterEggs from './EasterEggs.astro';
+---
+
+<Default />
+<EasterEggs />
