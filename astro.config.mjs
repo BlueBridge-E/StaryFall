@@ -7,7 +7,7 @@ import starlight from '@astrojs/starlight';
 const SITE = 'https://bluebridge-e.github.io';
 const BASE = '/StaryFall';
 
-// 全站共用的社交分享卡片（public/og-image.png，由 tools/og/make-og-image.py 生成）。
+// 全站共用的社交分享卡片（public/og-image.png，由 tools/og/make-images.py 生成）。
 // head 里的字符串不会被 Astro 重写，所以必须写绝对地址。
 // 改站名/副标题后要重跑生成脚本，否则卡片上还是旧文案。
 const OG_IMAGE = `${SITE}${BASE}/og-image.png`;
@@ -46,6 +46,11 @@ export default defineConfig({
             title: 'StaryFall',
             href: `${BASE}/rss.xml`,
           },
+        },
+        // iOS「添加到主屏」的图标。不写这一行时 iOS 会用网页截图当图标。
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: `${BASE}/apple-touch-icon.png`, sizes: '180x180' },
         },
         // Starlight 自己会输出 og:title / og:type / og:url / og:locale /
         // og:description / og:site_name 和 canonical，但**不输出 og:image**。

@@ -1,16 +1,20 @@
 """
-生成社交分享卡片 public/og-image.png（1200×630）。
+生成本站的两张位图资源：
 
-这是一个**手工工具，不参与构建**，只在改站点标题/副标题/域名时手动重跑一次：
+    public/og-image.png          1200×630  社交分享卡片
+    public/apple-touch-icon.png   180×180  iOS「添加到主屏」图标
 
-    python tools/og/make-og-image.py
+这是一个**手工工具，不参与构建**，只在改站点标题/副标题/域名/图标时手动重跑：
+
+    python tools/og/make-images.py
 
 依赖：Pillow、numpy、系统里的中文字体（Windows 用微软雅黑，macOS 用苹方）。
 刻意不放进 package.json —— 站点构建不需要它，进了 CI 就是一份永远没人验证的
 依赖。生成的 PNG 直接提交到仓库。
 
-视觉上复刻 src/styles/hero.css：同样的渐变底、径向光晕、34px 网格纹理、
--0.03em 字距的渐变标题，保证分享卡片和首页头图是同一套语言。
+分享卡视觉上复刻 src/styles/hero.css：同样的渐变底、径向光晕、34px 网格纹理、
+-0.03em 字距的渐变标题，保证卡片和首页头图是同一套语言。触屏图标复刻
+public/favicon.svg 的图形。
 """
 
 from pathlib import Path
@@ -25,7 +29,9 @@ FAINT = (156, 163, 175)
 GRAD_START = (30, 64, 175)
 GRAD_END = (79, 70, 229)
 
-OUT = Path(__file__).resolve().parents[2] / 'public' / 'og-image.png'
+PUBLIC = Path(__file__).resolve().parents[2] / 'public'
+OG_OUT = PUBLIC / 'og-image.png'
+ICON_OUT = PUBLIC / 'apple-touch-icon.png'
 
 
 def pick_font(candidates):
@@ -129,7 +135,7 @@ def pill(canvas, center, text, size=25):
     d.text((cx + dot_r + dot_gap, center[1]), text, font=f, fill=ACCENT, anchor='lm')
 
 
-def main():
+def make_og_image():
     canvas = background()
     d = ImageDraw.Draw(canvas)
 
@@ -141,10 +147,33 @@ def main():
     d.text((W / 2, 522), 'bluebridge-e.github.io/StaryFall',
            font=font(LATIN, 22), fill=FAINT, anchor='mm')
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    canvas.convert('RGB').save(OUT, 'PNG', optimize=True)
-    print(f'{OUT}  {OUT.stat().st_size / 1024:.1f} KB')
+    OG_OUT.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert('RGB').save(OG_OUT, 'PNG', optimize=True)
+    print(f'{OG_OUT}  {OG_OUT.stat().st_size / 1024:.1f} KB')
+
+
+def make_touch_icon(size=180):
+    """复刻 favicon.svg：4 点星 + 右下角小圆。
+
+    底色铺满、不切圆角、不留透明 —— iOS 会自己给主屏图标加圆角遮罩，
+    预先切成透明圆角会被填成黑色。
+    """
+    s = size / 64
+    canvas = Image.new('RGB', (size, size), ACCENT)
+    d = ImageDraw.Draw(canvas)
+
+    star = [(32, 12), (36.6, 24.6), (50, 29), (36.6, 33.4), (32, 46),
+            (27.4, 33.4), (14, 29), (27.4, 24.6)]
+    d.polygon([(x * s, y * s) for x, y in star], fill=(255, 255, 255))
+
+    cx, cy, r = 47 * s, 45 * s, 4 * s
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(191, 219, 254))
+
+    ICON_OUT.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(ICON_OUT, 'PNG', optimize=True)
+    print(f'{ICON_OUT}  {ICON_OUT.stat().st_size / 1024:.1f} KB')
 
 
 if __name__ == '__main__':
-    main()
+    make_og_image()
+    make_touch_icon()

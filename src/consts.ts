@@ -7,7 +7,12 @@ const rawBase = import.meta.env.BASE_URL || '/';
 export const base = rawBase.replace(/\/$/, '');
 export const site = import.meta.env.SITE || '';
 
-/** 拼接站内绝对路径，例如 url('/tags/') -> '/StaryFall/tags/' */
+/**
+ * 拼接站内绝对路径，例如 url('/tags/') -> '/StaryFall/tags/'。
+ *
+ * 模板里普遍直接写 `${base}/tags/`（两者完全等价，只是少一层函数调用），
+ * 所以它目前的实际调用点几乎只有 absoluteUrl()。
+ */
 export const url = (path: string) => `${base}${path.startsWith('/') ? path : `/${path}`}`;
 
 /** 拼接用于 canonical / og:url 的完整地址 */
@@ -22,7 +27,7 @@ export const siteRoot = new URL(`${base}/`, site).href;
 
 /**
  * 社交分享卡片，位于 public/og-image.png，1200×630。
- * 由 tools/og/make-og-image.py 生成（手工工具，不参与构建）——
+ * 由 tools/og/make-images.py 生成（手工工具，不参与构建）——
  * 改站名/副标题/域名后需要重跑一次，否则分享卡片还是旧文案。
  */
 export const OG_IMAGE = '/og-image.png';
