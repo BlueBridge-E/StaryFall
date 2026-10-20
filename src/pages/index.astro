@@ -303,45 +303,7 @@ const ordered = featured ? [featured, ...rest] : [];
     color: #fff;
   }
 
-  /* ── 分页 ── */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2.5rem;
-  }
-  .page-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.55em 1.25em;
-    border-radius: 999px;
-    background: var(--card-bg);
-    color: var(--accent);
-    cursor: pointer;
-    font: inherit;
-    font-size: 0.88rem;
-    font-weight: 600;
-    border: 1px solid var(--border);
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .page-btn:hover:not(:disabled) {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-  }
-  .page-btn:disabled {
-    opacity: 0.4;
-    cursor: default;
-  }
-  .page-info {
-    font-size: 0.88rem;
-    color: var(--muted);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* .footer 在 src/styles/tokens.css（三页共用一份） */
+  /* ── 分页在 src/styles/tokens.css（与 /feed/ 共用一份） ── */
 
   a:focus-visible,
   button:focus-visible {
@@ -373,9 +335,6 @@ const ordered = featured ? [featured, ...rest] : [];
     .section-head {
       flex-direction: column;
       gap: 0.3rem;
-    }
-    .pagination {
-      flex-wrap: wrap;
     }
   }
 </style>

@@ -161,3 +161,60 @@ body {
   text-decoration: underline;
 }
 
+/* ── 独立页面分页（首页 / AI 速递） ── */
+
+/*
+ * 两页各写过一份 .pagination / .page-btn，后来分叉成两种外观：首页是胶囊
+ * （999px 圆角 / 0.55em 1.25em / 0.88rem），AI 速递是圆角方块
+ * （8px / 0.5em 1.2em / 0.9rem）。同一个交互不该有两种长相，
+ * 这里统一按胶囊 —— 它与头图导航、标签胶囊是同一套语言。
+ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.55em 1.25em;
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--accent);
+  cursor: pointer;
+  /* <button> 默认不继承字体，不写这行会掉回浏览器默认按钮字体，与整站不一致 */
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.page-info {
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 窄屏下一行放不下四个按钮 */
+@media (max-width: 480px) {
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
+
