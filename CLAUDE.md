@@ -41,14 +41,23 @@ Astro + Starlight 静态博客，部署到 GitHub Pages（`base: '/StaryFall'`�
 **Key files：**
 
 - **`astro.config.mjs`** — Astro 6 + Starlight 0.39。`sidebar: []`、`devToolbar` 关闭、`customCss` 指向
-  `src/styles/custom.css`、`head` 里注入 RSS alternate 与 `twitter:card=summary` 覆盖。
+  `src/styles/custom.css`、`head` 里注入 RSS alternate 与分享卡片（`og:image` 等）。
   `components` 覆盖了 4 个 Starlight 组件（见下）。
+  `site` / `base` 在这个文件里另有一份字面量（`SITE` / `BASE`）：它不能从 `src/consts.ts` 导入，
+  因为后者靠 `import.meta.env` 派生，而配置文件在 Vite 的模块上下文之外执行。
 - **`src/content.config.ts`** — 单一 `docs` collection，Starlight 的 `docsLoader()` + `docsSchema()`
   扩展 `date: z.date().optional()` 与 `tags: z.array(z.string()).optional().default([])`。
   **`tags` 带一个 transform**：`trim → toLowerCase → 空白转 -`，用于合并 `AI`/`ai` 这类大小写重复标签
   （不合并会在大小写不敏感的文件系统上互相覆盖目录，导致标签页文章数不对）。
-- **`src/consts.ts`** — `base`（从 `import.meta.env.BASE_URL` 派生）、`site`、`url()`、`absoluteUrl()`、`siteRoot`。
+- **`src/consts.ts`** — `base`（从 `import.meta.env.BASE_URL` 派生）、`site`、`url()`、`absoluteUrl()`、`siteRoot`、
+  `OG_IMAGE`（分享卡片路径）、`themeColor`（仅给 `theme-color` 这类内联字符串用）。
   **站内链接一律用它拼 base，不要硬编码 `/StaryFall`。**
+- **`src/components/SiteHead.astro`** — 首页 / `/feed/` / `/work/` / `/tags/` 共用的 `<head>` **内容**
+  （canonical + og:* + twitter:* + RSS alternate）。加一个 meta 只改这里。
+  **它只收 `<head>` 内容，不产出 `<html>` / `<body>`**：各页 `<style>` 里的 `body { … }` 会被 Astro
+  作用域化成 `body:where(.astro-xxxx)`，作用域类只加在渲染该元素的文件上，把 `<body>` 搬进 layout
+  会让四页的字体/行高/max-width 静默失配。文章页不走这里，head 由 Starlight 生成，
+  `og:image` 在 `astro.config.mjs` 的 `head` 里注入。
 - **`src/lib/posts.ts`** — `postSlug()`、`getPosts()`（按日期倒序）、`findRelated()`、`findSiblings()`、`readingMinutes()`。
   slug 推导是 `post.id.replace(/^posts\//, '').replace(/\.(md|mdx)$/, '')`，只在这里维护一份。
 - **`src/scripts/pagination.ts`** — 首页与 /feed 的分页：`?page=N` 写入 URL（`pushState`）、
@@ -186,6 +195,9 @@ npm run check:content -- --fix   # 自动修「机械性」问题（见下）
   `node tools/measure/verify-typography.mjs`。
 - 写含中文的源文件时不要用 PowerShell 的 `Set-Content` / `Out-File`（默认编码会在 UTF-8 文件前加 BOM，
   且在部分环境下把中文写坏）。用 Node 的 `fs` 或编辑器直接写。
+- **分享卡片 `public/og-image.png` 是生成物**，不是手绘：改站名 / 副标题 / 域名后要重跑
+  `python tools/og/make-og-image.py`（需要 Pillow + 系统中文字体），否则卡片上还是旧文案。
+  这个脚本**不参与构建、不在 CI 里**，所以它坏了不会有人告诉你 —— 只有重跑时才会发现。
 
 ## Interaction
 
