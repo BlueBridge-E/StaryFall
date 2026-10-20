@@ -1,0 +1,62 @@
+---
+/**
+ * 独立页面（首页 / AI 速递 / 作品 / 标签）共用的 <head> 内容。
+ *
+ * 这四页原来各写了一份完全相同的 15 行 meta（charset / viewport / title /
+ * description / icon / canonical / og:* / twitter:* / theme-color / RSS），
+ * 加一个字段要改四处。这里收敛成唯一来源。
+ *
+ * **只收 <head> 的内容，不收 <html>/<body>。** 各页的 <style> 里都有
+ * `body { … }` 这类根元素规则，而 Astro 会把组件 <style> 改写成
+ * `body:where(.astro-xxxx)` —— 作用域类只加在**渲染该元素的那个文件**里。
+ * 一旦把 <body> 搬进 layout，四页的 body 规则（字体、行高、max-width、内边距）
+ * 会全部静默失配，页面看上去"能用"但排版全错。tokens.css 顶部记着同一个坑。
+ *
+ * 文章页不走这里 —— 那边的 head 由 Starlight 自己生成，og:image 在
+ * astro.config.mjs 的 `head` 里统一注入。
+ */
+import { base, absoluteUrl, OG_IMAGE, themeColor } from '../consts';
+
+export interface Props {
+  /** 完整 <title>，调用方自己决定是否带 " | StaryFall" */
+  title: string;
+  description: string;
+  /** 站点内路径（含前导斜杠、不含 base），用于 canonical 与 og:url */
+  path: string;
+  type?: 'website' | 'article';
+  imageAlt?: string;
+}
+
+const {
+  title,
+  description,
+  path,
+  type = 'website',
+  imageAlt = 'StaryFall —— 学习与构建的技术博客',
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+const image = absoluteUrl(OG_IMAGE);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="StaryFall" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={imageAlt} />
+<meta name="theme-color" content={themeColor} />
+<link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />

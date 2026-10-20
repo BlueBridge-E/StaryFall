@@ -1,5 +1,6 @@
 ---
-import { base, absoluteUrl } from '../consts';
+import { base } from '../consts';
+import SiteHead from '../components/SiteHead.astro';
 import { getPosts, postSlug, readingMinutes } from '../lib/posts';
 import '../styles/tokens.css';
 import '../styles/hero.css';
@@ -8,7 +9,6 @@ const posts = await getPosts();
 
 const siteTitle = 'StaryFall — 学习与构建的技术博客';
 const siteDescription = '关于 AI Agent、MCP、开源项目深度解析与前端工程化的技术博客。';
-const canonical = absoluteUrl('/');
 
 // 首屏统计与标签
 const tagCount = new Set(posts.flatMap((post) => post.data.tags)).size;
@@ -23,21 +23,7 @@ const ordered = featured ? [featured, ...rest] : [];
 <!doctype html>
 <html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{siteTitle}</title>
-    <meta name="description" content={siteDescription} />
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="StaryFall" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content={siteTitle} />
-    <meta property="og:description" content={siteDescription} />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="theme-color" content="#2563eb" />
-    <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
+    <SiteHead title={siteTitle} description={siteDescription} path="/" />
   </head>
   <body>
     <header class="hero">
@@ -355,17 +341,7 @@ const ordered = featured ? [featured, ...rest] : [];
     font-variant-numeric: tabular-nums;
   }
 
-  .footer {
-    padding: 2.25rem 1.5rem 3rem;
-    text-align: center;
-    font-size: 0.84rem;
-    color: var(--muted);
-    border-top: 1px solid var(--border);
-  }
-  .footer a {
-    color: var(--accent);
-    text-decoration: none;
-  }
+  /* .footer 在 src/styles/tokens.css（三页共用一份） */
 
   a:focus-visible,
   button:focus-visible {

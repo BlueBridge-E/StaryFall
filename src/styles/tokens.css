@@ -133,3 +133,31 @@ body {
   border: 0;
   border-top: 1px solid var(--sl-color-hairline, var(--border));
 }
+
+/* ── 独立页面页脚 ── */
+
+/*
+ * 首页 / AI 速递 / 作品三页各写过一份 .footer，后来又各自被改过：
+ * 首页是 2.25rem 内边距 + 0.84rem + 上边框，作品页上边框在但内边距是 2rem，
+ * AI 速递连上边框都没有。这里收回唯一来源，统一按首页那份（最完整的一版）。
+ *
+ * 必须放在被 import 的 .css 里：写在页面 <style> 中会被作用域化成
+ * .footer:where(.astro-xxxx)，只在渲染该 <footer> 的那个文件里生效。
+ */
+.footer {
+  padding: 2.25rem 1.5rem 3rem;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+

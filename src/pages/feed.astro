@@ -1,7 +1,8 @@
 ---
 // src/pages/feed.astro — AI 新闻速递
 // 数据文件: public/ai-news.json（由 cron 定时更新）
-import { base, absoluteUrl } from '../consts';
+import { base } from '../consts';
+import SiteHead from '../components/SiteHead.astro';
 import '../styles/tokens.css';
 import '../styles/hero.css';
 
@@ -32,7 +33,6 @@ const lastUpdated = newsData?.lastUpdated ?? '';
 
 const pageTitle = 'AI 速递 — StaryFall';
 const pageDescription = 'AI 热点资讯精选，每周三、周日更新，聚合多源报道与要点摘要。';
-const canonical = absoluteUrl('/feed/');
 
 // 按月分组，用 #YYYY-MM 锚点分享/直达某个月（由 scripts/pagination.ts 跳到该月所在页）。
 const monthOf = (date: string | undefined) => (date ?? '').slice(0, 7);
@@ -57,21 +57,7 @@ const itemsWithMonthStart = items.map((item, i) => {
 <!doctype html>
 <html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="StaryFall" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="theme-color" content="#2563eb" />
-    <link rel="alternate" type="application/rss+xml" title="StaryFall" href={`${base}/rss.xml`} />
+    <SiteHead title={pageTitle} description={pageDescription} path="/feed/" />
   </head>
   <body>
     <header class="hero">
@@ -326,12 +312,7 @@ const itemsWithMonthStart = items.map((item, i) => {
     padding: 4rem 1rem;
   }
 
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
+  /* .footer 在 src/styles/tokens.css（三页共用一份） */
 
   @media (max-width: 480px) {
     .hero { padding: 3rem 1.25rem 2rem; }

@@ -19,3 +19,17 @@ export const absoluteUrl = (path: string) => new URL(url(path), site).href;
  * 避免在各处重复拼 base。
  */
 export const siteRoot = new URL(`${base}/`, site).href;
+
+/**
+ * 社交分享卡片，位于 public/og-image.png，1200×630。
+ * 由 tools/og/make-og-image.py 生成（手工工具，不参与构建）——
+ * 改站名/副标题/域名后需要重跑一次，否则分享卡片还是旧文案。
+ */
+export const OG_IMAGE = '/og-image.png';
+
+/**
+ * 品牌主色，仅供 theme-color 这类必须是内联字符串的位置使用。
+ * CSS 侧请用 tokens.css 的 --accent，不要引用这个常量。
+ */
+export const themeColor = '#2563eb';
+
