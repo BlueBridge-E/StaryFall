@@ -181,7 +181,9 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
       /* ── 相机 ── */
       let yaw = 0.6;
       let pitch = -0.22;
-      let autoYaw = 0;
+      // 从 yaw 起步而不是 0：否则 paint 里 yaw 会一直朝 0 缓动，
+      // 减弱动态偏好下就变成"前几秒还在慢慢摆"，与"不要动"相悖
+      let autoYaw = yaw;
       let dragging = false;
       let lastX = 0;
       let lastY = 0;
@@ -430,6 +432,9 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
       });
 
       canvas.addEventListener('pointerdown', (event) => {
+        // 只有主键（含触摸/笔）才开始拖动：右键、中键不进入拖拽态，
+        // 否则右键拖一下也会改视角，松手还可能被当成点击
+        if (event.button !== 0) return;
         dragging = true;
         downX = event.clientX;
         downY = event.clientY;
@@ -442,11 +447,11 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
       canvas.addEventListener('pointerup', (event) => {
         dragging = false;
         canvas.releasePointerCapture?.(event.pointerId);
-        // 只有"按下到松开几乎没移动"才算点击；否则是拖动转星云，
-        // 拖动后在星星上松手不应该跳走
-        const moved = Math.hypot(event.clientX - downX, event.clientY - downY);
         const slug = pick(event.clientX, event.clientY);
-        if (slug && moved < 8) {
+        // 只有"主键按下到松开几乎没移动"才算点击：拖动转星云不跳转，
+        // 右键/中键松手也不该跳转（浏览器默认也不认为那是导航）
+        const moved = Math.hypot(event.clientX - downX, event.clientY - downY);
+        if (slug && event.button === 0 && moved < 8) {
           location.href = `${data.base}/posts/${slug}/`;
         } else {
           setActive(slug);
@@ -468,6 +473,14 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
       canvas.style.cursor = 'grab';
       raf = requestAnimationFrame(paint);
       addEventListener('pagehide', () => cancelAnimationFrame(raf));
+      // 从 bfcache 返回本页时脚本不会重新执行，只靠上面的 pagehide 会把循环永久停掉，
+      // 回来就是一张死图（点进文章再按返回必现）。persisted 为真时把循环接回来。
+      addEventListener('pageshow', (event) => {
+        if (!event.persisted) return;
+        last = 0;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(paint);
+      });
     </script>
 
     <style>
