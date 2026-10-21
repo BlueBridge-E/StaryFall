@@ -151,7 +151,10 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
       let W = 0;
       let H = 0;
       function resize() {
-        const dpr = Math.min(devicePixelRatio || 1, 2);
+        // dpr 上限 1.5 而不是 2：星是柔光晕，1.5 与 2 肉眼几乎无差，但后备缓冲
+        // 从 3.7MP 降到 2.1MP —— 同一台机器实测 37.6 → 51.3 fps（1280×720 画布）。
+        // 唯二会受影响的是 0.7px 的连线和 11px 的标签文字，略微柔一点。
+        const dpr = Math.min(devicePixelRatio || 1, 1.5);
         const rect = canvas.getBoundingClientRect();
         W = rect.width;
         H = rect.height;
@@ -202,6 +205,9 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
        * 旋转角度下投影出来的半径不一样。固定系数要么装不下（切边），要么浪费
        * 一大半画布。这里采样 8 个旋转角度，取所有星投影后的最大半径反推缩放，
        * 保证转到任何角度都不会切到画面外。
+       *
+       * 俯仰角是这里的输入之一：pitch 变了必须重新调用（见 pointermove），否则
+       * 从默认的 -0.22 拖到 ±0.6 时盘面会变高 20% 左右，上下边缘的星被裁掉。
        */
       let viewScale = 300;
       function fitToCanvas() {
@@ -421,7 +427,16 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
         pointerY = event.clientY;
         if (dragging) {
           yaw += (event.clientX - lastX) * 0.006;
-          pitch = Math.max(-0.6, Math.min(0.6, pitch + (event.clientY - lastY) * 0.003));
+          const nextPitch =
+            event.pointerType === 'touch'
+              ? pitch
+              : Math.max(-0.6, Math.min(0.6, pitch + (event.clientY - lastY) * 0.003));
+          if (nextPitch !== pitch) {
+            pitch = nextPitch;
+            // 俯仰变了就重算视口缩放：fit 是在当前 pitch 下采样的，不重算会切边。
+            // 效果上等于"转到侧面时相机自动拉远"，默认视角不受影响。
+            fitToCanvas();
+          }
           autoYaw = yaw;
           lastX = event.clientX;
           lastY = event.clientY;
@@ -460,6 +475,13 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
 
       canvas.addEventListener('pointerleave', () => {
         if (!dragging) setActive(null);
+      });
+
+      // 触摸下竖滑会被浏览器接管（见 CSS 的 touch-action: pan-y），此时只派发
+      // pointercancel、不再派发 pointerup，不复位的话 dragging 会永远停在 true
+      canvas.addEventListener('pointercancel', () => {
+        dragging = false;
+        canvas.style.cursor = 'grab';
       });
 
       // 键盘/读屏：隐藏列表获得焦点时，星云里对应的星亮起来
@@ -547,7 +569,11 @@ const pageDescription = `${sky.stars.length} 篇文章组成的星云：每颗�
           radial-gradient(60% 60% at 50% 45%, rgba(37, 99, 235, 0.12), transparent 75%),
           #04060d;
         box-shadow: inset 0 0 120px rgba(37, 99, 235, 0.08), 0 24px 60px rgba(0, 0, 0, 0.45);
-        touch-action: none;
+        /* pan-y：竖滑交给页面滚动，横滑留给旋转。写 none 时画布占屏 80%
+           （390×844 下 675px），手机上几乎没法滚到下面的页脚。
+           代价是触摸下不能再上下拖俯仰 —— 默认俯仰 -0.22、盘又被压扁到 0.58，
+           这个方向本来变化就很小，换页面的可滚动性更划算。 */
+        touch-action: pan-y;
       }
 
       .hud {
