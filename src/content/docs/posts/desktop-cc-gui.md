@@ -2,7 +2,7 @@
 title: desktop-cc-gui 深度解析：AI VibeCoding 的开源桌面客户端
 description: 从架构、功能、技术栈到生态定位，深度解析 zhukunpenglinyutong/desktop-cc-gui 这一当下热门开源项目
 date: 2026-05-20
-tags: [opensource, ai, vibe-coding, claude-code, tauri, desktop-app]
+tags: [open-source, ai, vibe-coding, claude-code, tauri, desktop-app]
 ---
 
 ## 概述

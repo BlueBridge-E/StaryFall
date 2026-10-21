@@ -2,7 +2,7 @@
 title: OpenMAIC 源码级解析：清华 20k star 多智能体课堂，怎么用一个 prompt 生成一场 AI 授课？
 description: 从 director-graph 编排引擎、流式结构化输出解析器，到 action engine 与播放状态机，逐层拆解 OpenMAIC 如何把「请你教我量子物理」变成一场可交互的沉浸式课堂。
 date: 2026-09-02
-tags: [agent, education-ai, langgraph, ai-agent, openmaic, next.js]
+tags: [agent, education-ai, langgraph, openmaic, next.js]
 ---
 
 > **信息来源：** 本文基于 THU-MAIC/OpenMAIC `main` 分支（v1.0.0，2026-08-27）源码实读 + 官方 README / CHANGELOG。涉及文件：`lib/orchestration/director-graph.ts`、`lib/orchestration/stateless-generate.ts`、`lib/orchestration/ai-sdk-adapter.ts`、`lib/playback/engine.ts`、`package.json`。文中标注「源码」指直接引自主仓库文件。

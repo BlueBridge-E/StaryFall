@@ -3,6 +3,9 @@
 > 给外部写作助手（OpenClaw 等）的交付规范。**逐条都是硬性要求**，
 > 与本仓库 `tools/check-content.mjs` 的检查项一一对应 —— 不符合的稿子会在 CI 被拦下。
 >
+> 本文只管**格式**。**内容层面**（选哪类文章、骨架、字数预算、证据纪律）见
+> [`CONTENT-PATTERN.md`](./CONTENT-PATTERN.md)。
+>
 > 站点：`https://bluebridge-e.github.io/StaryFall/`，内容目录：`src/content/docs/posts/`。
 
 ---
@@ -121,29 +124,30 @@ tags: [ai, agent, open-source]
 
 ## 7. 标签词表（优先复用，不要随意造新词）
 
-**已成规模、优先使用**：
+**已成规模、优先使用**（括号内是 2026-10-21 的出现次数，29 篇共 57 个标签）：
 
 ```text
-ai(13)  open-source(12)  agent(10)  claude-code(5)  devtools(5)
-frontend(4)  mcp(4)  typescript(4)  code-analysis(3)  context-engineering(3)
-knowledge-graph(3)  rust(3)  token-optimization(3)  ai-agent(2)  ai-tools(2)
+open-source(16)  ai(15)  agent(13)  devtools(7)  claude-code(5)
+code-analysis(5)  mcp(5)  context-engineering(3)  frontend(3)  knowledge-graph(3)
+rust(3)  token-optimization(3)  typescript(3)  ai-tools(2)  architecture(2)
 headroom(2)  python(2)  react(2)
 ```
 
-**只用过一次，新增前先确认没有更合适的**：
+**只用过一次（39 个，新增前先确认没有更合适的）**：
 
 ```text
-ai-trading analysis anthropic apple architecture astro compiler container
-deep-dive desktop-app docker document-processing education-ai electron
-fullstack github-pages langgraph llm macos methodology microsoft next.js
-openclaw openmaic orchestration personal-ai-infrastructure privacy quantization
-rag rsc screen-recorder simd speech-to-text starlight swift tauri trpc
-vector-search vibe-coding vibe-trading video-production virtualization vite
-web-scraping
+ai-trading anthropic apple compiler container deep-dive desktop-app docker
+document-processing education-ai electron fullstack langgraph llm macos
+methodology microsoft next.js openclaw openmaic orchestration
+personal-ai-infrastructure privacy quantization rag rsc screen-recorder simd
+speech-to-text swift tauri trpc vector-search vibe-coding vibe-trading
+video-production virtualization vite web-scraping
 ```
 
-已知待合并的重复项（**新稿一律写左边**）：`open-source`（不要写 `opensource`）、
+已合并的重复项（**新稿一律写左边**）：`open-source`（不要写 `opensource`）、
 `agent`（不要写 `ai-agent`）、`code-analysis`（不要写 `analysis`）。
+旧写法已于 2026-10-21 全部合并完毕，站内不再有残留；但**检查器不查词表**，
+新稿写错不会被 CI 拦下，只能靠这条规则自律。
 
 ---
 

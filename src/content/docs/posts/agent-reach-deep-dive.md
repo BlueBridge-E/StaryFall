@@ -2,7 +2,7 @@
 title: Agent-Reach 深度解析：Agent 的互联网能力层
 description: Agent-Reach 不写读取逻辑、不做封装层——它只做选型、安装、体检、路由。这个"能力层"思路，恰好击中了 AI Agent 时代最痛的鸿沟。
 date: 2026-08-09
-tags: [opensource, ai, agent, devtools, architecture]
+tags: [open-source, ai, agent, devtools, architecture]
 ---
 
 ## 一句话定义

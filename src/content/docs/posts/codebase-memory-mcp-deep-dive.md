@@ -4,7 +4,7 @@ description: "33K stars，单二进制零依赖，158 语言 Tree-sitter 解析�
 date: 2026-07-22
 tags:
   - mcp
-  - ai-agent
+  - agent
   - code-analysis
   - knowledge-graph
   - open-source
