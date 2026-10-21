@@ -195,6 +195,9 @@ npm run check:content -- --fix   # 自动修「机械性」问题（见下）
   ```
 - 改完内容的固定顺序：`npm run check:content` → `npm run check` → `npm run build` →
   `node tools/measure/verify-typography.mjs`。
+- 格式之外还有**内容层面**的规范：`CONTENT-PATTERN.md` 定义了三类文章（产品深度解析 /
+  跟进更新 / 概念科普）的骨架、字数预算、证据纪律与交稿自检。它**不由 CI 强制**，
+  但新稿与改稿都应先对着它自检一遍。
 - 写含中文的源文件时不要用 PowerShell 的 `Set-Content` / `Out-File`（默认编码会在 UTF-8 文件前加 BOM，
   且在部分环境下把中文写坏）。用 Node 的 `fs` 或编辑器直接写。
 - **`public/og-image.png` 与 `public/apple-touch-icon.png` 是生成物**，不是手绘：改站名 / 副标题 /
