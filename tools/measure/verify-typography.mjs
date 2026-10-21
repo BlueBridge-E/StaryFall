@@ -94,7 +94,20 @@ check('favicon.svg 仍在', fs.existsSync('dist/favicon.svg'));
 check('robots.txt 仍在', fs.existsSync('dist/robots.txt'));
 check('Pagefind zh-cn', read('dist/pagefind/pagefind-entry.json').includes('"zh-cn"'));
 check('twitter:card=summary 唯一', (post.match(/name="twitter:card"/g) || []).length === 1);
-check('tags/ai-agent 合并', (read('dist/tags/ai-agent/index.html').match(/class="post-title/g) || []).length === 2);
+// 标签页数量从源码现算（内联与块状两种 frontmatter 写法都要处理），
+// 并确认旧写法（opensource / ai-agent / analysis）已经合并、不再有独立页面。
+const TAG_SOURCE = new Set();
+for (const f of fs.readdirSync('src/content/docs/posts').filter((x) => x.endsWith('.md'))) {
+  const fm = read(`src/content/docs/posts/${f}`).split(/^---$/m)[1] ?? '';
+  const inline = fm.match(/^tags:\s*\[(.*)\]\s*$/m);
+  if (inline) inline[1].split(',').forEach((t) => TAG_SOURCE.add(t.trim()));
+  else for (const m of fm.matchAll(/^\s*-\s+(.+)$/gm)) TAG_SOURCE.add(m[1].trim());
+}
+const TAG_PAGES = fs.readdirSync('dist/tags').filter((d) => fs.existsSync(`dist/tags/${d}/index.html`));
+check(`标签页与源码标签数一致（${TAG_SOURCE.size}）`, TAG_PAGES.length === TAG_SOURCE.size, `实际 ${TAG_PAGES.length}`);
+check('旧写法标签已合并（opensource / ai-agent / analysis）',
+  ['opensource', 'ai-agent', 'analysis'].every((t) => !TAG_PAGES.includes(t)),
+  TAG_PAGES.filter((t) => ['opensource', 'ai-agent', 'analysis'].includes(t)).join(', '));
 // 期望值从数据源现算：新增文章或 CI 刷新 news 之后，断言不该跟着过期。
 const EXPECTED_POSTS = fs.readdirSync('src/content/docs/posts').filter((f) => f.endsWith('.md')).length;
 const EXPECTED_NEWS = JSON.parse(fs.readFileSync('public/ai-news.json', 'utf8')).items.length;
