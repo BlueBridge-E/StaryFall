@@ -14,7 +14,10 @@ const { newer, older } = findSiblings(current, all);
 // 「上一篇 / 下一篇」已经露脸的文章不再进「相关文章」，否则同一屏两个区块会重复推同一篇
 // （例如 claude-code-commands 页，两个区块的首卡与次卡完全相同）。
 const siblingIds = [newer?.id, older?.id].filter((id): id is string => Boolean(id));
-const related = findRelated(current, all, { exclude: siblingIds });
+// fillWithLatest: false —— 凑不够 4 篇就少显示几篇，不要拿最新文章填坑。
+// 「相关文章」这四个字是承诺；用不相关的文章凑数是误导（现在 apple-container 的标签
+// 全站唯一，兜底会把它撑成一整节无关的文章）。空列表由下方 related.length > 0 兜住。
+const related = findRelated(current, all, { exclude: siblingIds, fillWithLatest: false });
 
 const href = (entry: Post) => `${base}/posts/${postSlug(entry.id)}/`;
 ---

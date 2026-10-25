@@ -66,6 +66,13 @@ export async function GET() {
     // 注意 @astrojs/rss 是原样写进 <?xml-stylesheet href="…"?>，不会自动补 base。
     stylesheet: `${base}/rss.xsl`,
     items,
-    customData: '<language>zh-cn</language>',
+    // atom:link rel=self 是 feed 工具（含校验器）用来确认「这份 feed 的正式地址」的。
+    // 库不会自动生成，也不允许自定义元素进 <channel> 之外 —— 但 xmlns 选项会把
+    // @_xmlns:atom 挂到 <rss> 根上，customData 再插 <atom:link>，这样命名空间是合法的。
+    // 只写 customData 不声明 xmlns 会产出一份「前缀未定义」的非法 XML，整份 feed 直接失效。
+    xmlns: { atom: 'http://www.w3.org/2005/Atom' },
+    customData:
+      `<language>zh-cn</language>` +
+      `<atom:link href="${absoluteUrl('/rss.xml')}" rel="self" type="application/rss+xml"/>`,
   });
 }

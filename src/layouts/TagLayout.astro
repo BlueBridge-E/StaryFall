@@ -9,7 +9,9 @@ export interface Props {
 }
 
 const { title, description = 'StaryFall 的文章标签归档。' } = Astro.props;
-const fullTitle = `${title} | StaryFall`;
+// 与首页 / AI 速递 / 作品集保持一致用破折号（那三页手写 `— StaryFall`）。
+// 文章页的 `| StaryFall` 是 Starlight 自己的标题模板，不在这里统一。
+const fullTitle = `${title} — StaryFall`;
 ---
 
 <!doctype html>
